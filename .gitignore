@@ -485,3 +485,9 @@ TSWLatexianTemp*
 
 # xwatermark package
 *.xwm
+
+# video components 
+*.mp4
+*.svg
+*.tex
+*.txt
