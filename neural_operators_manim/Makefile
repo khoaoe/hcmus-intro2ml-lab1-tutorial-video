@@ -1,5 +1,6 @@
 VENV ?= .venv
-MANIM ?= $(VENV)/bin/manim
+LOCAL_MANIM := $(VENV)/bin/manim
+MANIM ?= $(if $(wildcard $(LOCAL_MANIM)),$(LOCAL_MANIM),manim)
 QUALITY ?= h
 FILE ?=
 SCENE ?=
@@ -20,13 +21,14 @@ help:
 	@echo "  s03 s04 s05 s06 s07 s08"
 
 check-manim:
-	@if [ ! -x "$(MANIM)" ]; then \
-		echo "Manim executable not found at: $(MANIM)"; \
-		echo "Install steps:"; \
-		echo "  1) source .venv/bin/activate"; \
-		echo "  2) pip install manim"; \
-		echo "If pip install fails with pangocairo error on Ubuntu/Debian:"; \
-		echo "  sudo apt install -y ffmpeg libcairo2-dev libpango1.0-dev pkg-config python3-dev"; \
+	@if ! command -v "$(MANIM)" >/dev/null 2>&1; then \
+		echo "Manim executable not found: $(MANIM)"; \
+		echo "Activate your environment first (example):"; \
+		echo "  micromamba activate manim_env"; \
+		echo "Or run directly:"; \
+		echo "  micromamba run -n manim_env make s01_1"; \
+		echo "If needed, install packages:"; \
+		echo "  pip install manim numpy scipy jupyterlab"; \
 		exit 127; \
 	fi
 
