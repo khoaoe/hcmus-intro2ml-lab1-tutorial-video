@@ -20,6 +20,7 @@ Manim requires both system-level binary dependencies (for video processing and t
 To keep the host system clean and avoid conflicting binaries, we only install LaTeX system-wide.
 
 **For Linux:**
+
 ```bash
 sudo pacman -S texlive-basic texlive-latexextra texlive-fontsrecommended
 ```
@@ -36,3 +37,41 @@ conda activate manim_env
 # 3. Install required Python packages
 pip install manim numpy scipy jupyterlab
 ```
+
+## 🎬 How to Render the Videos
+
+Once your environment is set up and activated (`conda activate manim_env`), you can render the scenes using the Manim command-line interface. 
+
+### Basic Rendering Commands
+
+Run the following commands from the root directory of the project. You must specify the path to the Python file and the exact name of the Scene class you want to render.
+
+**1. Preview Quality (Fast rendering for testing)**
+Use the `-pql` flag (Preview, Quality Low, 480p at 15fps). This is recommended while drafting to save time:
+
+```bash
+manim -pql src/s01_traditional_dl/scenes_1_1_and_1_2.py Scene1_1_Hook
+```
+
+**2. High Quality (Production ready)**
+Use the `-pqh` flag (Preview, Quality High, 1080p at 60fps). Use this for the final output:
+
+```bash
+manim -pqh src/s01_traditional_dl/scenes_1_1_and_1_2.py Scene1_1_Hook
+```
+
+### Rendering All Scenes in a File
+
+If a Python file contains multiple scenes (like `Scene1_1_Hook` and `Scene1_2_PlotTwist`) and you want to render all of them sequentially, replace the scene name with the `-a` (all) flag:
+
+```bash
+manim -pql src/s01_traditional_dl/scenes_1_1_and_1_2.py -a
+```
+
+### Common Flags Explained:
+
+* `-p`: Plays the video automatically in your default media player after rendering is complete.
+* `-q`: Specifies the render quality. Options include `l` (low), `m` (medium), `h` (high), and `k` (4K).
+* `-a`: Renders all `Scene` classes found in the specified file.
+
+*Note: All rendered output files (.mp4) will be automatically saved in the `media/videos/` directory within your project root.*
