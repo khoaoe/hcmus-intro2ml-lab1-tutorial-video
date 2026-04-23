@@ -47,17 +47,17 @@ Once your environment is set up and activated (`conda activate manim_env`), you 
 Run the following commands from the root directory of the project. You must specify the path to the Python file and the exact name of the Scene class you want to render.
 
 **1. Preview Quality (Fast rendering for testing)**
-Use the `-pql` flag (Preview, Quality Low, 480p at 15fps). This is recommended while drafting to save time:
+Use the `-ql` flag (Quality Low, 480p at 15fps). This is recommended while drafting to save time:
 
 ```bash
-manim -pql src/s01_traditional_dl/scenes_1_1_and_1_2.py Scene1_1_Hook
+manim -ql src/s01_traditional_dl/scenes.py Scene1_1_Hook
 ```
 
 **2. High Quality (Production ready)**
-Use the `-pqh` flag (Preview, Quality High, 1080p at 60fps). Use this for the final output:
+Use the `-qh` flag (Quality High, 1080p at 60fps). Use this for the final output:
 
 ```bash
-manim -pqh src/s01_traditional_dl/scenes_1_1_and_1_2.py Scene1_1_Hook
+manim -qh src/s01_traditional_dl/scenes.py Scene1_1_Hook
 ```
 
 ### Rendering All Scenes in a File
@@ -65,7 +65,7 @@ manim -pqh src/s01_traditional_dl/scenes_1_1_and_1_2.py Scene1_1_Hook
 If a Python file contains multiple scenes (like `Scene1_1_Hook` and `Scene1_2_PlotTwist`) and you want to render all of them sequentially, replace the scene name with the `-a` (all) flag:
 
 ```bash
-manim -pql src/s01_traditional_dl/scenes_1_1_and_1_2.py -a
+manim -qh src/s01_traditional_dl/scenes.py -a
 ```
 
 ### Common Flags Explained:

@@ -1,393 +1,600 @@
-import sys
-import os
-from manim import *
-
-# Cấu hình sys.path để import từ thư mục gốc của project
+import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
+from manim import *
 from utils.colors import *
 
-class Scene2_1_ScientificData(ThreeDScene):
+
+class Scene2_1_NatureOfScienceData(ThreeDScene):
     def construct(self):
-        # ---------------------------------------------------------
-        # Beat 1: Khí hậu học (30.0s) | [4:00–4:30]
-        # ---------------------------------------------------------
-        self.set_camera_orientation(phi=60 * DEGREES, theta=45 * DEGREES)
+        self.camera.background_color = C_BACKGROUND
+        
+        # ============================================================
+        # BEAT 1 [4:00 - 4:30] (30.0s): Khí hậu & Thời tiết
+        # ============================================================
+        # VO: "Trước khi đi sâu vào định nghĩa Neural Operator, hãy quan sát bản chất..."
+        
+        self.set_camera_orientation(phi=60 * DEGREES, theta=30 * DEGREES)
+        
+        # Globe setup
+        globe = Sphere(radius=1.5, resolution=(20, 20)).set_color(C_PRIMARY).set_opacity(0.4)
+        
+        # Layers (Nhiệt độ, gió, áp suất)
+        temp_layer = Sphere(radius=1.6, resolution=(15, 15)).set_color(C_WARNING).set_opacity(0.2)
+        wind_layer = Sphere(radius=1.7, resolution=(15, 15)).set_color(C_SECONDARY).set_opacity(0.2)
+        pressure_layer = Sphere(radius=1.8, resolution=(15, 15)).set_color(C_ACCENT).set_opacity(0.1)
+        
         self.begin_ambient_camera_rotation(rate=0.1)
-
-        # Trái Đất (Không gian liên tục vô hạn chiều)
-        globe = Sphere(radius=2.5, resolution=(40, 40)).set_color(SPHERE_DARK_BLUE).set_opacity(0.8)
         
-        # BẢN VÁ: Tạo lưới bằng cách nhân bản Sphere và chỉ giữ lại stroke
-        globe_mesh = Sphere(radius=2.5, resolution=(40, 40)).set_fill(opacity=0).set_stroke(color=MATH_BLUE, width=0.5, opacity=0.5)
-
-        # 5.0s Create
-        self.play(Create(globe_mesh), FadeIn(globe), run_time=5.0)
-
-        # Fixed in frame texts
-        mapping_text = Text("Ánh xạ Hàm số", font_size=36, color=TEXT_MAIN, weight=BOLD)
-        mapping_math = MathTex(r"\mathcal{U}_{\text{today}} \to \mathcal{U}_{\text{tomorrow}}", font_size=48, color=FUNC_TEAL)
-        mapping_group = VGroup(mapping_text, mapping_math).arrange(DOWN, buff=0.3).to_corner(UL)
+        # Timeline: 30s total
+        self.play(Create(globe), run_time=2.0)
+        self.play(FadeIn(temp_layer), run_time=1.5)
+        self.play(FadeIn(wind_layer), run_time=1.5)
+        self.play(FadeIn(pressure_layer), run_time=1.5)
+        self.wait(5.5) # Hold to sync
         
-        self.add_fixed_in_frame_mobjects(mapping_group)
+        # "Trạng thái hôm nay -> Ngày mai" - Switch to 2D overlay for text
+        arrow = Arrow(LEFT * 2, RIGHT * 2, buff=0.1, color=WHITE).shift(DOWN * 2.5)
+        t_today = Text("Hôm nay (Hàm số)", font_size=24, color=C_PRIMARY).next_to(arrow, LEFT)
+        t_tomorrow = Text("Ngày mai (Hàm số)", font_size=24, color=C_CONTINUOUS).next_to(arrow, RIGHT)
+        mapping_text = Text("Mapping: Hàm → Hàm", font_size=28, color=C_ACCENT).next_to(arrow, UP)
         
-        # 3.0s Write
-        self.play(Write(mapping_group), run_time=3.0)
+        overlay_group = VGroup(arrow, t_today, t_tomorrow, mapping_text)
+        self.add_fixed_in_frame_mobjects(overlay_group)
         
-        # 22.0s Wait to complete 30.0s beat (5.0 + 3.0 + 22.0 = 30.0)
-        self.wait(22.0)
-
-        # ---------------------------------------------------------
-        # Beat 2: Địa chấn & Khí động học (20.0s) | [4:30–4:50]
-        # ---------------------------------------------------------
-        seismic_block = Cube(side_length=3.5, fill_color=MATRIX_WEIGHT, fill_opacity=0.6, stroke_color=MATH_YELLOW)
+        self.play(Create(arrow), FadeIn(t_today), FadeIn(t_tomorrow), run_time=2.0)
+        self.play(Write(mapping_text), run_time=2.0)
         
-        # 3.0s Transform to block
-        self.play(Transform(globe, seismic_block), FadeOut(globe_mesh), run_time=3.0)
-        self.wait(5.0) # Hold for seismic explanation
-
-        # Aerodynamic surface
-        aero_surface = Surface(
-            lambda u, v: np.array([u, v, 0.5 * np.sin(u) * np.cos(v)]),
-            u_range=[-2, 2], v_range=[-2, 2],
-            fill_color=MATH_GREEN, fill_opacity=0.8, resolution=(20, 20)
-        )
+        # Wait out the rest of Beat 1 (30 - 16 = 14s)
+        self.wait(14.0)
         
-        # Tạo lưới cho mặt cong bằng cách khởi tạo lại Surface với fill_opacity=0
-        aero_mesh = Surface(
-            lambda u, v: np.array([u, v, 0.5 * np.sin(u) * np.cos(v)]),
-            u_range=[-2, 2], v_range=[-2, 2],
-            resolution=(20, 20)
-        ).set_fill(opacity=0).set_stroke(color=TEXT_MAIN, width=0.5)
-
-        # 3.0s Transform to surface
-        self.play(Transform(globe, aero_surface), FadeIn(aero_mesh), run_time=3.0)
+        # ============================================================
+        # BEAT 2 [4:30 - 4:50] (20.0s): Địa chấn & Khí động học
+        # ============================================================
+        # VO: "Địa chấn học: trường vận tốc ba chiều a(x) mô tả sóng..."
         
-        # 9.0s Wait to complete 20.0s beat (3.0 + 5.0 + 3.0 + 9.0 = 20.0)
-        self.wait(9.0)
-
-        # ---------------------------------------------------------
-        # Beat 3: Động lực học phân tử (10.0s) | [4:50–5:00]
-        # ---------------------------------------------------------
         self.stop_ambient_camera_rotation()
-        
-        # 2.0s Clear 3D objects
-        self.play(FadeOut(globe), FadeOut(aero_mesh), FadeOut(mapping_group), run_time=2.0)
-        self.set_camera_orientation(phi=0 * DEGREES, theta=-90 * DEGREES) # Reset to 2D view
-
-        # Continuous trajectory
-        trajectory = ParametricFunction(
-            lambda t: np.array([t, 1.5 * np.sin(2*t) * np.exp(-0.1*t), 0]),
-            t_range=[-4, 4], color=FUNC_TEAL, stroke_width=4
+        self.play(
+            FadeOut(globe), FadeOut(temp_layer), FadeOut(wind_layer), FadeOut(pressure_layer),
+            FadeOut(overlay_group),
+            run_time=2.0
         )
         
-        checklist = VGroup(
-            Text("1. Input = Hàm số", font_size=28, color=TEXT_SUB),
-            Text("2. Output = Hàm số", font_size=28, color=TEXT_SUB),
-            Text("3. Ràng buộc vật lý liên tục", font_size=28, color=TEXT_HIGHLIGHT)
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.3).to_corner(DR)
+        # 3D Seismic block
+        seismic_block = Prism(dimensions=[3, 3, 2]).set_color(C_SECONDARY).set_opacity(0.5)
+        seismic_wave = Surface(
+            lambda u, v: np.array([u, v, 0.5 * np.sin(np.sqrt(u**2 + v**2) * 3)]),
+            u_range=[-1.5, 1.5], v_range=[-1.5, 1.5],
+            resolution=(15, 15)
+        ).set_color(C_CONTINUOUS).set_opacity(0.8)
         
-        self.add_fixed_in_frame_mobjects(checklist)
-
-        # 3.0s Draw trajectory and list
-        self.play(Create(trajectory), FadeIn(checklist, shift=UP), run_time=3.0)
+        self.play(Create(seismic_block), run_time=2.0)
+        self.play(Create(seismic_wave), run_time=3.0)
+        self.wait(2.0)
         
-        # 5.0s Wait to complete 10.0s beat (2.0 + 3.0 + 5.0 = 10.0)
-        self.wait(5.0)
-
-
-class Scene2_2_NotAnImage(MovingCameraScene):
-    def construct(self):
-        # ---------------------------------------------------------
-        # Beat 1: Ảo giác của Pixel (25.0s) | [5:00–5:25]
-        # ---------------------------------------------------------
-        # Speaker: "Có một lưu ý quan trọng: Khi hình dung một hàm số như trường nhiệt độ, 
-        # ta thường vẽ nó dưới dạng ảnh màu: chỗ đỏ là nóng, chỗ xanh là lạnh. Nhưng đó không phải là ảnh. 
-        # Đó là hàm số được hiển thị, được lấy mẫu tại một số điểm nhất định để ta có thể nhìn thấy."
+        # Transform to Aerodynamics Geometry
+        aero_surface = Surface(
+            lambda u, v: np.array([u, v, 0.3 * np.cos(u) * np.sin(v)]),
+            u_range=[-2, 2], v_range=[-2, 2]
+        ).set_color(C_PRIMARY).set_opacity(0.7)
         
-        # Constructing a procedural "heatmap" using a grid to explicitly show pixels later
-        grid_size = 20
-        square_size = 0.3
-        heatmap_group = VGroup()
-        
-        for i in range(grid_size):
-            for j in range(grid_size):
-                # Calculate a continuous value simulating a heatmap (radial sine wave)
-                x = (i - grid_size/2) * square_size
-                y = (j - grid_size/2) * square_size
-                dist = np.sqrt(x**2 + y**2)
-                val = np.sin(dist)
-                
-                # Interpolate color (Blue/Cold to Red/Hot)
-                color = interpolate_color(MATH_BLUE, MATH_RED, (val + 1) / 2)
-                
-                # stroke_width=0 makes it look continuous at a distance
-                sq = Square(side_length=square_size, fill_color=color, fill_opacity=1, stroke_width=0)
-                sq.move_to(np.array([x, y, 0]))
-                heatmap_group.add(sq)
-
-        # 3.0s Fade in "continuous" heatmap
-        self.play(FadeIn(heatmap_group), run_time=3.0)
-        self.wait(5.0)
-        
-        # Define camera zoom target
-        zoom_target = heatmap_group[150] # Pick a square near the center
-        
-        # 5.0s Strong Zoom to reveal pixels
         self.play(
-            self.camera.frame.animate.scale(0.15).move_to(zoom_target.get_center()),
-            run_time=5.0,
-            rate_func=there_and_back_with_pause # Zoom in, pause, but wait, we want to stay zoomed.
-        )
-        # Fix: We want to stay zoomed in, so use default smooth rate_func
-        # Overriding the play call above to stay zoomed:
-        self.remove(*self.mobjects) # clear previous play state internally just in case
-        self.add(heatmap_group)
-        self.play(
-            self.camera.frame.animate.scale(0.15).move_to(zoom_target.get_center()),
-            run_time=5.0
-        )
-
-        # 2.0s Add distinct grid strokes to show discreteness
-        for sq in heatmap_group:
-            sq.set_stroke(color=BG_DARK, width=0.5)
-        self.play(heatmap_group.animate.set_stroke(width=0.5), run_time=2.0)
-        
-        # Typography interactions (scaled appropriately for the zoomed camera)
-        text_image = Text("ẢNH", font_size=12, color=ERROR_RED, weight=BOLD).move_to(zoom_target.get_center() + UP*0.2)
-        strike_line = Line(text_image.get_left(), text_image.get_right(), color=ERROR_RED, stroke_width=1.5)
-        text_function = Text("HÀM SỐ LẤY MẪU", font_size=8, color=FUNC_TEAL, weight=BOLD).move_to(text_image.get_center() + DOWN*0.15)
-        
-        # 4.0s Text interactions
-        self.play(Write(text_image), run_time=1.0)
-        self.play(Create(strike_line), run_time=1.0)
-        self.play(FadeIn(text_function, shift=DOWN*0.05), run_time=2.0)
-        
-        # 6.0s Wait to complete 25.0s beat (3.0 + 5.0 + 5.0 + 2.0 + 4.0 + 6.0 = 25.0)
-        self.wait(6.0)
-
-        # ---------------------------------------------------------
-        # Beat 2: Bị ràng buộc bởi lưới (15.0s) | [5:25–5:40]
-        # ---------------------------------------------------------
-        # Speaker: "Sự khác biệt này cực kỳ quan trọng. Nếu ta xử lý nó như ảnh, đưa vào CNN 
-        # và train trên lưới 64x64, là ta đang ném đi bản chất liên tục của dữ liệu. 
-        # Và ta bị ràng buộc trong lưới đó."
-
-        # 3.0s Pull back slightly to show the rigid constraint
-        self.play(
-            self.camera.frame.animate.scale(3.0),
-            FadeOut(text_image, strike_line, text_function),
+            Transform(seismic_block, aero_surface),
+            FadeOut(seismic_wave),
             run_time=3.0
         )
+        # Wait out the rest of Beat 2 (20 - 12 = 8s)
+        self.wait(8.0)
         
-        # Create a strict boundary barrier
-        barrier_rect = Rectangle(
-            width=self.camera.frame.width * 0.8, 
-            height=self.camera.frame.height * 0.8, 
-            color=ERROR_RED, stroke_width=4
-        ).move_to(self.camera.frame.get_center())
+        # ============================================================
+        # BEAT 3 [4:50 - 5:00] (10.0s): Động lực học phân tử & Điểm chung
+        # ============================================================
+        # VO: "Động lực học phân tử: nguyên tử chuyển động liên tục..."
         
-        warning_text = Text(
-            "BỊ RÀNG BUỘC LƯỚI", 
-            font_size=16, color=ERROR_RED, weight=BOLD
-        ).next_to(barrier_rect, UP, buff=0.1)
-
-        # 3.0s Red barrier crash
-        self.play(Create(barrier_rect), Write(warning_text), run_time=3.0)
+        self.play(FadeOut(seismic_block), run_time=1.5)
         
-        # Pulsing effect to highlight the constraint
-        # 3.0s Pulse
-        self.play(
-            barrier_rect.animate.set_stroke(width=8, opacity=0.5),
-            rate_func=there_and_back, run_time=1.5
-        )
-        self.play(
-            barrier_rect.animate.set_stroke(width=8, opacity=0.5),
-            rate_func=there_and_back, run_time=1.5
+        # Continuous particle trajectory
+        trajectory = ParametricFunction(
+            lambda t: np.array([
+                1.5 * np.sin(3 * t) * np.cos(t),
+                1.5 * np.sin(3 * t) * np.sin(t),
+                1.5 * np.cos(3 * t)
+            ]),
+            t_range=[0, PI],
+            color=C_CONTINUOUS
         )
         
-        # 6.0s Wait to complete 15.0s beat (3.0 + 3.0 + 3.0 + 6.0 = 15.0s)
-        self.wait(6.0)
+        # Checklist Text Overlay
+        check_1 = Text("1. Input = Hàm số", font_size=24, color=WHITE)
+        check_2 = Text("2. Output = Hàm số", font_size=24, color=WHITE)
+        check_3 = Text("3. Ràng buộc vật lý liên tục", font_size=24, color=C_ACCENT)
+        checklist = VGroup(check_1, check_2, check_3).arrange(DOWN, aligned_edge=LEFT).to_corner(UL)
+        self.add_fixed_in_frame_mobjects(checklist)
+        
+        self.play(Create(trajectory), run_time=2.0)
+        self.play(
+            FadeIn(check_1, shift=RIGHT),
+            FadeIn(check_2, shift=RIGHT),
+            FadeIn(check_3, shift=RIGHT),
+            lag_ratio=0.3,
+            run_time=2.5
+        )
+        
+        # Wait out the rest of Beat 3 (10 - 6.0 = 4.0s)
+        self.wait(4.0)
+        
+        # Final cleanup transition
+        self.play(FadeOut(trajectory), FadeOut(checklist), run_time=1.0)
 
 
-class Scene2_3_ShiftToOperators(Scene):
+class Scene2_2_ImageIsNotFunction(MovingCameraScene):
     def construct(self):
-        # ---------------------------------------------------------
-        # Beat 1: Sự dịch chuyển hệ quy chiếu (30.0s) | [5:40–6:10]
-        # ---------------------------------------------------------
-        # Speaker: "Để hiểu Neural Operator, ta so sánh với Deep Learning cổ điển. 
-        # DL truyền thống học hàm số f_theta: R^n -> R^m – ánh xạ giữa các vector hữu hạn chiều. 
-        # Operator Learning muốn học toán tử G_theta : A -> U – ánh xạ giữa các không gian hàm vô hạn chiều."
-
-        # Setup Split Screen
-        divider = Line(UP * 4, DOWN * 4, color=AXES_COLOR, stroke_width=2)
+        self.camera.background_color = C_BACKGROUND
         
-        # Left Side: Traditional DL (Discrete)
-        dl_title = Text("Deep Learning", font_size=32, color=TEXT_MAIN).to_edge(UP).shift(LEFT * 3.5)
-        dl_math = MathTex(r"f_\theta: \mathbb{R}^n \to \mathbb{R}^m", font_size=40, color=DISCRETE_BLUE).next_to(dl_title, DOWN)
-        
-        dots_in = VGroup(*[Dot(color=DISCRETE_BLUE) for _ in range(5)]).arrange(DOWN, buff=0.3)
-        dots_out = VGroup(*[Dot(color=DISCRETE_BLUE) for _ in range(3)]).arrange(DOWN, buff=0.3)
-        dots_in.shift(LEFT * 5 + DOWN * 0.5)
-        dots_out.shift(LEFT * 2 + DOWN * 0.5)
-        
-        arrows = VGroup()
-        for din in dots_in:
-            for dout in dots_out:
-                arrows.add(Line(din.get_center(), dout.get_center(), stroke_width=0.5, color=DISCRETE_GRID, stroke_opacity=0.5))
+        # ============================================================
+        # BEAT 1: Bẫy ma trận rời rạc
+        # ============================================================
+        title = Text("Ảnh Số ≠ Hàm Số", font_size=40, color=C_WARNING).to_edge(UP)
+        self.play(Write(title), run_time=1.0)
 
-        # Right Side: Operator Learning (Continuous)
-        op_title = Text("Neural Operators", font_size=32, color=TEXT_MAIN).to_edge(UP).shift(RIGHT * 3.5)
-        op_math = MathTex(r"G_\theta : \mathcal{A} \to \mathcal{U}", font_size=40, color=CONTINUOUS_PURPLE).next_to(op_title, DOWN)
+        # Lưới pixel 8x8 (Đại diện cho ảnh số rời rạc)
+        # Sử dụng seed để màu random được cố định giữa các lần render
+        np.random.seed(42) 
+        grid_8 = VGroup(*[
+            Square(side_length=0.4).set_fill(C_MATRIX, opacity=0.2 + 0.8 * np.random.rand()).set_stroke(WHITE, 1) 
+            for _ in range(64)
+        ])
+        grid_8.arrange_in_grid(8, 8, buff=0)
+        grid_8.move_to(LEFT * 3)
+
+        self.play(FadeIn(grid_8, shift=UP), run_time=1.5)
         
-        ax_in = Axes(x_range=[0, 3], y_range=[-1, 2], x_length=2.5, y_length=2).shift(RIGHT * 2 + DOWN * 0.5)
-        ax_out = Axes(x_range=[0, 3], y_range=[-1, 2], x_length=2.5, y_length=2).shift(RIGHT * 5 + DOWN * 0.5)
-        
-        func_in = ax_in.plot(lambda x: np.sin(2 * x) * np.exp(-0.2 * x), color=FUNC_TEAL)
-        func_out = ax_out.plot(lambda x: np.cos(x) + 0.5, color=CONTINUOUS_PURPLE)
-        op_arrow = CurvedArrow(ax_in.get_right(), ax_out.get_left(), color=NO_GOLD, angle=-TAU/4).shift(UP*0.5)
+        brace_8 = Brace(grid_8, DOWN)
+        label_8 = brace_8.get_text("Ma trận 8x8 (Rời rạc)").set_color(C_DISCRETE)
+        self.play(Create(brace_8), Write(label_8), run_time=1.5)
+        self.wait(1.5)
 
-        # 5.0s Layout setup
-        self.play(Create(divider), Write(dl_title), Write(op_title), run_time=2.0)
-        self.play(Write(dl_math), Write(op_math), run_time=3.0)
-        
-        # 10.0s Draw internals
-        self.play(Create(dots_in), Create(dots_out), Create(arrows), run_time=4.0)
-        self.play(Create(ax_in), Create(ax_out), run_time=2.0)
-        self.play(Create(func_in), Create(func_out), Create(op_arrow), run_time=4.0)
+        # ============================================================
+        # BEAT 2: Giới hạn của độ phân giải
+        # ============================================================
+        # Transform thành lưới 16x16
+        grid_16 = VGroup(*[
+            Square(side_length=0.2).set_fill(C_MATRIX, opacity=0.2 + 0.8 * np.random.rand()).set_stroke(WHITE, 0.5) 
+            for _ in range(256)
+        ])
+        grid_16.arrange_in_grid(16, 16, buff=0)
+        grid_16.move_to(grid_8)
 
-        # 15.0s Wait
-        self.wait(15.0)
+        label_16 = Text("Ma trận 16x16\n(Sai lệch Input!)", font_size=24, color=C_WARNING).next_to(grid_16, DOWN, buff=0.5)
 
-        # ---------------------------------------------------------
-        # Beat 2: Ví dụ Darcy Flow (30.0s) | [6:10–6:40]
-        # ---------------------------------------------------------
-        # Speaker: "Lấy ví dụ Darcy Flow: -\nabla \cdot (a(x)\nabla u(x)) = f(x). 
-        # Trong đó a(x) là hệ số khuếch tán, u(x) là nghiệm. 
-        # Thay vì giải số phức tạp cho mỗi a mới, ta muốn học toán tử G sao cho G(a) ≈ u."
-
-        # 2.0s Clear screen
         self.play(
-            FadeOut(divider), FadeOut(dl_title), FadeOut(dl_math), FadeOut(dots_in), 
-            FadeOut(dots_out), FadeOut(arrows), FadeOut(op_title), FadeOut(op_math),
-            FadeOut(ax_in), FadeOut(ax_out), FadeOut(func_in), FadeOut(func_out), FadeOut(op_arrow),
+            Transform(grid_8, grid_16),
+            Transform(label_8, label_16),
+            FadeOut(brace_8),
             run_time=2.0
         )
 
-        darcy_title = Text("Phương trình Darcy Flow", font_size=36, color=TEXT_SUB).to_edge(UP)
-        # Tách chuỗi để dễ đổi màu
-        eq = MathTex(
-            r"-\nabla \cdot (",   # 0
-            r"a(x)",              # 1
-            r"\nabla ",           # 2
-            r"u(x)",              # 3
-            r") = f(x)",          # 4
-            font_size=60
+        # Khối Standard CNN bị gãy
+        cnn_box = Rectangle(width=3.5, height=2, color=C_SECONDARY).set_fill(C_SECONDARY, 0.2)
+        cnn_text = Text("Standard CNN\n(Cố định Input)", font_size=24, color=WHITE).move_to(cnn_box)
+        cnn_group = VGroup(cnn_box, cnn_text).next_to(grid_16, RIGHT, buff=2)
+
+        arrow = Arrow(grid_16.get_right(), cnn_box.get_left(), color=WHITE, buff=0.2)
+        cross = Cross(arrow, stroke_color=C_WARNING, stroke_width=8, scale_factor=0.6)
+
+        self.play(Create(cnn_group), Create(arrow), run_time=1.5)
+        self.play(Create(cross), run_time=1.0)
+        self.wait(2.0)
+
+        # ============================================================
+        # BEAT 3: Sự tự do của hàm số liên tục
+        # ============================================================
+        # Dọn dẹp màn hình
+        self.play(
+            FadeOut(grid_8), FadeOut(label_8), 
+            FadeOut(cnn_group), FadeOut(arrow), FadeOut(cross), 
+            FadeOut(title),
+            run_time=1.5
+        )
+
+        continuous_title = Text("Hàm Số (Liên Tục)", font_size=40, color=C_CONTINUOUS).to_edge(UP)
+        
+        # Vẽ đồ thị hàm số
+        axes = Axes(
+            x_range=[-3, 3, 1], 
+            y_range=[-1.5, 1.5, 1], 
+            x_length=8, 
+            y_length=4,
+            axis_config={"color": GREY}
         )
         
-        # 4.0s Write equation
-        self.play(Write(darcy_title), Write(eq), run_time=4.0)
-        
-        # 4.0s Highlight variables
-        self.play(eq[1].animate.set_color(MATH_BLUE), run_time=2.0) # a(x)
-        self.play(eq[3].animate.set_color(CONTINUOUS_PURPLE), run_time=2.0) # u(x)
+        # Một hàm sóng mượt mà
+        func = axes.plot(lambda x: np.sin(2 * x) * np.exp(-0.1 * x**2), color=C_CONTINUOUS, stroke_width=4)
+        func_label = MathTex(r"f(x) \in \mathcal{A}", color=C_CONTINUOUS).next_to(func, UP, buff=0.5)
 
-        # 4.0s Draw Operator Connection
-        g_arrow = CurvedArrow(eq[1].get_bottom() + DOWN*0.2, eq[3].get_bottom() + DOWN*0.2, color=NO_GOLD, angle=TAU/3)
-        g_label = MathTex(r"G_\theta", color=NO_GOLD, font_size=36).next_to(g_arrow, DOWN, buff=0.1)
-        
-        self.play(Create(g_arrow), Write(g_label), run_time=4.0)
+        self.play(Write(continuous_title), Create(axes), run_time=1.5)
+        self.play(Create(func), Write(func_label), run_time=2.0)
 
-        # 16.0s Wait
-        self.wait(16.0)
+        # Sampling ở độ phân giải thấp (Low Res)
+        x_vals_low = np.linspace(-3, 3, 9)
+        dots_low = VGroup(*[
+            Dot(axes.c2p(x, np.sin(2 * x) * np.exp(-0.1 * x**2)), color=C_ACCENT, radius=0.08) 
+            for x in x_vals_low
+        ])
+        
+        # Cột lấy mẫu (Stems)
+        stems_low = VGroup(*[
+            DashedLine(axes.c2p(x, 0), axes.c2p(x, np.sin(2 * x) * np.exp(-0.1 * x**2)), color=C_ACCENT, stroke_opacity=0.5)
+            for x in x_vals_low
+        ])
+
+        self.play(Create(stems_low), Create(dots_low), run_time=1.5)
+        self.wait(1.0)
+
+        # Sampling ở độ phân giải cao (High Res)
+        x_vals_high = np.linspace(-3, 3, 45)
+        dots_high = VGroup(*[
+            Dot(axes.c2p(x, np.sin(2 * x) * np.exp(-0.1 * x**2)), color=C_PRIMARY, radius=0.04) 
+            for x in x_vals_high
+        ])
+        
+        self.play(
+            Transform(dots_low, dots_high),
+            FadeOut(stems_low),
+            run_time=2.0
+        )
+        
+        # Kết luận
+        conclusion = Text("Bất biến với độ phân giải (Resolution-Invariant)", font_size=28, color=C_SECONDARY).next_to(axes, DOWN, buff=0.5)
+        
+        # Highlight đường cong gốc không thay đổi dù điểm lấy mẫu dày đặc
+        self.play(Write(conclusion), func.animate.set_stroke(width=8, color=C_SECONDARY), run_time=1.5)
+        self.wait(3.0)
+        
+
+import numpy as np
+from manim import *
+
+# ==========================================
+# COLOR PALETTE (ICML Guidelines)
+# ==========================================
+C_PRIMARY = "#58C4DD"     # TEAL/BLUE (Lạnh)
+C_SECONDARY = "#83C167"   # GREEN
+C_ACCENT = "#FFFF00"      # YELLOW
+C_WARNING = "#FF6666"     # RED (Nóng)
+C_BACKGROUND = "#1C1C1C"  # DARK GREY
+
+C_DISCRETE = "#FC6255"    # RED_C
+C_CONTINUOUS = "#9A72AC"  # PURPLE_C
+
+class Scene2_2_ImageIsNotFunction(Scene): # Kế thừa Scene cơ bản, không dùng MovingCameraScene nữa
+    def construct(self):
+        self.camera.background_color = C_BACKGROUND
+        
+        # ============================================================
+        # BEAT 1 [5:00 - 5:25] (25.0s): Heatmap & Bản chất lấy mẫu
+        # ============================================================
+        
+        grid_size = 30
+        square_size = 0.15
+        heatmap = VGroup()
+        
+        for i in range(grid_size):
+            for j in range(grid_size):
+                x = (i - grid_size/2) * 0.2
+                y = (j - grid_size/2) * 0.2
+                val = (np.sin(x) + np.cos(y) + 2) / 4.0 
+                val = max(0, min(1, val))
+                
+                # Bọc ManimColor() để tránh lỗi nội suy
+                color = interpolate_color(ManimColor(C_PRIMARY), ManimColor(C_WARNING), val)
+                sq = Square(side_length=square_size).set_fill(color, opacity=1).set_stroke(width=0)
+                sq.move_to(RIGHT * x * 0.75 + UP * y * 0.75)
+                heatmap.add(sq)
+                
+        heatmap.center()
+        
+        # Text "ẢNH" xuất hiện bình thường (sẽ tự đứng yên vì Camera không di chuyển)
+        title_text = Text("ẢNH", font_size=48, color=WHITE).to_corner(UL)
+        
+        self.play(FadeIn(heatmap), Write(title_text), run_time=2.0)
+        self.wait(3.0)
+        
+        # 2. ZOOM VÀO: Bằng cách phóng to và di chuyển chính heatmap thay vì camera
+        target_square = heatmap[grid_size * 5 + 5] 
+        target_point = target_square.get_center()
+        zoom_factor = 6.0
+        
+        self.play(
+            heatmap.animate.scale(zoom_factor, about_point=target_point).shift(ORIGIN - target_point),
+            run_time=3.0
+        )
+
+        # 3. Lộ rõ các ô màu/pixel rời rạc (Hiện viền trắng)
+        # Phóng to heatmap lên 6 lần nên viền cũng cần điều chỉnh độ dày tương ứng
+        self.play(
+            heatmap.animate.set_stroke(color=WHITE, width=2.0),
+            run_time=1.5
+        )
+        self.wait(2.0)
+        
+        # 4. Gạch chéo chữ "ẢNH", hiện chữ "HÀM SỐ LẤY MẪU"
+        cross_line = Line(title_text.get_left(), title_text.get_right(), color=C_WARNING, stroke_width=4)
+        
+        self.play(Create(cross_line), run_time=0.5)
+        self.wait(1.0)
+        
+        sampled_text = Text("HÀM SỐ LẤY MẪU", font_size=40, color=C_ACCENT).next_to(title_text, RIGHT, buff=0.5)
+        
+        self.play(Write(sampled_text), run_time=1.5)
+        
+        self.wait(10.4)
+
+        # ============================================================
+        # BEAT 2 [5:25 - 5:40] (15.0s): Cảnh báo giới hạn lưới
+        # ============================================================
+        
+        # 1. ZOOM OUT: Thu nhỏ heatmap về lại ban đầu
+        self.play(
+            heatmap.animate.scale(1/zoom_factor, about_point=ORIGIN).move_to(ORIGIN),
+            run_time=2.0
+        )
+        
+        # 2. Heatmap bị ép vào lưới (Đóng khung rào chắn)
+        barrier_box = SurroundingRectangle(heatmap, color=C_WARNING, stroke_width=6, buff=0)
+        grid_label = Text("Lưới 64x64", font_size=24, color=C_WARNING).next_to(barrier_box, UP)
+        
+        self.play(
+            Create(barrier_box), FadeIn(grid_label),
+            heatmap.animate.set_opacity(0.4), 
+            run_time=1.5
+        )
+        
+        # 3. CNN và Dấu chặn
+        cnn_box = Rectangle(width=2.5, height=1.5, color=C_SECONDARY).set_fill(C_SECONDARY, 0.2)
+        cnn_text = Text("Standard\nCNN", font_size=24, color=WHITE).move_to(cnn_box)
+        cnn_group = VGroup(cnn_box, cnn_text).next_to(barrier_box, RIGHT, buff=1.5)
+        
+        arrow = Arrow(barrier_box.get_right(), cnn_box.get_left(), color=WHITE, buff=0.1)
+        red_block = Cross(arrow, stroke_color=C_WARNING, stroke_width=8, scale_factor=0.6)
+        
+        self.play(Create(cnn_group), Create(arrow), run_time=1.5)
+        self.play(Create(red_block), run_time=0.5)
+        
+        # 4. Text Overlay: Ném đi bản chất liên tục -> Bị ràng buộc lưới
+        warning_group = VGroup(
+            Text("Ném đi bản chất liên tục", font_size=28, color=WHITE),
+            Text("↓", font_size=32, color=WHITE),
+            Text("BỊ RÀNG BUỘC LƯỚI", font_size=32, color=C_WARNING)
+        ).arrange(DOWN, buff=0.2).to_corner(DL)
+        
+        self.play(FadeIn(warning_group, shift=UP), run_time=1.5)
+        
+        # tạo hiệu ứng rung lắc 
+        self.play(Wiggle(warning_group), run_time=1.0)
+        
+        self.wait(7.0)
+
+
+class Scene2_3_DLvsOperator(Scene):
+    def construct(self):
+        self.camera.background_color = C_BACKGROUND
+        
+        # ============================================================
+        # BEAT 1 [5:40 - 6:10] (30.0s): Màn hình chia đôi
+        # ============================================================
+        
+        # Đường chia đôi màn hình
+        split_line = DashedLine(UP * 4, DOWN * 4, color=GREY, dash_length=0.1)
+        self.play(Create(split_line), run_time=1.0)
+        
+        # --- NỬA TRÁI: DEEP LEARNING TRUYỀN THỐNG ---
+        left_title = Text("Deep Learning Cổ Điển", font_size=28, color=C_DISCRETE).move_to(LEFT * 3.5 + UP * 3)
+        left_formula = MathTex(r"f_\theta : \mathbb{R}^n \rightarrow \mathbb{R}^m", font_size=36).next_to(left_title, DOWN, buff=0.5)
+        
+        # Trực quan hóa vector rời rạc
+        vec_in = Matrix([["x_1"], ["x_2"], [r"\vdots"], ["x_n"]], element_alignment_corner=UP).scale(0.7)
+        vec_in.get_brackets().set_color(WHITE)
+        vec_out = Matrix([["y_1"], ["y_2"], [r"\vdots"], ["y_m"]], element_alignment_corner=UP).scale(0.7)
+        vec_out.get_brackets().set_color(WHITE)
+        
+        vec_group = VGroup(vec_in, Arrow(LEFT, RIGHT, color=WHITE, buff=0.2), vec_out).arrange(RIGHT, buff=0.5)
+        vec_group.next_to(left_formula, DOWN, buff=1.0)
+        
+        self.play(Write(left_title), run_time=1.0)
+        self.play(Write(left_formula), run_time=1.5)
+        self.play(FadeIn(vec_group, shift=UP), run_time=2.0)
+        
+        # --- NỬA PHẢI: OPERATOR LEARNING ---
+        right_title = Text("Operator Learning", font_size=28, color=C_CONTINUOUS).move_to(RIGHT * 3.5 + UP * 3)
+        right_formula = MathTex(r"\mathcal{G}_\theta : \mathcal{A} \rightarrow \mathcal{U}", font_size=36).next_to(right_title, DOWN, buff=0.5)
+        
+        # Trực quan hóa hàm số liên tục
+        ax_in = Axes(x_range=[0, 3], y_range=[-1, 1], x_length=2, y_length=1.5).set_opacity(0.5)
+        curve_in = ax_in.plot(lambda x: np.sin(2*x)*np.exp(-0.2*x), color=C_PRIMARY)
+        graph_in = VGroup(ax_in, curve_in)
+        
+        ax_out = Axes(x_range=[0, 3], y_range=[-1, 1], x_length=2, y_length=1.5).set_opacity(0.5)
+        curve_out = ax_out.plot(lambda x: 0.5*np.cos(3*x) + 0.2*x, color=C_CONTINUOUS)
+        graph_out = VGroup(ax_out, curve_out)
+        
+        func_group = VGroup(graph_in, Arrow(LEFT, RIGHT, color=WHITE, buff=0.2), graph_out).arrange(RIGHT, buff=0.3)
+        func_group.next_to(right_formula, DOWN, buff=1.0)
+        
+        self.play(Write(right_title), run_time=1.0)
+        self.play(Write(right_formula), run_time=1.5)
+        self.play(Create(func_group), run_time=2.0)
+        
+        # Đợi đồng bộ hóa (30s - 10s = 20s)
+        self.wait(20.0)
+        
+        # ============================================================
+        # BEAT 2 [6:10 - 6:40] (30.0s): Darcy Flow Equation
+        # ============================================================
+        
+        # Xóa màn hình chia đôi
+        self.play(
+            FadeOut(split_line), 
+            FadeOut(left_title), FadeOut(left_formula), FadeOut(vec_group),
+            FadeOut(right_title), FadeOut(right_formula), FadeOut(func_group),
+            run_time=1.5
+        )
+        
+        # Xuất hiện phương trình Darcy Flow
+        # -nabla \cdot (a(x) \nabla u(x)) = f(x)
+        darcy_eq = MathTex(
+            r"-\nabla \cdot (", 
+            r"a(x)", 
+            r"\nabla ", 
+            r"u(x)", 
+            r") = f(x)", 
+            font_size=56
+        )
+        
+        self.play(Write(darcy_eq), run_time=2.5)
+        self.wait(1.0)
+        
+        # Highlight a(x) và u(x)
+        self.play(darcy_eq[1].animate.set_color(C_PRIMARY), run_time=1.0)   # a(x) -> Teal
+        self.play(darcy_eq[3].animate.set_color(C_CONTINUOUS), run_time=1.0) # u(x) -> Purple
+        self.wait(1.0)
+        
+        # Tách hai hàm ra để thể hiện ánh xạ
+        func_a = MathTex(r"a(x) \in \mathcal{A}", font_size=40, color=C_PRIMARY).move_to(LEFT * 3 + DOWN * 1.5)
+        func_u = MathTex(r"u(x) \in \mathcal{U}", font_size=40, color=C_CONTINUOUS).move_to(RIGHT * 3 + DOWN * 1.5)
+        
+        # Mũi tên ánh xạ G
+        op_arrow = CurvedArrow(func_a.get_top() + UP*0.2, func_u.get_top() + UP*0.2, angle=-PI/3, color=WHITE)
+        op_label = MathTex(r"\mathcal{G}_\theta", font_size=36, color=C_ACCENT).next_to(op_arrow, UP, buff=0.1)
+        
+        self.play(
+            darcy_eq.animate.shift(UP * 2),
+            FadeIn(func_a, shift=UP),
+            FadeIn(func_u, shift=UP),
+            run_time=2.0
+        )
+        self.play(Create(op_arrow), Write(op_label), run_time=1.5)
+        
+        # Box nhấn mạnh kết luận G(a) \approx u
+        conclusion = MathTex(r"\mathcal{G}_\theta(a) \approx u", font_size=48, color=C_ACCENT)
+        box = SurroundingRectangle(conclusion, color=C_SECONDARY, buff=0.3)
+        conc_group = VGroup(conclusion, box).move_to(DOWN * 2.5)
+        
+        self.play(Write(conclusion), Create(box), run_time=2.0)
+        
+        # Đợi cho hết thời gian (30 - 13.5 = 16.5s)
+        self.wait(16.5)
+        
+        # Dọn dẹp cảnh chuẩn bị cho Section mới
+        self.play(
+            FadeOut(darcy_eq), FadeOut(func_a), FadeOut(func_u), 
+            FadeOut(op_arrow), FadeOut(op_label), FadeOut(conc_group),
+            run_time=1.5
+        )
+
 
 
 class Scene2_4_ChallengesAndDefinition(Scene):
     def construct(self):
-        # ---------------------------------------------------------
-        # Beat 1: Hai thách thức toán học (20.0s) | [6:40–7:00]
-        # ---------------------------------------------------------
-        # Speaker: "Việc học trong không gian hàm đòi hỏi giải quyết hai thách thức. 
-        # Discretization Invariance: dữ liệu đo trên lưới khác nhau, model phải hoạt động trên mọi loại lưới không cần retrain. 
-        # Continuous Query: đầu ra phải là hàm thực thụ, truy vấn được tại bất kỳ điểm nào để lấy đạo hàm kiểm tra vật lý, hoặc tính tích phân đo năng lượng."
-
-        title = Text("Hai thách thức cốt lõi", font_size=40, color=TEXT_MAIN).to_edge(UP)
-        self.add(title)
-
-        # Left side: Discretization Invariance
-        inv_text = Text("1. Discretization Invariance", font_size=28, color=MATH_YELLOW).shift(LEFT*3 + UP*1.5)
+        self.camera.background_color = C_BACKGROUND
         
-        grid_coarse = NumberPlane(x_range=[-2, 2, 1], y_range=[-2, 2, 1], x_length=3, y_length=3, background_line_style={"stroke_color": DISCRETE_GRID})
-        grid_coarse.shift(LEFT*3 + DOWN*1)
+        # ============================================================
+        # BEAT 1 [6:40 - 7:00] (20.0s): Hai thách thức
+        # ============================================================
         
-        grid_fine = NumberPlane(x_range=[-2, 2, 0.25], y_range=[-2, 2, 0.25], x_length=3, y_length=3, background_line_style={"stroke_color": FUNC_TEAL})
-        grid_fine.shift(LEFT*3 + DOWN*1)
-
-        # 4.0s Setup Grid morphing
-        self.play(Write(inv_text), Create(grid_coarse), run_time=2.0)
-        self.play(Transform(grid_coarse, grid_fine), run_time=2.0)
-
-        # Right side: Continuous Query
-        query_text = Text("2. Continuous Query", font_size=28, color=MATH_YELLOW).shift(RIGHT*3 + UP*1.5)
-        
-        ax = Axes(x_range=[0, 4], y_range=[0, 3], x_length=4, y_length=3).shift(RIGHT*3 + DOWN*1)
-        curve = ax.plot(lambda x: 1.5 + np.sin(x*1.5), color=CONTINUOUS_PURPLE)
-        
-        query_dot = Dot(color=TEXT_HIGHLIGHT)
-        query_label = MathTex(r"u(x_i)", font_size=24, color=TEXT_HIGHLIGHT)
-        query_group = VGroup(query_dot, query_label)
-        
-        # 5.0s Query path animation
-        self.play(Write(query_text), Create(ax), Create(curve), run_time=2.0)
-        
-        # Use ValueTracker to slide dot smoothly
-        t_val = ValueTracker(0)
-        query_dot.add_updater(lambda m: m.move_to(ax.c2p(t_val.get_value(), 1.5 + np.sin(t_val.get_value()*1.5))))
-        query_label.add_updater(lambda m: m.next_to(query_dot, UP+RIGHT, buff=0.1))
-        
-        self.add(query_dot, query_label)
-        self.play(t_val.animate.set_value(4), run_time=3.0, rate_func=smooth)
-        query_dot.clear_updaters()
-        query_label.clear_updaters()
-
-        # 11.0s Wait
-        self.wait(11.0)
-
-        # ---------------------------------------------------------
-        # Beat 2: Bộ 4 tiêu chí tối thượng (30.0s) | [7:00–7:30]
-        # ---------------------------------------------------------
-        # Speaker: "Tóm lại, Neural Operator là framework thỏa mãn bốn tiêu chí: 
-        # Nhận đầu vào là hàm số tại bất kỳ độ phân giải nào. Xuất đầu ra truy vấn được tại mọi điểm. 
-        # Tính hội tụ: khi lưới càng mịn, mô hình hội tụ về giới hạn liên tục duy nhất. 
-        # Và tốc độ: phải nhanh hơn hàng nghìn lần so với solver truyền thống. Phần tiếp theo: cấu trúc bên trong."
-
-        # 2.0s Clear screen
-        self.play(
-            FadeOut(title), FadeOut(inv_text), FadeOut(grid_coarse), 
-            FadeOut(query_text), FadeOut(ax), FadeOut(curve), FadeOut(query_group),
-            run_time=2.0
+        # 1. Thách thức 1: Discretization Invariance
+        # Tạo lưới vuông cơ bản
+        grid_square = NumberPlane(
+            x_range=[-6, 6, 1], y_range=[-4, 4, 1],
+            background_line_style={"stroke_color": C_MATRIX, "stroke_width": 2, "stroke_opacity": 0.5}
         )
+        
+        # Tạo lưới bất quy tắc (bằng cách warp lưới vuông)
+        grid_irregular = NumberPlane(
+            x_range=[-6, 6, 1], y_range=[-4, 4, 1],
+            background_line_style={"stroke_color": C_WARNING, "stroke_width": 2, "stroke_opacity": 0.5}
+        ).apply_function(lambda p: p + np.array([0.3 * np.sin(p[1]), 0.3 * np.cos(p[0]), 0]))
+        
+        # Tạo lưới mịn
+        grid_smooth = NumberPlane(
+            x_range=[-6, 6, 0.25], y_range=[-4, 4, 0.25],
+            background_line_style={"stroke_color": C_PRIMARY, "stroke_width": 1, "stroke_opacity": 0.5}
+        )
+        
+        self.play(Create(grid_square), run_time=1.5)
+        self.play(Transform(grid_square, grid_irregular), run_time=1.5)
+        self.play(Transform(grid_square, grid_smooth), run_time=1.5)
+        
+        question_mark = Text("?", font_size=96, color=C_ACCENT).move_to(ORIGIN)
+        text_inv = Text("Discretization Invariance", font_size=40, color=C_ACCENT)
+        box_inv = SurroundingRectangle(text_inv, color=C_ACCENT, buff=0.3).set_fill(C_BACKGROUND, 0.8)
+        group_inv = VGroup(box_inv, text_inv)
+        
+        self.play(FadeIn(question_mark, scale=0.5), run_time=0.5)
+        self.play(Flash(question_mark, color=C_ACCENT, line_length=0.5), run_time=0.5)
+        self.play(Transform(question_mark, group_inv), run_time=1.0)
+        self.wait(1.5)
+        
+        # 2. Thách thức 2: Continuous Query
+        self.play(FadeOut(grid_square), FadeOut(question_mark), run_time=1.0)
+        
+        curve = ParametricFunction(
+            lambda t: np.array([t, 1.5 * np.sin(t) * np.exp(-0.1 * t**2), 0]),
+            t_range=[-5, 5], color=C_CONTINUOUS, stroke_width=6
+        )
+        query_dot = Dot(color=C_VECTOR, radius=0.15)
+        query_dot.move_to(curve.get_start())
+        
+        text_query = Text("Continuous Query", font_size=36, color=C_VECTOR).next_to(query_dot, UP)
+        text_query.add_updater(lambda m: m.next_to(query_dot, UP, buff=0.2))
+        
+        self.play(Create(curve), run_time=1.5)
+        self.play(FadeIn(query_dot), FadeIn(text_query), run_time=0.5)
+        
+        # Chấm di chuyển dọc theo đường cong
+        self.play(MoveAlongPath(query_dot, curve), run_time=4.0, rate_func=linear)
+        text_query.clear_updaters()
+        
+        # Buffer cho hết 20s Beat 1 (20 - 15.0 = 5.0s)
+        self.wait(5.0)
+        
+        # ============================================================
+        # BEAT 2 [7:00 - 7:30] (30.0s): Định nghĩa Checklist
+        # ============================================================
+        self.play(FadeOut(curve), FadeOut(query_dot), FadeOut(text_query), run_time=1.0)
+        
+        title = Text("NEURAL OPERATOR", font_size=48, color=C_PRIMARY, weight=BOLD).to_edge(UP, buff=0.5)
+        self.play(Write(title), run_time=1.0)
+        
+        # Checklist items
+        items = [
+            "1. Nhận đầu vào ở mọi độ phân giải",
+            "2. Truy vấn đầu ra tại bất kỳ điểm nào",
+            "3. Hội tụ về giới hạn liên tục duy nhất",
+            "4. Tốc độ: Nhanh hơn solver 1000x"
+        ]
+        
+        checklist_group = VGroup()
+        
+        # Hàm tạo icon checkmark
+        def get_checkmark():
+            return VGroup(
+                Line(LEFT*0.2 + UP*0.1, DOWN*0.15, color=C_SECONDARY, stroke_width=4),
+                Line(DOWN*0.15, RIGHT*0.25 + UP*0.25, color=C_SECONDARY, stroke_width=4)
+            )
 
-        final_title = Text("4 Tiêu Chí Của Neural Operator", font_size=40, color=NO_GOLD, weight=BOLD).to_edge(UP)
-        self.play(Write(final_title), run_time=1.0)
-
-        # Checklist creation
-        checklist = VGroup(
-            Text("1. Input tại mọi độ phân giải (Resolution Invariant)", font_size=28, color=TEXT_MAIN),
-            Text("2. Output truy vấn tại mọi điểm (Continuous)", font_size=28, color=TEXT_MAIN),
-            Text("3. Hội tụ về giới hạn liên tục duy nhất", font_size=28, color=TEXT_MAIN),
-            Text("4. Nhanh hơn solver truyền thống hàng nghìn lần", font_size=28, color=TEXT_HIGHLIGHT)
-        ).arrange(DOWN, aligned_edge=LEFT, buff=0.5).shift(DOWN*0.5)
-
-        # Pre-create checkmarks to the left of each item
-        checkmarks = VGroup()
-        for item in checklist:
-            tick = MathTex(r"\checkmark", color=MATH_GREEN).next_to(item, LEFT, buff=0.3)
-            checkmarks.add(tick)
-
-        # 16.0s Draw checklist sequentially (4 items * (2s reveal + 2s wait))
-        for item, tick in zip(checklist, checkmarks):
-            self.play(FadeIn(item, shift=UP*0.3), Write(tick), run_time=2.0)
-            self.wait(2.0)
-
-        # 11.0s Final Wait to pad out the remaining time exactly
-        self.wait(11.0)
+        for i, text in enumerate(items):
+            check = get_checkmark()
+            item_text = Text(text, font_size=32, color=WHITE).next_to(check, RIGHT, buff=0.3)
+            row = VGroup(check, item_text)
+            checklist_group.add(row)
+            
+        checklist_group.arrange(DOWN, aligned_edge=LEFT, buff=0.6).next_to(title, DOWN, buff=1.0)
+        
+        # Animation hiện từng mục checklist
+        for row in checklist_group:
+            self.play(Create(row[0]), FadeIn(row[1], shift=RIGHT), run_time=0.8)
+            self.wait(0.2)
+        
+        # Buffer hold cho đến hết section (30s - 2s(title) - 4s(items) = 24s)
+        self.wait(24.0)
