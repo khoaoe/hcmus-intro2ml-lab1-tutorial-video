@@ -29,6 +29,7 @@ from src.common.theme import (
     NVIDIA_GREEN,
 )
 from src.common.timing import TimedScene
+from src.common.layout import make_background_network
 
 
 apply_global_config()
@@ -44,33 +45,6 @@ class Scene0002Roadmap(TimedScene):
     def setup(self):
         super().setup()
         self.camera.background_color = BG
-
-    def make_background_network(self):
-        rng = np.random.default_rng(11)
-        points = [
-            np.array([rng.uniform(-14.0, 14.0), rng.uniform(-4.3, 4.3), 0])
-            for _ in range(68)
-        ]
-        dots = VGroup(
-            *[
-                Dot(p, radius=rng.uniform(0.01, 0.025), color=MUTED, fill_opacity=0.24)
-                for p in points
-            ]
-        )
-        lines = VGroup()
-        for i, p in enumerate(points):
-            neighbors = sorted(
-                [
-                    (np.linalg.norm(p - q), q)
-                    for j, q in enumerate(points)
-                    if i != j
-                ],
-                key=lambda item: item[0],
-            )
-            for dist, q in neighbors[:2]:
-                if dist < 2.4:
-                    lines.add(Line(p, q, color=GRID, stroke_width=0.55, stroke_opacity=0.22))
-        return VGroup(lines, dots)
 
     def make_pixel_vector_icon(self):
         pixels = VGroup()
@@ -265,7 +239,7 @@ class Scene0002Roadmap(TimedScene):
     def construct(self):
         self.camera.frame.move_to(LEFT * 6.0)
 
-        background = self.make_background_network()
+        background = make_background_network(seed=11)
         self.add(background)
 
         title = Text("Roadmap", font_size=58, color=TEXT, weight=BOLD)

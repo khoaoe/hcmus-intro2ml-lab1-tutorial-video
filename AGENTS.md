@@ -390,11 +390,19 @@ This is a recommendation, not a mandate. Follow actual repo conventions after in
 ## 11. Shared Manim style and theme
 
 Do not duplicate global Manim config or palette constants inside every scene.
+Do not create scene-local versions of recurring visual motifs such as
+background networks, cards, chips, arrows, vector columns, or operator boxes
+when a shared helper exists or should exist. Put reusable consistency-critical
+components in `neural_operators_manim/src/common/` and import them from scenes.
+In particular, production scenes should use one canonical dark background color
+and one canonical subtle background motif unless the script explicitly calls for
+a different visual world.
 
 Create or reuse:
 
 ```text
 src/common/theme.py
+src/common/layout.py
 ```
 
 Canonical baseline:

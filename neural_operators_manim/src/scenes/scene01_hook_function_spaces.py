@@ -7,7 +7,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from common.theme import (
+from src.common.layout import labeled_card, make_background_network
+from src.common.theme import (
     apply_global_config,
     BG,
     CARD_BG,
@@ -72,23 +73,6 @@ class Scene01HookFunctionSpaces(TimedScene):
     # -----------------------------------------------------------------
     # Reusable mini visual components
     # -----------------------------------------------------------------
-
-    def make_card(self, content, label, width=3.2, height=2.0, accent=INPUT):
-        """Create a reusable rounded card with content and label."""
-        box = RoundedRectangle(
-            width=width,
-            height=height,
-            corner_radius=0.18,
-            stroke_width=1.3,
-            stroke_color=accent,
-            fill_color=CARD_BG,
-            fill_opacity=0.45,
-        )
-        label_mob = Text(label, font_size=24, color=TEXT)
-        label_mob.next_to(box, DOWN, buff=0.16)
-
-        content.move_to(box.get_center())
-        return VGroup(box, content, label_mob)
 
     def make_pixel_patch(self, rows=7, cols=7, cell=0.13):
         """A small image-like finite-dimensional grid."""
@@ -223,48 +207,20 @@ class Scene01HookFunctionSpaces(TimedScene):
         label.move_to(box)
         return VGroup(box, label)
 
-    def make_background_network(self, n=42):
-        """Subtle 3Blue1Brown-ish node mesh background."""
-        rng = np.random.default_rng(7)
-        points = [
-            np.array([
-                rng.uniform(-7.7, 7.7),
-                rng.uniform(-4.1, 4.1),
-                0,
-            ])
-            for _ in range(n)
-        ]
-
-        dots = VGroup(*[
-            Dot(p, radius=rng.uniform(0.012, 0.025), color=MUTED, fill_opacity=0.32)
-            for p in points
-        ])
-
-        lines = VGroup()
-        for i, p in enumerate(points):
-            # connect to a few nearby points
-            dists = sorted(
-                [(np.linalg.norm(p - q), j, q) for j, q in enumerate(points) if j != i],
-                key=lambda item: item[0],
-            )
-            for dist, _, q in dists[:2]:
-                if dist < 2.2:
-                    lines.add(Line(
-                        p,
-                        q,
-                        color=GRID,
-                        stroke_width=0.6,
-                        stroke_opacity=0.25,
-                    ))
-
-        return VGroup(lines, dots)
-
     # -----------------------------------------------------------------
     # Main scene
     # -----------------------------------------------------------------
 
     def construct(self):
-        bg_network = self.make_background_network()
+        bg_network = make_background_network(
+            seed=11,
+            n=42,
+            x_range=(-7.7, 7.7),
+            y_range=(-4.1, 4.1),
+            max_distance=2.2,
+            dot_opacity=0.32,
+            line_opacity=0.25,
+        )
         self.add(bg_network)
 
         # -------------------------------------------------------------
@@ -325,21 +281,21 @@ class Scene01HookFunctionSpaces(TimedScene):
         left_header = VGroup(left_title, left_subtitle).arrange(DOWN, buff=0.08)
         left_header.move_to(LEFT * 4.25 + UP * 3.12)
 
-        image_card = self.make_card(
+        image_card = labeled_card(
             self.make_pixel_patch(),
             "image / pixels",
             width=2.15,
             height=1.55,
             accent=INPUT,
         )
-        text_card = self.make_card(
+        text_card = labeled_card(
             self.make_token_stack(),
             "text / tokens",
             width=2.15,
             height=1.55,
             accent=PURPLE,
         )
-        vector_card = self.make_card(
+        vector_card = labeled_card(
             self.make_vector(),
             "vector",
             width=2.15,
@@ -443,14 +399,14 @@ class Scene01HookFunctionSpaces(TimedScene):
         right_header = VGroup(right_title, right_subtitle).arrange(DOWN, buff=0.08)
         right_header.move_to(RIGHT * 4.25 + UP * 3.12)
 
-        curve_card = self.make_card(
+        curve_card = labeled_card(
             self.make_function_curve(),
             "signal / field",
             width=3.45,
             height=1.95,
             accent=INPUT,
         )
-        heat_card = self.make_card(
+        heat_card = labeled_card(
             self.make_heat_field(),
             "state over space-time",
             width=3.45,
