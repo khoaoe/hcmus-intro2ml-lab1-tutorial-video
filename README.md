@@ -36,6 +36,7 @@ conda activate manim_env
 
 # 3. Install required Python packages
 pip install manim numpy scipy jupyterlab
+pip install -U manim
 ```
 
 ## 🎬 How to Render the Videos

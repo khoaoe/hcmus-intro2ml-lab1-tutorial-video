@@ -44,11 +44,13 @@ class TimedScene(Scene):
         self.wait(duration)
         self.t += duration
 
-    def pad_to(self, target_time):
+    def pad_to(self, target_time, render_tail=0.0):
         remaining = target_time - self.t
         if remaining > 0:
             self.wait(remaining)
             self.t = target_time
+        if render_tail > 0:
+            self.wait(render_tail)
 
 
 class Scene01HookFunctionSpaces(TimedScene):
@@ -640,4 +642,4 @@ class Scene01HookFunctionSpaces(TimedScene):
         )
         self.play_timed(Create(underline), run_time=0.7)
         self.wait_timed(2.2)
-        self.pad_to(45.0)
+        self.pad_to(45.0, render_tail=0.175)
