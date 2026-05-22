@@ -1,0 +1,30 @@
+Reference: https://www.nature.com/articles/s4225...
+
+
+You may find the relevant papers: 
+Neural Operator: Graph Kernel Network for Partial Differential Equations
+https://arxiv.org/pdf/2003.03485.pdf
+
+Multipole Graph Neural Operator for Parametric Partial Differential Equations
+https://arxiv.org/abs/2006.09535
+
+Fourier Neural Operator for Parametric Partial Differential Equations
+https://arxiv.org/abs/2010.08895
+
+Markov Neural Operators for Learning Chaotic Systems
+https://arxiv.org/abs/2106.06898
+
+Neural Operator: Learning Maps Between Function Spaces
+https://arxiv.org/pdf/2108.08481.pdf
+
+Physics-Informed Neural Operator for Learning Partial Differential Equations
+https://arxiv.org/pdf/2111.03794.pdf
+
+U-NO: U-shaped Neural Operators
+https://arxiv.org/pdf/2204.11127.pdf
+
+Pretraining Codomain Attention Neural Operators for Solving Multiphysics PDEs
+https://arxiv.org/pdf/2403.12553
+
+Geometry-Informed Neural Operator for Large-Scale 3D PDEs
+https://arxiv.org/pdf/2309.00583
