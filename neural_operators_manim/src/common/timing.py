@@ -1,7 +1,7 @@
-from manim import MovingCameraScene
+from manim import MovingCameraScene, ThreeDScene
 
 
-class TimedScene(MovingCameraScene):
+class TimedSceneMixin:
     """Scene with script-time aligned animation helpers."""
 
     def setup(self):
@@ -37,6 +37,14 @@ class TimedScene(MovingCameraScene):
         self.t = target_time
 
 
+class TimedScene(TimedSceneMixin, MovingCameraScene):
+    """2D scene with script-time aligned animation helpers."""
+
+
+class TimedThreeDScene(TimedSceneMixin, ThreeDScene):
+    """3D scene with script-time aligned animation helpers."""
+
+
 def global_to_local(global_time: float, scene_start: float) -> float:
     return global_time - scene_start
 
@@ -50,4 +58,3 @@ def parse_timecode(timecode: str) -> float:
         hours, minutes, seconds = parts
         return float(hours) * 3600 + float(minutes) * 60 + float(seconds)
     return float(timecode)
-
