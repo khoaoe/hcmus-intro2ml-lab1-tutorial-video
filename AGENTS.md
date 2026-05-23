@@ -240,7 +240,33 @@ self.play_timed("finite_world_intro", 0.0, 8.0, ...)
 
 ---
 
-## 8. Timing helper requirements
+## 8. Visual quality contract
+
+Every rendered scene must be checked visually before reporting completion.
+
+A scene is wrong if:
+
+- text overlaps other text, icons, frames, paths, or formulas,
+- text overflows its intended card, chip, frame, or screen boundary,
+- connection lines/arrows run through labels or primary objects in a confusing way,
+- old objects remain visible under new objects after a transition,
+- new objects start appearing before outgoing objects are visually clear when that causes overlap,
+- layout reads as misaligned, cramped, clipped, or unintentionally stacked,
+- animation timing technically matches but visual state looks wrong at any beat.
+
+Implementation requirements:
+
+- Keep readable margins at 16:9; do not place long text near frame edges unless it is fitted.
+- Fit or wrap long labels inside cards/chips; never rely on default text width for long strings.
+- Prefer staging transitions: fade old groups fully before introducing dense new groups when both would occupy the same region.
+- Draw connectors behind objects, with low opacity, and route them around labels/icons. If a connector harms readability, remove it or replace it with a clearer motion cue.
+- When using `Transform`, include every visible object that must move or fade; otherwise explicitly `FadeOut` stale objects before the next beat.
+- After rendering, inspect the video across the full timeline, not only the final frame. Sample representative frames from all beats and check layout, overlap, overflow, alignment, spacing, text readability, animation transitions, and visual clarity.
+- Do not mark a scene complete until duration verification and visual inspection both pass.
+
+---
+
+## 9. Timing helper requirements
 
 If timing helpers do not exist, create them in a shared module such as:
 
@@ -295,7 +321,7 @@ Recommended additions:
 
 ---
 
-## 9. Render-duration verification
+## 10. Render-duration verification
 
 After rendering a scene, verify actual duration.
 
@@ -324,7 +350,7 @@ No fake “done.” Be explicit.
 
 ---
 
-## 10. Existing repo structure rule
+## 11. Existing repo structure rule
 
 The existing modules `s01` through `s08` are experimental. Do not treat them as the required production architecture.
 
@@ -387,7 +413,7 @@ This is a recommendation, not a mandate. Follow actual repo conventions after in
 
 ---
 
-## 11. Shared Manim style and theme
+## 12. Shared Manim style and theme
 
 Do not duplicate global Manim config or palette constants inside every scene.
 Do not create scene-local versions of recurring visual motifs such as
@@ -449,7 +475,7 @@ Use these names in code where reasonable.
 
 ---
 
-## 12. Visual style target
+## 13. Visual style target
 
 Aim for 3Blue1Brown-like clarity:
 
@@ -485,7 +511,7 @@ If forced to choose, pick correctness and timing.
 
 ---
 
-## 13. Manim implementation standards
+## 14. Manim implementation standards
 
 Generated code must be runnable from the repository root.
 
@@ -529,7 +555,7 @@ aaa
 
 ---
 
-## 14. Scene file template
+## 15. Scene file template
 
 Recommended structure:
 
@@ -568,7 +594,7 @@ class Scene0001FromPixelsToFields(TimedScene):
 
 ---
 
-## 15. Production workflow for any scene
+## 16. Production workflow for any scene
 
 When implementing a scene:
 
@@ -587,7 +613,7 @@ Do not skip steps 1, 7, 9.
 
 ---
 
-## 16. Render commands
+## 17. Render commands
 
 Prefer commands from repo root.
 
@@ -611,7 +637,7 @@ scene_id | class_name | file | expected_duration
 
 ---
 
-## 17. TTS and audio alignment
+## 18. TTS and audio alignment
 
 The script says each VO line is independently recordable.
 
@@ -639,7 +665,7 @@ assets/audio/
 
 ---
 
-## 18. Conceptual correctness guardrails
+## 19. Conceptual correctness guardrails
 
 ### 18.1 Traditional deep learning
 
@@ -789,7 +815,7 @@ Use this carefully:
 
 ---
 
-## 19. Architecture vocabulary
+## 20. Architecture vocabulary
 
 Use names accurately.
 
@@ -847,7 +873,7 @@ Do not invent architecture claims beyond the production script and sources.
 
 ---
 
-## 20. Scene-by-scene implementation map
+## 21. Scene-by-scene implementation map
 
 The script currently has these sections:
 
@@ -874,7 +900,7 @@ If old folders `s01` to `s08` exist, treat them as experiments only.
 
 ---
 
-## 21. Asset policy
+## 22. Asset policy
 
 Allowed:
 
@@ -899,7 +925,7 @@ If using original slide deck imagery, use it as reference, not as the final visu
 
 ---
 
-## 22. Git safety
+## 23. Git safety
 
 Before making changes:
 
@@ -922,7 +948,7 @@ Rules:
 
 ---
 
-## 23. Quality checklist before reporting done
+## 24. Quality checklist before reporting done
 
 For every scene:
 
@@ -947,7 +973,7 @@ A scene is not production-ready if duration is unverified.
 
 ---
 
-## 24. Response format for coding tasks
+## 25. Response format for coding tasks
 
 When reporting back to the user, use this structure:
 
@@ -987,7 +1013,7 @@ Do not hide uncertainty.
 
 ---
 
-## 25. Specific lesson from the Scene 1 issue
+## 26. Specific lesson from the Scene 1 issue
 
 A previous implementation rendered a scene around 31 seconds even though the script required a longer target.
 
@@ -1005,7 +1031,7 @@ This is a hard rule.
 
 ---
 
-## 26. Preferred implementation strategy
+## 27. Preferred implementation strategy
 
 Start with shared infrastructure before building many scenes:
 
@@ -1038,7 +1064,7 @@ Build reusable components for:
 
 ---
 
-## 27. Naming convention
+## 28. Naming convention
 
 Recommended file naming:
 
@@ -1060,7 +1086,7 @@ Use names that sort naturally and map to the script.
 
 ---
 
-## 28. Mathematical notation policy
+## 29. Mathematical notation policy
 
 Use readable MathTex.
 
@@ -1082,7 +1108,7 @@ When an equation is too dense:
 
 ---
 
-## 29. Handling source conflicts
+## 30. Handling source conflicts
 
 If the script, slide deck, transcript, or code context disagree:
 
@@ -1095,7 +1121,7 @@ Never silently “fix” the narrative flow.
 
 ---
 
-## 30. Final philosophy
+## 31. Final philosophy
 
 This project is about making a technically correct, synchronized, beautiful explanation of Neural Operators.
 
