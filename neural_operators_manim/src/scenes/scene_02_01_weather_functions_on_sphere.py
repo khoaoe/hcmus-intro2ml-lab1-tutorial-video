@@ -19,7 +19,6 @@ from src.common.layout import make_background_network, make_chip
 from src.common.theme import (
     apply_global_config,
     BG,
-    CARD_BG,
     GRID,
     TEXT,
     MUTED,
@@ -29,7 +28,6 @@ from src.common.theme import (
     WARNING,
     PURPLE,
     NVIDIA_GREEN,
-    PHYSICS,
     SCIENCE,
 )
 from src.common.timing import TimedThreeDScene
@@ -48,7 +46,15 @@ def sphere_point(radius, latitude, longitude):
     )
 
 
-def sphere_curve(radius, latitude_fn, longitude_fn, t_values, color, stroke_width=1.0, stroke_opacity=1.0):
+def sphere_curve(
+    radius,
+    latitude_fn,
+    longitude_fn,
+    t_values,
+    color,
+    stroke_width=1.0,
+    stroke_opacity=1.0,
+):
     curve = VMobject(color=color, stroke_width=stroke_width, stroke_opacity=stroke_opacity)
     points = [sphere_point(radius, latitude_fn(t), longitude_fn(t)) for t in t_values]
     curve.set_points_smoothly(points)
@@ -59,6 +65,7 @@ class WeatherSphere(VGroup):
     def __init__(self, radius=1.55, phase=0.0, with_field=True, with_arrows=True, **kwargs):
         surface_opacity = 0.48 if with_field else 0.08
         surface_colors = [INPUT, SCIENCE, NVIDIA_GREEN, OPERATOR] if with_field else [GRID, SCIENCE]
+
         surface = Surface(
             lambda u, v: np.array(
                 [
@@ -76,6 +83,7 @@ class WeatherSphere(VGroup):
             stroke_width=0.45,
             stroke_opacity=0.42,
         )
+
         rim = Circle(radius=radius, color=SCIENCE, stroke_width=1.4, stroke_opacity=0.45)
         rim.rotate(PI / 2, axis=RIGHT)
 
@@ -155,6 +163,7 @@ class PixelGrid(VGroup):
     def __init__(self, rows=8, cols=13, **kwargs):
         pixels = VGroup()
         palette = [INPUT, SCIENCE, NVIDIA_GREEN, OPERATOR, WARNING, PURPLE, OUTPUT]
+
         for row in range(rows):
             for col in range(cols):
                 intensity = 0.38 + 0.42 * (0.5 + 0.5 * np.sin(row * 0.9 + col * 0.55))
@@ -166,7 +175,9 @@ class PixelGrid(VGroup):
                     fill_opacity=intensity,
                 )
                 pixels.add(pixel)
+
         pixels.arrange_in_grid(rows=rows, cols=cols, buff=0.018)
+
         frame = RoundedRectangle(
             width=pixels.width + 0.18,
             height=pixels.height + 0.18,
@@ -176,6 +187,7 @@ class PixelGrid(VGroup):
             fill_color="#1A1020",
             fill_opacity=0.18,
         ).move_to(pixels)
+
         super().__init__(frame, pixels, **kwargs)
 
 
@@ -189,6 +201,7 @@ class ForecastOperator(VGroup):
             stroke_width=6,
             max_tip_length_to_length_ratio=0.16,
         )
+
         glow = Arrow(
             LEFT * 1.2,
             RIGHT * 1.2,
@@ -198,8 +211,14 @@ class ForecastOperator(VGroup):
             stroke_opacity=0.16,
             max_tip_length_to_length_ratio=0.16,
         )
-        label = MathTex(r"\mathcal{G}: a_t \mapsto a_{t+1}", color=OPERATOR, font_size=34)
+
+        label = MathTex(
+            r"\mathcal{G}: a_t \mapsto a_{t+\Delta t}",
+            color=OPERATOR,
+            font_size=34,
+        )
         label.next_to(arrow, UP, buff=0.14)
+
         super().__init__(glow, arrow, label, **kwargs)
 
 
@@ -215,7 +234,12 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
         self.camera.background_color = BG
 
     def make_weather_sphere(self, radius=1.55, phase=0.0, with_field=True, with_arrows=True):
-        return WeatherSphere(radius=radius, phase=phase, with_field=with_field, with_arrows=with_arrows)
+        return WeatherSphere(
+            radius=radius,
+            phase=phase,
+            with_field=with_field,
+            with_arrows=with_arrows,
+        )
 
     def make_variable_list(self):
         variables = [
@@ -226,9 +250,17 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
             ("precipitation", OUTPUT),
             ("vorticity", PURPLE),
         ]
+
         title = Text("variables at each point", font_size=21, color=MUTED)
-        chips = VGroup(*[make_chip(label, color=color, font_size=15, height=0.34) for label, color in variables])
+
+        chips = VGroup(
+            *[
+                make_chip(label, color=color, font_size=15, height=0.34)
+                for label, color in variables
+            ]
+        )
         chips.arrange(DOWN, aligned_edge=LEFT, buff=0.11)
+
         return VGroup(title, chips).arrange(DOWN, aligned_edge=LEFT, buff=0.18)
 
     def make_forecast_operator(self):
@@ -238,18 +270,27 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
         return PixelGrid()
 
     def make_physics_glyphs(self):
-        glyphs = VGroup(
-            MathTex(r"\nabla", color=INPUT, font_size=46),
-            MathTex(r"\operatorname{div}", color=SCIENCE, font_size=36),
-            MathTex(r"\int", color=OPERATOR, font_size=50),
-        ).arrange(RIGHT, buff=0.46)
-        labels = VGroup(
-            Text("gradient", font_size=20, color=INPUT),
-            Text("divergence", font_size=20, color=SCIENCE),
-            Text("energy", font_size=20, color=OPERATOR),
-            Text("flux", font_size=20, color=OUTPUT),
-        ).arrange(RIGHT, buff=0.28)
-        return VGroup(glyphs, labels).arrange(DOWN, buff=0.18)
+        items = VGroup(
+            VGroup(
+                MathTex(r"\nabla", color=INPUT, font_size=46),
+                Text("gradient", font_size=20, color=INPUT),
+            ).arrange(DOWN, buff=0.12),
+            VGroup(
+                MathTex(r"\nabla\cdot", color=SCIENCE, font_size=42),
+                Text("divergence", font_size=20, color=SCIENCE),
+            ).arrange(DOWN, buff=0.12),
+            VGroup(
+                MathTex(r"\int_D", color=OPERATOR, font_size=46),
+                Text("energy", font_size=20, color=OPERATOR),
+            ).arrange(DOWN, buff=0.12),
+            VGroup(
+                MathTex(r"\oint_{\partial D}", color=OUTPUT, font_size=40),
+                Text("flux", font_size=20, color=OUTPUT),
+            ).arrange(DOWN, buff=0.12),
+        )
+
+        items.arrange(RIGHT, buff=0.42)
+        return items
 
     def fixed(self, *mobjects):
         self.add_fixed_in_frame_mobjects(*mobjects)
@@ -258,16 +299,30 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
 
     def construct(self):
         np.random.seed(21)
+
         self.set_camera_orientation(phi=64 * DEGREES, theta=-38 * DEGREES, zoom=1.05)
         self.begin_ambient_camera_rotation(rate=0.025)
 
-        background = make_background_network(seed=21, n=32, dot_opacity=0.16, line_opacity=0.12)
+        background = make_background_network(
+            seed=21,
+            n=32,
+            dot_opacity=0.16,
+            line_opacity=0.12,
+        )
         background.set_z_index(-10)
+
         title = Text("Weather / Climate", font_size=42, color=TEXT, weight=BOLD)
         title.set_color_by_gradient(TEXT, NVIDIA_GREEN)
         title.to_corner(UL, buff=0.32)
-        domain_label = make_chip("Domain ≈ sphere", color=SCIENCE, font_size=19, height=0.42)
+
+        domain_label = make_chip(
+            "Domain ≈ sphere",
+            color=SCIENCE,
+            font_size=19,
+            height=0.42,
+        )
         domain_label.to_edge(DOWN, buff=0.48).shift(LEFT * 3.75)
+
         self.add_fixed_in_frame_mobjects(background, title, domain_label)
         self.remove(background, title, domain_label)
 
@@ -285,6 +340,7 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
         )
 
         field_sphere = self.make_weather_sphere(with_field=True, with_arrows=True)
+
         variable_list = self.make_variable_list()
         variable_list.to_edge(RIGHT, buff=0.46).shift(UP * 0.18)
         self.fixed(variable_list)
@@ -304,8 +360,15 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
 
         formula = MathTex(r"a_t : S^2 \to \mathbb{R}^d", color=TEXT, font_size=48)
         formula.to_edge(DOWN, buff=0.75).shift(RIGHT * 1.05)
-        vector_label = make_chip("vector-valued function", color=NVIDIA_GREEN, font_size=18, height=0.42)
+
+        vector_label = make_chip(
+            "vector-valued function",
+            color=NVIDIA_GREEN,
+            font_size=18,
+            height=0.42,
+        )
         vector_label.next_to(formula, DOWN, buff=0.15)
+
         self.fixed(formula, vector_label)
 
         # Global 07:42.5-07:54.0 => local 22.5-34.0
@@ -319,11 +382,36 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
             FadeIn(vector_label, shift=UP * 0.08),
         )
 
-        today_sphere = self.make_weather_sphere(radius=1.05, phase=0.0, with_field=True, with_arrows=True).shift(LEFT * 2.85)
-        tomorrow_sphere = self.make_weather_sphere(radius=1.05, phase=1.4, with_field=True, with_arrows=True).shift(RIGHT * 2.85)
-        today_label = make_chip("today", color=INPUT, font_size=19, height=0.4).move_to(LEFT * 3.0 + DOWN * 2.82)
-        tomorrow_label = make_chip("tomorrow", color=OUTPUT, font_size=19, height=0.4).move_to(RIGHT * 3.0 + DOWN * 2.82)
+        today_sphere = self.make_weather_sphere(
+            radius=1.05,
+            phase=0.0,
+            with_field=True,
+            with_arrows=True,
+        ).shift(LEFT * 2.85)
+
+        tomorrow_sphere = self.make_weather_sphere(
+            radius=1.05,
+            phase=1.4,
+            with_field=True,
+            with_arrows=True,
+        ).shift(RIGHT * 2.85)
+
+        today_label = make_chip(
+            "today",
+            color=INPUT,
+            font_size=19,
+            height=0.4,
+        ).move_to(LEFT * 3.0 + DOWN * 2.82)
+
+        tomorrow_label = make_chip(
+            "tomorrow",
+            color=OUTPUT,
+            font_size=19,
+            height=0.4,
+        ).move_to(RIGHT * 3.0 + DOWN * 2.82)
+
         operator_arrow = self.make_forecast_operator().move_to(UP * 0.08)
+
         self.fixed(today_label, tomorrow_label, operator_arrow)
 
         # Global 07:54.0-07:57.0 => local 34.0-37.0
@@ -337,6 +425,7 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
             FadeOut(vector_label, shift=DOWN * 0.08),
             FadeOut(variable_list, shift=RIGHT * 0.08),
         )
+
         # Global 07:57.0-08:06.5 => local 37.0-46.5
         self.play_timed(
             "forecast_function_to_function_map",
@@ -354,10 +443,23 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
 
         physics_glyphs = self.make_physics_glyphs()
         physics_glyphs.to_edge(DOWN, buff=0.46)
-        expert_need = Text("physics checks need field calculus", font_size=25, color=TEXT, weight=BOLD)
+
+        expert_need = Text(
+            "physics checks need field calculus",
+            font_size=25,
+            color=TEXT,
+            weight=BOLD,
+        )
         expert_need.to_edge(UP, buff=0.42).shift(RIGHT * 1.95)
-        tangent_arrows = self.make_weather_sphere(radius=1.12, phase=2.1, with_field=False, with_arrows=True)
+
+        tangent_arrows = self.make_weather_sphere(
+            radius=1.12,
+            phase=2.1,
+            with_field=False,
+            with_arrows=True,
+        )
         tangent_arrows.shift(LEFT * 2.85)
+
         self.fixed(physics_glyphs, expert_need)
 
         # Global 08:07.5-08:25.0 => local 47.5-65.0
@@ -375,6 +477,7 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
 
         pixel_grid = self.make_pixel_grid()
         pixel_grid.move_to(RIGHT * 2.9 + DOWN * 0.08)
+
         warning = VGroup(
             RoundedRectangle(
                 width=3.8,
@@ -389,13 +492,30 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
         )
         warning[1].move_to(warning[0])
         warning.next_to(pixel_grid, DOWN, buff=0.2)
-        output_label = Text("Output must remain a function", font_size=34, color=OUTPUT, weight=BOLD)
+
+        output_label = Text(
+            "Output must remain a function",
+            font_size=34,
+            color=OUTPUT,
+            weight=BOLD,
+        )
         output_label.to_edge(DOWN, buff=0.52)
-        final_formula = MathTex(r"\mathcal{G}: a_t \mapsto a_{t+1}", color=OPERATOR, font_size=38)
+
+        final_formula = MathTex(
+            r"\mathcal{G}: a_t \mapsto a_{t+\Delta t}",
+            color=OPERATOR,
+            font_size=38,
+        )
         final_formula.to_edge(UP, buff=0.46).shift(RIGHT * 2.55)
+
         self.fixed(pixel_grid, warning, output_label, final_formula)
 
-        final_function_sphere = self.make_weather_sphere(radius=1.15, phase=2.6, with_field=True, with_arrows=True)
+        final_function_sphere = self.make_weather_sphere(
+            radius=1.15,
+            phase=2.6,
+            with_field=True,
+            with_arrows=True,
+        )
         final_function_sphere.shift(RIGHT * 2.85)
 
         # Global 08:25.0-09:05.0 => local 65.0-105.0
@@ -411,6 +531,7 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
             FadeIn(warning, shift=UP * 0.08),
             today_sphere.animate.shift(LEFT * 0.15).set_opacity(0.68),
         )
+
         self.play_timed(
             "restore_function_semantics",
             76.0,
@@ -424,6 +545,7 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
             today_label.animate.set_opacity(1.0),
             tomorrow_label.animate.set_opacity(1.0),
         )
+
         self.play_timed(
             "function_output_final_hold_motion",
             89.0,
@@ -433,6 +555,6 @@ class Scene0201WeatherFunctionsOnSphere(TimedThreeDScene):
             today_sphere.animate.set_opacity(0.9),
             rate_func=there_and_back,
         )
-        self.wait_timed("final_composition_hold_for_scene_2_2", 102.0, 104.9)
-        # Manim CE writes terminal frames inclusively at 20 fps for this project.
-        self.pad_to(self.SCENE_DURATION - 0.1)
+
+        self.wait_timed("final_composition_hold_for_scene_2_2", 102.0, 105.0)
+        self.pad_to(self.SCENE_DURATION)
