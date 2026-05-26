@@ -1328,6 +1328,18 @@ No slide karaoke.
 No dashboard clutter.  
 No “syntax passed therefore done.”
 
+## Optional reference repos
+
+These external repositories may be inspected by Codex only as references.
+They are not canonical sources and must never override `docs/full_voice_manim_script.md`.
+
+Recommended local paths:
+
+```text
+~/reference-repos/Math-To-Manim
+~/reference-repos/ManimML
+```
+
 ## Optional reference: Math-To-Manim
 
 If available locally at `~/reference-repos/Math-To-Manim`, Codex may inspect it only as a reference for:
