@@ -1327,3 +1327,17 @@ No timing roulette.
 No slide karaoke.  
 No dashboard clutter.  
 No “syntax passed therefore done.”
+
+## Optional reference: Math-To-Manim
+
+If available locally at `~/reference-repos/Math-To-Manim`, Codex may inspect it only as a reference for:
+
+- staged mathematical explanation patterns,
+- MathTex / TransformMatchingTex usage,
+- formula readability and spacing patterns,
+- static validation / render-review ideas.
+
+Do not import Math-To-Manim as a runtime dependency.
+Do not run its full generation pipeline for production scenes.
+Do not let it override `docs/full_voice_manim_script.md`.
+Do not copy large blocks of code. Reimplement small reusable ideas inside `neural_operators_manim/src/common/`.
