@@ -387,6 +387,18 @@ Tiny labels:     avoid below 14
 
 If a label cannot fit, shorten it or move it to narration. Do not shrink it into unreadable dust.
 
+### Text inside boxes, chips, and panels
+
+Most recurring typography bugs come from treating text labels as geometry that can be squeezed into a box. For all production scenes:
+
+- Use the shared text/container helpers (`SafeText`, `SafeMathTex`, `Chip`, `PanelCard`) for labels inside cards, chips, badges, tabs, stamps, and panels. Do not hand-build `RoundedRectangle + Text` for UI labels unless you are also following the same helper contract.
+- For plain UI labels such as `change mesh`, `query anywhere`, `solve u`, or `predict u`, use `SafeText`/`Chip`, not `MathTex` or raw `Text`.
+- Create text first, measure the rendered `text.width`/`text.height`, then size the box from real text dimensions plus padding. Never estimate text width with `len(label)` or fixed character-count formulas.
+- Fit overflowing text only by reducing font size or applying uniform scaling. Never use `stretch_to_fit_width`, `stretch_to_fit_height`, `.stretch(...)`, direct `text.width = ...`, direct `text.height = ...`, or `space_out_submobjects(...)` on text.
+- Do not call `.arrange(...)` directly on a `Text` object; `Text` is character-submobject based. Arrange groups of separate text objects, not the glyphs inside one label.
+- Avoid scaling a `VGroup` that contains both a box and its text after the box/text layout is finalized, except for intentional whole-scene uniform scaling followed by visual QA.
+- Every rendered contact sheet must include a check for broken letter spacing inside chips/cards/panels. If spacing looks wrong, fix the shared helper first, not each scene locally.
+
 ---
 
 ## 13. Layout safety
