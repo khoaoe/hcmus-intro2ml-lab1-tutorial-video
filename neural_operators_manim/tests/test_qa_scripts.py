@@ -49,6 +49,12 @@ class QAScriptsTest(unittest.TestCase):
         self.assertEqual(parse_keyframes("0,10.5,130"), [0.0, 10.5, 130.0])
         self.assertEqual(parse_keyframes(None), [])
 
+    def test_duration_boundary_accepts_one_frame_tolerance(self):
+        from scripts.verify_duration import duration_within_tolerance
+
+        self.assertTrue(duration_within_tolerance(139.95, expected=140.0, tolerance=0.05))
+        self.assertFalse(duration_within_tolerance(139.94, expected=140.0, tolerance=0.05))
+
     def test_qa_report_creation(self):
         from scripts.check_scene import StepResult, write_qa_report
 

@@ -31,6 +31,10 @@ def read_duration(video_path: Path) -> float:
     return float(result.stdout.strip())
 
 
+def duration_within_tolerance(duration: float, expected: float, tolerance: float) -> bool:
+    return abs(duration - expected) <= tolerance + 1e-9
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="Verify rendered Manim scene duration.")
     parser.add_argument("media_root", type=Path)
@@ -46,7 +50,7 @@ def main() -> int:
     print(f"{args.scene}: {duration:.3f}s (expected {args.expected:.3f}s, delta {delta:.3f}s)")
     print(video_path)
 
-    if delta > args.tolerance:
+    if not duration_within_tolerance(duration, args.expected, args.tolerance):
         print(
             f"Duration mismatch: delta {delta:.3f}s exceeds tolerance {args.tolerance:.3f}s",
             file=sys.stderr,
