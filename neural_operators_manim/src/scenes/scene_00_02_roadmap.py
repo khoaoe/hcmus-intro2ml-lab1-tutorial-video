@@ -201,6 +201,26 @@ class Scene0002Roadmap(TimedScene):
         question.next_to(VGroup(wave, car), RIGHT, buff=0.2)
         return VGroup(weather, wave, molecule, car, question)
 
+    def make_timeline(self):
+        line = Line(LEFT * 11.4, RIGHT * 11.4, color=GRID, stroke_width=3.2)
+        line.shift(UP * 0.25)
+        progress_line = Line(LEFT * 11.4, LEFT * 11.4, color=NVIDIA_GREEN, stroke_width=4.2)
+        progress_line.shift(UP * 0.25)
+        timeline = VGroup(line, progress_line)
+        timeline.base_line = line
+        timeline.progress_line = progress_line
+        return timeline
+
+    def make_roadmap_nodes(self):
+        return VGroup(
+            self.make_node(-10.0, 1, "Traditional DL", "finite-dimensional ML", self.make_pixel_vector_icon(), INPUT),
+            self.make_node(-6.0, 2, "Scientific Computing", "PDEs + solvers", self.make_solver_icon(), NVIDIA_GREEN),
+            self.make_node(-2.0, 3, "Solution Operator", "learn G", self.make_operator_icon(), OPERATOR),
+            self.make_node(2.0, 4, "Build Neural Operator", "integral · derivative · Riemann · NN", self.make_kernel_icon(), PURPLE),
+            self.make_node(6.0, 5, "Architectures", "GNO · FNO · U-NO · TNO · CoDA", self.make_architecture_icon(), OUTPUT),
+            self.make_node(10.0, 6, "Domains + Open Problems", "weather · seismic · carbon · MD · car CFD", self.make_domains_icon(), WARNING),
+        )
+
     def make_node(self, x, index, title, label, icon, accent):
         center = np.array([x, 0.25, 0])
         halo = VGroup(
@@ -248,21 +268,13 @@ class Scene0002Roadmap(TimedScene):
         title_group = VGroup(title, subtitle).arrange(DOWN, buff=0.18)
         title_group.move_to(LEFT * 6.0 + UP * 3.08)
 
-        line = Line(LEFT * 11.4, RIGHT * 11.4, color=GRID, stroke_width=3.2)
-        line.shift(UP * 0.25)
-        progress_line = Line(LEFT * 11.4, LEFT * 11.4, color=NVIDIA_GREEN, stroke_width=4.2)
-        progress_line.shift(UP * 0.25)
+        timeline = self.make_timeline()
+        line = timeline.base_line
+        progress_line = timeline.progress_line
 
-        nodes = VGroup(
-            self.make_node(-10.0, 1, "Traditional DL", "finite-dimensional ML", self.make_pixel_vector_icon(), INPUT),
-            self.make_node(-6.0, 2, "Scientific Computing", "PDEs + solvers", self.make_solver_icon(), NVIDIA_GREEN),
-            self.make_node(-2.0, 3, "Solution Operator", "learn G?", self.make_operator_icon(), OPERATOR),
-            self.make_node(2.0, 4, "Neural Operators", "integral + derivative + NN", self.make_kernel_icon(), PURPLE),
-            self.make_node(6.0, 5, "Architectures", "GNO, FNO, U-NO, TNO, CoDA", self.make_architecture_icon(), OUTPUT),
-            self.make_node(10.0, 6, "Domains + Open Problems", "real domains, open problems", self.make_domains_icon(), WARNING),
-        )
+        nodes = self.make_roadmap_nodes()
         nodes.set_opacity(0.0)
-        roadmap = VGroup(line, progress_line, nodes)
+        roadmap = VGroup(timeline, nodes)
 
         # Global 00:42.0-00:49.0 => local 0.0-7.0
         self.play_timed(
@@ -283,10 +295,18 @@ class Scene0002Roadmap(TimedScene):
         self.play_timed(
             "traditional_deep_learning",
             8.0,
-            19.5,
+            9.2,
             *self.activate_node_anims(nodes, 0),
+            title_group.animate.set_opacity(0.0),
             progress_line.animate.put_start_and_end_on(LEFT * 11.4 + UP * 0.25, LEFT * 10.0 + UP * 0.25),
             self.camera.frame.animate.move_to(LEFT * 8.1),
+        )
+        self.play_timed(
+            "traditional_deep_learning_hold",
+            9.2,
+            19.5,
+            background.animate.set_opacity(0.54),
+            nodes[0].halo.animate.set_stroke(opacity=0.95),
         )
 
         # Global 01:01.5-01:10.5 => local 19.5-28.5
