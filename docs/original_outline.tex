@@ -177,18 +177,41 @@ Chốt scene bằng text \texttt{Write} đồng bộ nhịp VO cuối. \\ \hline
 \textbf{Timestamp tổng:} \texttt{5:40 -- 6:40}
 
 \noindent
-
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[5:40--6:10]} \newline Màn hình chia đôi: Trái $\mathbb{R}^n \to \mathbb{R}^m$ (vector rời rạc). Phải $\mathcal{A} \to \mathcal{U}$ (trường hàm liên tục). 
-& \textit{"Để hiểu Neural Operator, ta so sánh với Deep Learning cổ điển. DL truyền thống học hàm số $f_{\theta}: \mathbb{R}^n \to \mathbb{R}^m$ -- ánh xạ giữa các vector hữu hạn chiều. Operator Learning muốn học toán tử $G_{\theta}: \mathcal{A} \to \mathcal{U}$ -- ánh xạ giữa các không gian hàm vô hạn chiều."} 
-& Split screen \manim{VGroup}. Left side: discrete dots/vectors. Right side: smooth surfaces/fields. Labels \manim{Write} sync with VO. \\ \hline
-\textbf{[6:10--6:40]} \newline Hiện phương trình Darcy Flow: $-\nabla \cdot (a(x) \nabla u(x)) = f(x)$. Highlight $a(x)$ (xanh) $\to$ $u(x)$ (tím). Mũi tên học được $G$ nối hai hàm. 
-& \textit{"Lấy ví dụ Darcy Flow: $-\nabla \cdot (a(x) \nabla u(x)) = f(x)$. Trong đó $a(x)$ là hệ số khuếch tán, $u(x)$ là nghiệm. Thay vì giải số phức tạp cho mỗi $a$ mới, ta muốn học toán tử $G$ sao cho $G(a) \approx u$."} 
-& Equation build-up term by term \manim{Write}. Highlight colors applied to variables. Operator $G$ \manim{Create} as curved arrow between functions. \\ \hline
+\textbf{[5:40--6:10]} \newline
+\textbf{Split screen: Solver Loop vs Operator Forward}
+
+\textbf{Trái (Solver):} Input $a_1$ $\to$ PDE box $\to$ iterative solver (vòng lặp Gauss-Seidel) $\to$ output $u_1$. Lặp lại cho $a_2$, $a_3$...
+
+\textbf{Phải (Operator):} Một "Learned Operator G" lớn. Nhiều inputs $a_1, a_2, a_3$ $\to$ G $\to$ outputs $u_1, u_2, u_3$ (chỉ 1 forward pass mỗi cái).
+
+Overlay: \textbf{Solve từng cái vs Học một lần}.
+& \textit{"Deep Learning truyền thống học map từ vector sang vector. Nhưng trong scientific computing, ta đối mặt với một câu hỏi khác: thay vì giải PDE từ đầu cho mỗi input mới, liệu ta có thể học luôn solution operator? Solver truyền thống phải lặp lại quá trình tính toán đắt đỏ cho từng trường hợp. Operator Learning amortize chi phí đó: train một lần, inference nhanh hơn hàng nghìn lần."} 
+& \textbf{Trái:} Solver box với \manim{ValueTracker} vòng lặp chạy. Input mới $\to$ solver chạy lại.
+
+\textbf{Phải:} Operator G \manim{FadeIn}. Nhiều inputs bay vào, outputs bay ra mượt mà (chỉ 1 mũi tên mỗi cái).
+
+\manim{Transform} solver loops $\to$ compressed thành operator. Text overlay \manim{Write} sync "amortize". \\ \hline
+\textbf{[6:10--6:40]} \newline
+\textbf{Darcy Flow: Gallery of Solutions}
+
+Hiện một "gallery" gồm 6-8 cặp $(a_i, u_i)$ - các trường permeability và pressure tương ứng.
+
+Animation: Từ gallery này, một mũi tên lớn "Operator G" xuất hiện, connecting tất cả.
+
+Cuối cùng: Hiện phương trình Darcy mờ đi, overlay text: \textbf{Không giải PDE mỗi lần. Học ánh xạ G}.
+& \textit{"Lấy ví dụ Darcy Flow: phương trình mô tả dòng chảy qua môi trường xốp. Input là hệ số khuếch tán $a(x)$, output là trường áp suất $u(x)$. Solver truyền thống phải giải PDE này cho mỗi $a$ mới. Operator Learning nhìn bài toán khác: ta có một tập các cặp $(a, u)$, và ta muốn học toán tử $G$ sao cho $G(a) \approx u$. Không giải PDE mỗi lần. Học ánh xạ."}
+& Gallery \manim{FadeIn} từng cặp (a, u).
+
+\manim{CurvedArrow} lớn "G" \manim{Create} connecting gallery.
+
+Equation Darcy \manim{Write} mờ, rồi \manim{FadeOut}.
+
+Text overlay \manim{Write}: "Học ánh xạ G". \\ \hline
 \end{tabularx}
 
 
