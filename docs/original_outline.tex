@@ -1,0 +1,459 @@
+\section{Tại sao Deep Learning truyền thống chưa đủ?}
+
+\textit{Tổng thời lượng: 3 phút 55 giây}
+
+
+% ================= SCENE 1.1 =================
+\subsection{Scene 1.1: Hook -- Giới hạn của DL hữu hạn chiều}
+\textbf{Timestamp tổng:} \texttt{0:00 -- 0:45}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+
+\textbf{[0:00--0:12]} \newline Màn hình đen $\to$ lưới $64 \times 64$ fade-in $\to$ từng ô sáng dần thành ảnh mèo. 
+& \textit{"Trong hàng chục năm qua, Deep Learning đã tạo ra những đột phá không tưởng, thay đổi hoàn toàn diện mạo của thị giác máy tính và xử lý ngôn ngữ tự nhiên."} 
+& Fade-in grid (0.5s) $\to$ pixel fill animation (1s/row) $\to$ image complete. Sync với nhịp VO. \\ \hline
+
+\textbf{[0:12--0:28]} \newline Ảnh mèo morph thành tensor $\to$ ma trận trọng số $\to$ phép nhân ma trận trừu tượng. 
+& \textit{"Chúng ta đã quá quen thuộc với việc CNN nhận diện hình ảnh, Transformer sinh văn bản, hay những kiến trúc kinh điển như ResNet và GPT."} 
+& Morphing mượt: \manim{Transform} image $\to$ \manim{Matrix} $\to$ \manim{DotProduct}. Highlight keywords. \\ \hline
+
+\textbf{[0:28--0:45]} \newline Zoom out: hiện khung $\mathbb{R}^n$ với các chấm điểm rời rạc. Overlay: \textbf{Finite-dimensional Euclidean Space}. 
+& \textit{"Nhưng nếu lùi lại một bước để quan sát, tất cả các mô hình này đều chia sẻ một giới hạn bản chất: chúng được thiết kế để xử lý các đối tượng \textbf{hữu hạn chiều} trong không gian Euclid $\mathbb{R}^n$. Một bức ảnh, suy cho cùng, là một ma trận pixel hữu hạn. Một câu văn là một chuỗi các vector rời rạc."} 
+& Camera pull-back (2s) $\to$ $\mathbb{R}^n$ frame \manim{Create} $\to$ text overlay \manim{Write}. Bold "hữu hạn chiều" sync với highlight. \\ \hline
+
+\end{tabularx}
+
+% ================= SCENE 1.2 =================
+\subsection{Scene 1.2: Plot twist -- Thế giới khoa học: dữ liệu là hàm số}
+\textbf{Timestamp tổng:} \texttt{0:45 -- 1:45}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+
+\textbf{[0:45--1:00]} \newline Khung $\mathbb{R}^n$ shatter effect $\to$ lộ cầu Trái Đất với 3 lớp trường chồng lên: nhiệt độ (đỏ), gió (xanh), áp suất (vàng). 
+& \textit{"Tuy nhiên, nếu chúng ta bước ra khỏi Khoa học Máy tính và đi dạo qua các khoa khác trong trường đại học, bức tranh thực tế sẽ thay đổi hoàn toàn:"} 
+& Shatter: \manim{FadeOut} $\mathbb{R}^n$ + \manim{Create} globe. Layers fade-in sequentially (0.5s each). \\ \hline
+
+\textbf{[1:00--1:25]} \newline Lần lượt hiện 4 icon + mini-animation: \textcolor{orange}{Da liễu} (gradient da), \textcolor{orange}{Địa vật lý} (sóng 3D), \textcolor{orange}{CFD} (dòng khí), \textcolor{orange}{Khí hậu} (100+ hàm trên cầu). 
+& \textit{"Da liễu nghiên cứu mô da trên bề mặt liên tục. Địa vật lý phân tích hàm 3D mô tả sóng địa chấn. Cơ khí tính toán trường vector 4D. Khí hậu mô phỏng hàng trăm hàm trên cầu. Ở đó, dữ liệu của họ không phải là ảnh hay token. Dữ liệu của họ là \textbf{hàm số}."} 
+& Mỗi icon: \manim{Scale} in (0.3s) $\to$ zoom $\to$ surface/field \manim{Create} $\to$ label \manim{Write}. Sync mỗi domain với 6-7s VO. \\ \hline
+
+\textbf{[1:25--1:45]} \newline Zoom cực gần vào 1 điểm trên cầu $\to$ vẫn thấy gradient liên tục, \textbf{không pixel}. Overlay: \textbf{Data = Functions}. 
+& \textit{"Và đây là điểm then chốt: khi ta cố ép một mô hình Deep Learning truyền thống xử lý dữ liệu này bằng cách rời rạc hóa thành lưới 64x64..."} 
+& Infinite zoom: \manim{CameraFrame} move + \manim{Scale} field. Emphasize continuity with smooth gradient, no grid lines. \\ \hline
+
+\end{tabularx}
+
+% ================= SCENE 1.3 =================
+\subsection{Scene 1.3: Grid Mismatch \& Ràng buộc vật lý}
+\textbf{Timestamp tổng:} \texttt{1:45 -- 2:30}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[1:45--2:00]} \newline Hai lưới cạnh nhau: $64 \times 64$ (thô, xanh) và $128 \times 128$ (mịn, tím), cùng sample 1 hàm nhiệt độ. & \textit{"Sự khác biệt này tạo ra một khoảng cách công nghệ khổng lồ. Nếu ta cố ép một mô hình Deep Learning truyền thống để dự báo thời tiết bằng cách rời rạc hóa khí quyển thành một lưới 64x64, ta sẽ lập tức vấp phải sai lầm."} & Side-by-side \manim{Grid} with color coding. Same function sampled differently: highlight mismatch in density. \\ \hline
+\textbf{[2:00--2:15]} \newline Animation: model train trên lưới thô $\to$ đưa lưới mịn vào $\to$ output glitch/nhiễu + overlay đỏ \textbf{GRID MISMATCH}. & \textit{"Vấn đề là: nếu bạn huấn luyện mô hình trên lưới 64x64 nhưng lại muốn chạy thử nghiệm trên lưới mịn hơn như 128x128, mô hình sẽ thất bại hoàn toàn. Đây chính là hiện tượng \textit{grid mismatch}: mỗi lần thay đổi độ phân giải, bạn buộc phải huấn luyện lại từ đầu."} & Glitch effect: \manim{ValueTracker} noise on output. Red X \manim{Flash} + text \manim{Write}. Sync "grid mismatch" with overlay. \\ \hline
+\textbf{[2:15--2:30]} \newline Hiện $\nabla u$ và $\int u \, dx$ với icon vật lý. Text overlay: \textbf{Discretization Dependence = Barrier to Science}. & \textit{"Hơn nữa, trong khoa học, các đạo hàm và tích phân của đầu ra phải tuân thủ nghiêm ngặt các định luật vật lý. Nhưng nếu đầu ra chỉ là một vector số rời rạc, làm sao chúng ta kiểm soát được tính nhất quán đó?"} & Equations \manim{Write} term-by-term. Physics icon \manim{Pulse}. Text overlay \manim{FadeIn} + subtle \manim{Pulse}. \\ \hline
+\end{tabularx}
+
+
+% ================= SCENE 1.4 =================
+\subsection{Scene 1.4: Traditional Solvers \& 4 hạn chế}
+\textbf{Timestamp tổng:} \texttt{2:30 -- 3:30}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[2:30--2:50]} \newline Hiện PDE: $-\nabla \cdot (a\nabla u)=f$ với từng thành phần highlight theo lời. Flowchart: PDE $\to$ Finite Diff $\to$ Fixed Grid. & \textit{"Trước khi có Neural Operators, các nhà khoa học giải quyết những bài toán này bằng phương pháp số truyền thống. Quy trình chuẩn là: mô hình hóa hiện tượng bằng Phương trình Đạo hàm Riêng (PDE) như Navier-Stokes cho chất lưu hay Schrödinger cho cơ học lượng tử, sau đó dùng sai phân hữu hạn hoặc phần tử hữu hạn để giải trên một lưới cố định."} & Equation build-up: each term \manim{Write} + color highlight. Flowchart: \manim{Arrow} nối nodes sequentially. \\ \hline
+\textbf{[2:50--3:10]} \newline Lưới mịn dần: $16^2 \to 32^2 \to 64^2 \to 128^2$. Đồng hồ bên cạnh chạy nhanh dần $\to$ "bùng nổ" icon. & \textit{"Cách tiếp cận này rất mạnh mẽ nhưng tồn tại những nút thắt khó gỡ: Sai số tích lũy... Bùng nổ chi phí tính toán: Khi độ phân giải tăng lên để đạt độ chính xác cần thiết, chi phí tính toán tăng theo lũy thừa, vượt quá khả năng chi trả của nhiều tổ chức."} & Grid refinement: \manim{Transform} with increasing density. Timer: \manim{ValueTracker} exponential speed-up $\to$ explosion effect. \\ \hline
+\textbf{[3:10--3:30]} \newline 4 icon hiện lần lượt, mỗi icon có mini-animation: \textcolor{red}{ Sai số tham số hóa}, \textcolor{red}{Chi phí bùng nổ}, \textcolor{red}{Rào cản chuyên môn}, \textcolor{red}{Không khả vi}. & \textit{"Và còn những nút thắt khó gỡ: sai số tích lũy do tham số hóa, chi phí tính toán tăng theo lũy thừa, rào cản chuyên môn, tính không khả vi khiến việc đưa dữ liệu thực tế ngược lại vào mô hình trở nên cực kỳ phức tạp. Đừng hiểu lầm, các bộ giải truyền thống là thành tựu vĩ đại. Mục tiêu không phải thay thế, mà bổ sung ML vào toolbox."} & Icons: \manim{FadeIn} + \manim{Scale} (0.5s each). Micro-animation: cloud distortion, money chart, book stack, gradient blocked. \\ \hline
+\end{tabularx}
+
+% ================= SCENE 1.5 =================
+\subsection{Scene 1.5: Câu hỏi then chốt \& Teaser Neural Operators}
+\textbf{Timestamp tổng:} \texttt{3:30 -- 4:00}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[3:30--3:45]} \newline Màn hình chia đôi: Trái $\mathbb{R}^n \to \mathbb{R}^m$ (vector), Phải $\mathcal{A} \to \mathcal{U}$ (hàm số). & \textit{"Câu hỏi đặt ra là: Liệu Machine Learning có thể học được trực tiếp ánh xạ từ không gian hàm này sang không gian hàm kia mà không cần giải PDE thủ công mỗi lần hay không?"} & Split screen: \manim{VGroup} with \manim{Transform} labels. Pause 0.5s after question. \\ \hline
+\textbf{[3:45--3:55]} \newline Dấu hỏi lớn "nổ" thành logo Neural Operator (chữ N cách điệu + $\int$). & \textit{"Và câu trả lời chính là \textbf{Neural Operators} — thế hệ AI mới học trên không gian vô hạn chiều."} & Explosion: \manim{Flash} $\to$ logo \manim{Create} with subtle glow. Sync "Neural Operators" with reveal. \\ \hline
+\textbf{[3:55--4:00]} \newline Fade to black + text: \textbf{Section 2: Thế giới hàm số}. & \textit{(nhạc chuyển cảnh, pause ngắn)} & Clean \manim{FadeOut} $\to$ text \manim{Write} centered. Hold 1s before cut. \\ \hline
+\end{tabularx}
+
+
+\section{THẾ GIỚI HÀM SỐ}
+\textit{Tổng thời lượng: 3 phút 30 giây}
+
+\subsection{Scene 2.1: Bản chất dữ liệu khoa học -- Mọi thứ đều là hàm số}
+\textbf{Timestamp tổng:} \texttt{4:00 -- 5:00}
+
+\noindent 
+
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[4:00--4:30]} \newline Hiện cầu Trái Đất với các lớp dữ liệu ERA5 (nhiệt, gió, áp suất). Mũi tên nối "Trạng thái hôm nay" $\to$ "Trạng thái ngày mai". Overlay: \textbf{Hàm $\to$ Hàm}. 
+& \textit{"Trước khi đi sâu vào định nghĩa Neural Operator, hãy quan sát bản chất dữ liệu khoa học. Dự báo thời tiết: nhiệt độ, vận tốc gió, áp suất tại mỗi điểm trên mặt cầu đều là các hàm số. Bài toán dự báo thực chất là ánh xạ từ tập hợp hàm số hôm nay sang tập hợp hàm số ngày mai. Đạo hàm và tích phân của chúng phải tuân định luật vật lý, cho ra năng lượng hay moment động lượng."} 
+& Globe rotate chậm. Layers \manim{FadeIn} tuần tự. Arrow \manim{Create} nối 2 trạng thái. Text overlay \manim{Write} sync với từ khóa "ánh xạ". \\ \hline
+\textbf{[4:30--4:50]} \newline Hiện khối 3D dưới lòng đất với sóng lan truyền. Chuyển cảnh sang geometry xe/máy bay + trường áp suất bao quanh. 
+& \textit{"Địa chấn học: trường vận tốc ba chiều $a(x)$ mô tả sóng lan truyền. Bài toán ngược quan trọng là từ quan sát bề mặt suy ra cấu trúc bên trong. Khí động học: hình dạng vật thể là hàm geometry, output là trường áp suất và vận tốc thỏa mãn Navier-Stokes. Neural Operator cho kết quả tương đương solver truyền thống chỉ trong vài giây."} 
+& 3D block \manim{Create} với wave propagation effect. Geometry surface \manim{Transform} sang flow field. Highlight PDE constraint subtly. \\ \hline
+\textbf{[4:50--5:00]} \newline Hiện quỹ đạo nguyên tử liên tục. Text overlay: \textbf{Input = Hàm, Output = Hàm, Ràng buộc vật lý liên tục}. 
+& \textit{"Động lực học phân tử: nguyên tử chuyển động liên tục theo Schrödinger. Quỹ đạo không phải dãy điểm rời rạc mà là hàm số liên tục. Điểm chung của tất cả bài toán này: dữ liệu vào là hàm số, dữ liệu ra là hàm số, và output phải thỏa mãn các ràng buộc vật lý liên tục."} 
+& Particle trajectory \manim{ParametricCurve} moving smoothly. Checklist text \manim{FadeIn} từng dòng. Sync VO nhịp cuối. \\ \hline
+\end{tabularx}
+
+\subsection{Scene 2.2: Lưu ý then chốt -- Ảnh không phải là Hàm số}
+\textbf{Timestamp tổng:} \texttt{5:00 -- 5:40}
+
+\noindent
+
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[5:00--5:25]} \newline Hiện heatmap trường nhiệt độ (đỏ nóng, xanh lạnh). Zoom cực gần $\to$ lộ rõ các ô màu/pixel rời rạc. Gạch chéo chữ \textbf{ẢNH}, hiện chữ \textbf{HÀM SỐ LẤY MẪU}. 
+& \textit{"Có một lưu ý quan trọng: Khi hình dung một hàm số như trường nhiệt độ, ta thường vẽ nó dưới dạng ảnh màu: chỗ đỏ là nóng, chỗ xanh là lạnh. Nhưng đó không phải là ảnh. Đó là hàm số được hiển thị, được lấy mẫu tại một số điểm nhất định để ta có thể nhìn thấy."} 
+& Heatmap \manim{ImageMobject}. Zoom camera \manim{MoveTo}. Grid lines \manim{Create} over pixels. Strike-through effect on "ẢNH", \manim{Transform} to "HÀM SỐ LẤY MẪU". \\ \hline
+\textbf{[5:25--5:40]} \newline Cảnh báo: Heatmap bị ép vào lưới 64x64 $\to$ hiện dấu chặn/red barrier. Overlay: \textbf{Ném đi bản chất liên tục $\to$ Bị ràng buộc lưới}. 
+& \textit{"Sự khác biệt này cực kỳ quan trọng. Nếu ta xử lý nó như ảnh, đưa vào CNN và train trên lưới 64x64, là ta đang ném đi bản chất liên tục của dữ liệu. Và ta bị ràng buộc trong lưới đó."} 
+& CNN icon/text \manim{FadeIn}. Red barrier \manim{Create} blocking output. Warning text \manim{Write} with subtle shake effect. \\ \hline
+\end{tabularx}
+
+\subsection{Scene 2.3: Từ Deep Learning truyền thống đến Operator Learning}
+\textbf{Timestamp tổng:} \texttt{5:40 -- 6:40}
+
+\noindent
+
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[5:40--6:10]} \newline Màn hình chia đôi: Trái $\mathbb{R}^n \to \mathbb{R}^m$ (vector rời rạc). Phải $\mathcal{A} \to \mathcal{U}$ (trường hàm liên tục). 
+& \textit{"Để hiểu Neural Operator, ta so sánh với Deep Learning cổ điển. DL truyền thống học hàm số $f_{\theta}: \mathbb{R}^n \to \mathbb{R}^m$ -- ánh xạ giữa các vector hữu hạn chiều. Operator Learning muốn học toán tử $G_{\theta}: \mathcal{A} \to \mathcal{U}$ -- ánh xạ giữa các không gian hàm vô hạn chiều."} 
+& Split screen \manim{VGroup}. Left side: discrete dots/vectors. Right side: smooth surfaces/fields. Labels \manim{Write} sync with VO. \\ \hline
+\textbf{[6:10--6:40]} \newline Hiện phương trình Darcy Flow: $-\nabla \cdot (a(x) \nabla u(x)) = f(x)$. Highlight $a(x)$ (xanh) $\to$ $u(x)$ (tím). Mũi tên học được $G$ nối hai hàm. 
+& \textit{"Lấy ví dụ Darcy Flow: $-\nabla \cdot (a(x) \nabla u(x)) = f(x)$. Trong đó $a(x)$ là hệ số khuếch tán, $u(x)$ là nghiệm. Thay vì giải số phức tạp cho mỗi $a$ mới, ta muốn học toán tử $G$ sao cho $G(a) \approx u$."} 
+& Equation build-up term by term \manim{Write}. Highlight colors applied to variables. Operator $G$ \manim{Create} as curved arrow between functions. \\ \hline
+\end{tabularx}
+
+
+\subsection{Scene 2.4: Thách thức \& Định nghĩa Neural Operator}
+\textbf{Timestamp tổng:} \texttt{6:40 -- 7:30}
+
+\noindent
+
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[6:40--7:00]} \newline Hiện 3 lưới khác nhau: vuông 64x64, tam giác bất quy tắc, mịn 128x128. Dấu chấm hỏi $\to$ hiện chữ \textbf{Discretization Invariance}. Tiếp theo: chấm query di chuyển tự do trong miền $\to$ \textbf{Continuous Query}. 
+& \textit{"Việc học trong không gian hàm đòi hỏi giải quyết hai thách thức. Discretization Invariance: dữ liệu đo trên lưới khác nhau, model phải hoạt động trên mọi loại lưới không cần retrain. Continuous Query: đầu ra phải là hàm thực thụ, truy vấn được tại bất kỳ điểm nào để lấy đạo hàm kiểm tra vật lý, hoặc tính tích phân đo năng lượng."} 
+& Grids \manim{Transform} sequentially. Question mark \manim{Flash} $\to$ text \manim{Write}. Query dot moves along \manim{Path}. Sync VO with each challenge reveal. \\ \hline
+\textbf{[7:00--7:30]} \newline Hiện checklist 4 tiêu chí: 1) Input mọi độ phân giải. 2) Output truy vấn mọi điểm. 3) Hội tụ giới hạn liên tục. 4) Nhanh hơn solver hàng nghìn lần. 
+& \textit{"Tóm lại, Neural Operator là framework thỏa mãn bốn tiêu chí: Nhận đầu vào là hàm số tại bất kỳ độ phân giải nào. Xuất đầu ra truy vấn được tại mọi điểm. Tính hội tụ: khi lưới càng mịn, mô hình hội tụ về giới hạn liên tục duy nhất. Và tốc độ: phải nhanh hơn hàng nghìn lần so với solver truyền thống. Phần tiếp theo: cấu trúc bên trong."} 
+& Checklist items \manim{FadeIn} one by one (0.8s each). Subtle checkmark animation next to each item. Final hold 1s before section cut. \\ \hline
+\end{tabularx}
+
+\section{XÂY DỰNG NEURAL OPERATOR}
+\textit{Tổng thời lượng: 3 phút 45 giây}
+
+\subsection{Scene 3.1: Nền tảng Toán học -- Tích phân \& Đạo hàm}
+\textbf{Timestamp tổng:} \texttt{7:30 -- 8:15}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[7:30--7:55]} \newline Hiện đường cong $a(x)$ dưới dấu tích phân. Chia thành $N$ hình chữ nhật $\to$ $N$ tăng dần, $\Delta x \to 0$, tổng hội tụ thành diện tích mượt. 
+& \textit{"Để hiểu Neural Operator, nhớ lại hai khái niệm cơ bản: Tích phân qua tổng Riemann. Chia hàm thành $N$ hình chữ nhật. Khi $N$ tiến tới vô cùng và $\Delta x$ tiến về 0, tổng các hình chữ nhật này sẽ hội tụ về giá trị tích phân thực."} 
+& \manim{RiemannSum} animation. $N$ \manim{ValueTracker} tăng mượt. Area fill color transition từ rời rạc $\to$ liên tục. Equation \manim{Write} sync với VO. \\ \hline
+\textbf{[7:55--8:15]} \newline Chuyển sang sai phân hữu hạn: 3 điểm trên đường cong $\to$ đường cát tuyến trượt thành tiếp tuyến. Hiện công thức đạo hàm rời rạc. 
+& \textit{"Đạo hàm qua sai phân hữu hạn: Đạo hàm tại một điểm thực chất là sự chênh lệch giá trị giữa các điểm lưới chia cho khoảng cách."} 
+& Secant line \manim{Transform} thành tangent. Points highlight sequentially. Formula appears term-by-term. Smooth easing. \\ \hline
+\end{tabularx}
+
+\subsection{Scene 3.2: Bước nhảy từ MLP sang Toán tử Tích phân}
+\textbf{Timestamp tổng:} \texttt{8:15 -- 9:15}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[8:15--8:45]} \newline Hiện phương trình MLP: $y_j = \sigma(\sum W_{ji}x_i + b_j)$. Highlight nodes, weights, bias. Sau đó morph mượt: chỉ số $j \to y$, $W \to \kappa(y,x;\theta)$, $\sum \to \int$. 
+
+% __________ Fix _____________ %
+& \textit{"Hãy nhìn MLP: tầng rời rạc, nhân trọng số, cộng bias, đi qua phi tuyến. Bản chất: tổng có trọng số rồi áp dụng phi tuyến. Bây giờ là bước nhảy vọt: xử lý hàm số thay vector. Thay chỉ số $j$ bằng tọa độ $y$ và chỉ số $i$ bằng tọa độ $x$. Khi đó, vector đầu vào $x_i$ trở thành hàm liên tục $a(x)$, và vector đầu ra $y_j$ trở thành hàm liên tục $v(y)$. Và ta thay ma trận $W$ bằng kernel $\kappa(y,x;\theta)$, tổng bằng tích phân."} 
+
+
+& Discrete MLP graph $\to$ \manim{Transform} thành continuous field. Kernel heatmap xuất hiện dần. Integral sign \manim{Create} lớn dần. Sync morph với nhịp VO. \\ \hline
+\textbf{[8:45--9:15]} \newline Hiện công thức cuối: $v(y) = \sigma(\int \kappa(y,x;\theta)a(x)dx + b(y))$. Overlay: \textbf{Định nghĩa Lớp Neural Operator}. 
+& \textit{"Khi khoảng cách điểm tiến về 0, tổng có trọng số của MLP chính xác trở thành Toán tử tích phân. Đây chính là định nghĩa của một lớp Neural Operator. Dạng tích phân này xuất hiện khắp nơi: đáp ứng xung, hàm Green, tích chập. Khác biệt: trước kernel cho trước, giờ học từ data."} 
+& Equation build-up \manim{Write}. Physics examples flash briefly (impulse, Green's function). Text overlay pulses. Clean transition. \\ \hline
+\end{tabularx}
+
+\subsection{Scene 3.3: So sánh MLP vs Neural Operator \& Thành phần Lớp}
+\textbf{Timestamp tổng:} \texttt{9:15 -- 10:15}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[9:15--9:45]} \newline Màn hình chia đôi: Trái MLP (vector, ma trận, tổng rời rạc). Phải Neural Operator (hàm, kernel, tích phân liên tục). Highlight sự tương ứng 1-1. 
+& \textit{"Neural Operator không phải kiến trúc kỳ lạ mới. Nó là sự tổng quát hóa tự nhiên của MLP lên không gian hàm. Input $x$ là vector $\mathbb{R}^n$ $\to$ input $a$ là hàm số. Trọng số $W$ là ma trận $\to$ kernel $\kappa(y,x)$. Tổng rời rạc $\to$ tích phân liên tục. Bias vector $\to$ bias hàm $b(y)$."} 
+& \manim{VGroup} split screen. Left: discrete dots/matrix. Right: smooth surfaces/kernel. Synced highlight lines connect corresponding terms. \\ \hline
+\textbf{[9:45--10:15]} \newline Zoom vào 1 lớp NO hoàn chỉnh: hiện 3 thành phần: (1) Lõi tích phân, (2) Bias hàm $b(y)$, (3) Residual Connection (mũi tên bypass). 
+& \textit{"Một lớp toán tử hoàn chỉnh gồm ba thành phần: Lõi tích phân tổng hợp thông tin toàn cục qua kernel. Bias hàm số $b(y)$ biến thiên theo không gian. Và Residual Connection: cộng trực tiếp input vào output. Cực kỳ quan trọng vì tích phân có xu hướng làm mịn dữ liệu, residual giúp giữ chi tiết sắc nét."} 
+& 3 components \manim{FadeIn} sequentially. Residual arrow \manim{Create} with subtle glow. Smoothness vs sharpness visual demo (blurred vs original function). \\ \hline
+\end{tabularx}
+
+\subsection*{Scene 3.4: Deep Neural Operator \& Phân tích Sai số}
+\textbf{Timestamp tổng:} \texttt{10:15 -- 11:15}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[10:15--10:45]} \newline Xếp chồng $L$ lớp toán tử tích phân dọc theo trục đứng. Hiện pipeline: Encoder $\to$ $L$ layers $\to$ Decoder. Highlight dòng chảy không bị phá vỡ tính chất. 
+
+% ----------------- Add --------------- %
+$$v^{(\ell+1)} = \sigma \left( \int_{\Omega} \kappa^{\ell}(y, x; \theta) \cdot v^{\ell}(x) dx + b^{\ell}(y) \right)$$
+
+
+& \textit{"Giống Deep Learning, xếp chồng nhiều lớp tạo Deep Neural Operator. Phép xếp chồng không phá vỡ tính chất cốt lõi: input vẫn ở bất kỳ discretization nào, output query được tại mọi điểm. Kiến trúc đầy đủ: Encoder pointwise $\to$ $L$ lớp toán tử $\to$ Decoder pointwise."} 
+
+
+& Layers \manim{Shift} up sequentially. Pipeline flowchart \manim{Create}. Checkmarks appear next to invariance/query properties. \\ \hline
+\textbf{[10:45--11:15]} \newline Hiện 3 thanh sai số: Tổng quát hóa, Xấp xỉ, Rời rạc hóa. Highlight công thức $O(N^{-s})$. So sánh hàm trơn (giảm nhanh) vs hàm shock (dao động). 
+& \textit{"Phân tích sai số có 3 thành phần: tổng quát hóa, xấp xỉ, và rời rạc hóa. Sai số rời rạc tỷ lệ với $N^{-s}$ ($s$ là độ trơn Sobolev). Hàm càng trơn, sai số giảm càng nhanh. Đây là lý do FNO tốt với nghiệm trơn nhưng khó với shock waves. Và có sự đánh đổi giữa độ chính xác số và độ phân giải lưới."} 
+& 3 error bars \manim{GrowFromEdge}. Formula zoom in. Smooth vs jagged function comparison. Final hold 0.5s before section cut. \\ \hline
+\end{tabularx}
+
+\section{KIẾN TRÚC: FNO, GNO, U-NO}
+\textit{Tổng thời lượng: 6 phút 10 giây}
+
+\subsection{Scene 4.1: Fourier Neural Operator (FNO) -- Cơ sở tần số \& Định lý Tích chập}
+\textbf{Timestamp tổng:} \texttt{11:15 -- 12:30}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.6cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+
+\textbf{[11:15--11:50]} \newline Hiện công thức FFT: $\hat{a}(\omega) = \int_{\Omega} a(x) e^{-2\pi i \langle x, \omega \rangle} dx$. Highlight $\hat{a}(\omega)$ (phổ năng lượng, hệ số phức). Giữ hình 1.5s. 
+& \textit{"Để tính tích phân hiệu quả, FNO không tính trực tiếp trên không gian thực. Thay vào đó, mô hình chuyển dịch hệ cơ sở sang miền tần số. Phép biến đổi Fourier phân rã hàm số thành tổ hợp sóng harmonic, cho phép ta quan sát dữ liệu dưới dạng phổ năng lượng với các hệ số phức. (ngắt 0.5s) Đây là bước đệm quan trọng nhất."} 
+& Equation build-up term-by-term. Glow on $\hat{a}(\omega)$. Hold 1.5s để viewer đọc công thức. Camera zoom nhẹ vào $\omega$. \\ \hline
+
+\textbf{[11:50--12:30]} \newline Morph sang sơ đồ 3 bước: FFT $\to$ Spectral Multiply $\to$ IFFT. Highlight nhánh Toàn cục \& Nhánh Cục bộ $W a(x)$. 
+& \textit{"Trọng tâm tăng tốc nằm ở Định lý Tích chập: tích chập phức tạp trong không gian thực tương đương phép nhân phần tử trong miền tần số. Thay vì học kernel $O(N^2)$, ta học trực tiếp ma trận trọng số $R(\omega)$ và nhân trong miền tần số. Một lớp FNO hoàn chỉnh gồm nhánh toàn cục học tương tác xa, và nhánh cục bộ $W a(x)$ bắt đặc trưng biến thiên nhanh. Nhờ FFT, độ phức tạp chỉ còn $O(N \log N)$."} 
+& Pipeline flowchart \manim{Create} tuần tự. $\mathcal{F}$ symbol \manim{Create} with glow. Signal \manim{ParametricCurve} $\to$ frequency bars $\to$ \manim{Flash} multiply $\to$ \manim{InverseTransform}. Nhánh cục bộ hiện sau, màu tương phản. \\ \hline
+
+\end{tabularx}
+
+\subsection{Scene 4.2: Tính chất FNO \& Giới hạn}
+\textbf{Timestamp tổng:} \texttt{12:30 -- 13:15}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[12:30--13:15]} \newline Hiện 3 property cards: Tốc độ $O(N \log N)$, Tầm nhìn toàn cục (grid connected), Zero-shot resolution (64x64 $\to$ 256x256). Overlay: $\mathcal{A} \to \mathcal{U}$. Cuối cùng hiện warning: lưới đều/tuần hoàn. 
+& \textit{"FNO sở hữu ba tính chất đột phá. Thứ nhất: tốc độ xử lý lưới triệu điểm trong vài giây. Thứ hai: tầm nhìn toàn cục. Một phép nhân tần số kết nối mọi điểm cùng lúc, vượt xa CNN. Thứ ba: zero-shot generalization. Train 64x64, query 256x256 vẫn chính xác, vì model học ánh xạ hàm sang hàm, không phải vector sang vector. (ngắt 0.5s) Giới hạn: FNO phù hợp nhất với lưới đều và biên tuần hoàn, đồng thời khớp tự nhiên với nghiệm PDE trong miền tần số."} 
+& Cards \manim{FadeIn} lần lượt, mỗi card giữ 0.8s. Global connectivity: \manim{Arrow} network lan tỏa. Resolution zoom \manim{Transform} mượt. Function-space overlay \manim{FadeIn} nhẹ. Warning icon \manim{FadeIn} + pulse chậm. \\ \hline
+\end{tabularx}
+
+\subsection{Scene 4.3: Graph Neural Operator (GNO) -- Xử lý lưới bất quy tắc}
+\textbf{Timestamp tổng:} \texttt{13:15 -- 14:30}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[13:15--13:50]} \newline Mesh bất quy tắc (cánh turbine/IoT). Xây đồ thị $G=(V,E)$ nối theo bán kính $r$. Hiện phân vùng Voronoi mờ, highlight thể tích $w_{ij}$. Text overlay: \textbf{Hội tụ tích phân $\neq$ GNN thường}. 
+& \textit{"Thực tế kỹ thuật thường diễn ra trên miền bất quy tắc, nơi Fourier không áp dụng được. GNO chuyển dịch sang cấu trúc đồ thị: mỗi điểm dữ liệu là một node, nối nhau trong bán kính $r$. (ngắt 0.4s) Điểm khác biệt cốt lõi với GNN thông thường là GNO bảo toàn tính chất toán tử tích phân: nó xấp xỉ tích phân bằng tổng có trọng số, với $w_{ij}$ tỉ lệ thuận thể tích phân vùng Voronoi. Điều này đảm bảo mô hình không thiên lệch bởi mật độ điểm, và hội tụ đúng khi lưới mịn dần."} 
+& Point cloud \manim{Create} $\to$ edges \manim{GrowFromCenter}. Voronoi cells \manim{FadeIn} (opacity 0.3). Radius circle \manim{Create} động. Highlight $w_{ij}$ volume với \manim{Indicate} + hold 1s. Text overlay \manim{Write} chậm. \\ \hline
+\textbf{[13:50--14:30]} \newline Animation message passing: thông tin chạy dọc edges $\to$ tổng hợp tại node trung tâm $\to$ update. Hiện MLP kernel $\kappa_\theta$ box nhỏ trên edge. 
+& \textit{"Kernel $\kappa$ không cố định mà là một MLP nhỏ tự học luật tương tác vật lý từ dữ liệu. GNO thực chất là Message Passing trong không gian hàm: node gửi thông điệp qua MLP, node nhận tổng hợp có trọng số Voronoi rồi áp dụng phi tuyến. Qua nhiều lớp, thông tin từ node xa nhảy cóc qua trung gian, giúp model nắm bắt tương tác toàn cục dù khởi đầu từ tổng hợp cục bộ."} 
+& Data packets \manim{MoveAlongPath} tốc độ vừa phải. Aggregation \manim{Flash} tại center node. MLP box \manim{Scale} sync VO. Giữ frame cuối 0.8s trước khi cut. \\ \hline
+\end{tabularx}
+
+
+\subsection{Scene 4.4: U-shaped Neural Operator (U-NO) -- Đa tỷ lệ \& Skip Connection}
+\textbf{Timestamp tổng:} \texttt{14:30 -- 15:45}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[14:30--15:05]} \newline Kiến trúc chữ U: Encoder $\to$ Latent Space $\to$ Decoder. Highlight skip connections. Overlay hiệu ứng "làm mờ" của tích phân vs "giữ nét" của skip. 
+& \textit{"Nghiệm PDE mang tính lưỡng cực: vừa có sóng dài toàn cục, vừa có gradient dốc đứng cục bộ như shock waves. FNO ưu tiên tần số thấp nên dễ làm mờ chi tiết. U-NO giải quyết mâu thuẫn này bằng kiến trúc phân cấp. Encoder thu nhỏ miền để nắm tương tác tầm xa với chi phí thấp. Latent Space nén trạng thái năng lượng tổng thể. Decoder khôi phục độ phân giải để tái tạo biến động sắc nét tại biên."} 
+& U-structure \manim{Create} layer-by-layer. Downsampling \manim{Transform} kèm resolution label. Latent space \manim{Pulse} nhẹ. Skip arrows \manim{Create} màu sáng. Blur vs Sharp contrast effect chạy chậm 1.2s. \\ \hline
+\textbf{[15:05--15:45]} \newline Minh họa skip connection: đặc trưng encoder bơm thẳng sang decoder. Hiện công thức $v_{dec} = \sigma(T_{dec} u_{dec} + u_{enc})$. Ẩn dụ vẽ bản đồ merge. 
+& \textit{"Chìa khóa là Skip Connections. Vì toán tử tích phân có xu hướng làm mịn dữ liệu, các kết nối tắt bơm thẳng chi tiết hình học từ encoder sang decoder, bypass các lớp phi tuyến sâu. Công thức này đảm bảo nghiệm cuối cùng vừa tuân thủ logic vật lý toàn cục, vừa giữ độ chính xác tuyệt đối tại điểm biến động. Giống vẽ bản đồ: cần toàn cảnh cho cao tốc, cần chi tiết cho tên đường nhỏ. U-NO làm cả hai cùng lúc."} 
+& Feature maps \manim{Overlap} merge mượt. Formula \manim{Write} đồng bộ lời giải thích. Map metaphor visual transition giữ 1s. Cut nhẹ sang scene sau. \\ \hline
+\end{tabularx}
+
+
+\subsection{Scene 4.5: CoDANO, Spherical FNO \& Khối Đạo hàm}
+\textbf{Timestamp tổng:} \texttt{15:45 -- 17:00}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[15:45--16:20]} \newline Ma trận attention $\alpha_{c,c'}$ giữa các kênh vật lý (áp suất $\to$ vận tốc). Chuyển sang mặt cầu với lưới spherical harmonics thay sin/cos. 
+& \textit{"Khi bài toán mở rộng lên hàng trăm biến tương tác, ta cần CoDANO: áp dụng cơ chế Attention giữa các biến vật lý, thay vì điểm không gian. Trọng số $\alpha_{c,c'}$ tự học định luật tương tác, ví dụ áp suất ảnh hưởng bao nhiêu phần trăm lên vận tốc. (ngắt 0.4s) Với khí hậu toàn cầu, Spherical FNO thay sin/cos bằng hàm điều hòa cầu, cho phép tích chập trực tiếp trên mặt cầu, triệt tiêu sai số tại hai cực."} 
+& Attention weights \manim{Matrix} animate row/column chậm. Sphere \manim{ParametricSurface} với harmonic grid overlay. Camera orbit nhẹ 360° trong 2s. Giữ frame 0.5s. \\ \hline
+\textbf{[16:20--17:00]} \newline Nghịch lý: tích phân làm mịn $\to$ mất đạo hàm. Giải pháp: khối CNN stencil $[-1, 0, 1]$ trượt trên hàm, tính sai phân hữu hạn. 
+& \textit{"Tồn tại một nghịch lý: tích phân giỏi tổng hợp nhưng kém nắm bắt đạo hàm tức thời. Để tính lực cản hay dòng chảy, ta buộc phải tích hợp khối CNN. Bản chất bộ lọc CNN chính là phép sai phân hữu hạn tìm đạo hàm. Khi tăng độ phân giải, ta chỉ cần điều chỉnh hệ số stencil để các định luật vật lý luôn nhất quán. Sự kết hợp này bù đắp điểm mù của toán tử tích phân."} 
+& Smooth curve vs derivative spike comparison hiện song song. CNN stencil \manim{Slide} dọc hàm, tốc độ vừa. Coefficient scaling \manim{Transform} khi resolution đổi. Hold 0.8s trước khi fade. \\ \hline
+\end{tabularx}
+
+\subsection{Scene 4.6: Tổng kết kiến trúc \& Chuyển cảnh}
+\textbf{Timestamp tổng:} \texttt{17:00 -- 17:25}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[17:00--17:25]} \newline Decision grid: FNO (lưới đều/tốc độ), GNO (mesh phức tạp), U-NO (đa tỷ lệ), CoDANO (nhiều biến). Badge \textbf{Hybrid SOTA}. List 4 thành phần: Tích phân + Residual + Bias hàm + CNN đạo hàm. Fade to black + text: \textbf{Section 5: Ứng dụng thực tế}. 
+& \textit{"Tổng kết chiến lược: lưới đều cần tốc độ chọn FNO. Mesh phức tạp chọn GNO. Nghiệm đa tỷ lệ chọn U-NO. Nhiều biến tương tác chọn CoDANO. Thực tế SOTA luôn là hybrid. Một Neural Operator tối ưu thường phối hợp bốn thành phần: tích phân bắt tương tác xa, residual ổn định training, bias hàm số, và khối CNN xử lý đạo hàm. (ngắt 0.5s) Phần tiếp theo: những kiến trúc này đang thay đổi thế giới thực tế như thế nào."} 
+& Grid cells \manim{FadeIn} kèm checkmark. Hybrid badge \manim{Create} glow nhẹ. 4 component icons \manim{Pulse} tuần tự. Clean \manim{FadeOut} $\to$ section title \manim{Write}. Hold 1.2s trước cut. \\ \hline
+\end{tabularx}
+
+\section{SECTION 5: ỨNG DỤNG THỰC TẾ}
+\textit{Tổng thời lượng: 6 phút 45 giây}
+
+\subsection{Scene 5.1: FourCastNet \& Spherical FNO -- Dự báo thời tiết}
+\textbf{Timestamp tổng:} \texttt{17:25 -- 19:10}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[17:25--18:10]} \newline Hiện cầu Trái Đất với các lớp dữ liệu ERA5 (nhiệt, gió, áp suất). Mũi tên thời gian chạy từ hôm nay sang ngày mai. Hiện 3 số liệu tốc độ nổi bật. 
+& \textit{"Bây giờ, hãy cùng xem Neural Operators thực sự thay đổi thế giới như thế nào. FourCastNet dựa trên FNO, train trên 40 năm dữ liệu ERA5. Nhiệm vụ: dự báo trạng thái khí quyển ngày mai từ hôm nay. So với mô hình IFS truyền thống: nhanh hơn 45,000 lần, tiết kiệm năng lượng 25,000 lần, độ chính xác tương đương ở dự báo ngắn và trung hạn."} 
+& Globe rotate slowly. Data layers \manim{FadeIn} sequentially. Time arrow \manim{Create}. Speed metrics \manim{GrowFromEdge} with emphasis. \\ \hline
+\textbf{[18:10--18:40]} \newline Minh họa ensemble forecasting: một đường dự báo đơn lẻ $\to$ tách thành hàng trăm đường mờ chồng lên nhau tạo dải xác suất. 
+& \textit{"Con số này có hệ quả thực tế: thay vì chạy một dự báo duy nhất, ta chạy hàng trăm kịch bản song song. Thay vì ngày mai 25 độ, model nói: 70 phần trăm khả năng 24 đến 26 độ, 20 phần trăm 22 đến 24 độ. Đây là thứ hệ thống cảnh báo thiên tai thực sự cần."} 
+& Single line \manim{Transform} into probability cloud. Opacity layers stack smoothly. Text overlay syncs with VO. \\ \hline
+\textbf{[18:40--19:10]} \newline Chuyển sang mặt cầu với lưới spherical harmonics (kinh độ + vĩ độ). Highlight sự tương đồng với solver truyền thống. 
+& \textit{"Biến thể nâng cao là Spherical FNO. Thay vì Fourier thông thường, SFNO dùng spherical harmonics: Fourier theo kinh độ, Legendre theo vĩ độ. Đây chính xác là cơ sở domain experts dùng trong solver truyền thống. Neural Operator nói cùng ngôn ngữ với họ."} 
+& Sphere grid morphs from planar to harmonic. Lat/Lon lines highlight. Smooth camera orbit. Clean transition. \\ \hline
+\end{tabularx}
+
+\subsection{Scene 5.2: Carbon Storage \& Khí động học công nghiệp}
+\textbf{Timestamp tổng:} \texttt{19:10 -- 20:55}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[19:10--19:55]} \newline Hiện mô hình 3D vỉa đá dưới lòng đất. Dòng $CO_2$ bơm xuống $\to$ đám mây lan rộng theo thời gian. Hiện con số 700,000x. 
+& \textit{"Một công cụ quan trọng chống biến đổi khí hậu là carbon capture: bơm $CO_2$ xuống vỉa đá sâu. Câu hỏi then chốt: bao nhiêu $CO_2$ lưu trữ an toàn, và đám mây sẽ lan đến đâu? Input là cấu trúc vận tốc 3D phức tạp. Output là sự lan rộng theo thời gian. Neural Operator nhanh hơn 700,000 lần so với solver truyền thống."} 
+& 3D subsurface volume \manim{Create}. $CO_2$ plume \manim{Expand} with time counter. Speed metric \manim{Flash}. Smooth shading for depth. \\ \hline
+\textbf{[19:55--20:25]} \newline Hiện hàng nghìn kịch bản lòng đất chồng mờ $\to$ bản đồ rủi ro tổng hợp. Chuyển sang geometry xe/cánh máy bay. 
+& \textit{"Với tốc độ đó, ta chạy hàng nghìn kịch bản cấu trúc lòng đất khác nhau vì ta không biết chính xác lòng đất trông như thế nào. Điều này cho phép đánh giá rủi ro đầy đủ và đưa ra quyết định tốt hơn về vị trí lưu trữ."} 
+& Multiple scenarios \manim{Overlap} then merge into risk heatmap. Quick pan to automotive/aerospace geometry. \\ \hline
+\textbf{[20:25--20:55]} \newline Pipeline hybrid: Mesh 3D không đều $\to$ GNO $\to$ lưới đều $\to$ FNO (FFT) $\to$ decode ngược. Minh họa real-time design iteration. 
+& \textit{"Đây là killer app công nghiệp. Quy trình cũ: thay đổi hình dáng $\to$ xây lưới mới $\to$ giải Navier-Stokes $\to$ mất nhiều giờ. Với Neural Operator: train model duy nhất, inference vài giây. Nhanh hơn 140,000 lần. Kiến trúc hybrid: GNO xử lý mesh không đều, map sang lưới đều, áp dụng FNO, decode ngược lại. Tối ưu thiết kế real-time."} 
+& Pipeline blocks \manim{Create} left-to-right. Mesh morphing animation. Iteration counter speeds up. Clean hold. \\ \hline
+\end{tabularx}
+
+\subsection{Scene 5.3: Động lực học phân tử \& PINO}
+\textbf{Timestamp tổng:} \texttt{20:55 -- 22:40}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[20:55--21:40]} \newline So sánh: ML truyền thống (chấm rời $t \to t+\Delta t$) vs NO (đường cong liên tục). Hiện các bước trung gian của solver được dùng làm supervision. 
+& \textit{"ML truyền thống xử lý động lực học phân tử theo kiểu rời rạc: state tại $t$ dự đoán state tại $t+\Delta t$. Nhưng bản chất bài toán là liên tục theo phương trình Schrödinger. Neural Operator học toán tử tiến hóa liên tục. Lợi ích lớn: dùng tất cả bước trung gian của solver làm supervision. Output là emulator domain expert kiểm tra được bằng cách cắm vào phương trình gốc."} 
+& Discrete dots vs continuous curve comparison. Solver steps highlight sequentially. Equation constraint overlay. \\ \hline
+\textbf{[21:40--22:10]} \newline Hiện cấu trúc PINO: $u_\theta$ cắm vào PDE $\to$ tính residual. Hiện công thức loss chia đôi: Data Loss + Physics Loss. 
+& \textit{"Cho đến nay, ứng dụng đều học từ cặp data. Nhưng trong khoa học, ta còn biết định luật vật lý. PINO khai thác điều này: nếu model dự đoán $u_\theta$, cắm vào PDE kiểm tra thỏa mãn không. Nếu không, đó là sai số dùng để train. Loss gồm data loss supervised và physics loss tính bằng automatic differentiation."} 
+& PDE residual check animation. Loss formula splits into two colored components. \manim{Write} syncs with VO. \\ \hline
+\textbf{[22:10--22:40]} \newline Minh họa zero-shot upscaling: 64x64 $\to$ 256x256 chỉ bằng physics fine-tune, không cần data mới. Đường spectrum khớp ground truth. 
+& \textit{"Kết quả ấn tượng: train FNO trên Darcy flow 64x64, fine-tune bằng physics loss không có thêm data. Kết quả 256x256 khớp chính xác ground truth dù model chưa bao giờ thấy data độ phân giải đó."} 
+& Resolution zoom \manim{Transform}. Spectrum lines merge perfectly. Subtle glow on match point. \\ \hline
+\end{tabularx}
+
+
+\subsection{Scene 5.4: Mô hình sinh GANO \& Tổng kết}
+\textbf{Timestamp tổng:} \texttt{22:40 -- 24:10}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[22:40--23:25]} \newline Hiện pipeline GAN: Gaussian Process noise $\to$ Generator (NO) $\to$ hàm output. Discriminator nhận hàm $\to$ scalar. Nhiều sample tạo cloud phân phối + confidence band. 
+& \textit{"Tất cả ứng dụng trên đều deterministic: cho input ra một output. Nhưng khoa học thường cần phân phối output. GANO tổng quát hóa GAN lên không gian hàm. Generator là NO nhận Gaussian Process sinh hàm đầu ra. Discriminator là Neural Functional nhận hàm trả về số thực. Khi hội tụ, generator học phân phối thật. Lấy mẫu nhiều lần $\to$ có phân phối dự đoán $\to$ khoảng tin cậy, variance, risk metrics. Hữu ích cho data augmentation, bài toán ngược Bayesian, khám phá không gian thiết kế."} 
+& Noise paths \manim{Create} $\to$ Generator box $\to$ output functions stack. Distribution cloud forms. Confidence band shades. Smooth easing. \\ \hline
+\textbf{[23:25--24:10]} \newline Tổng kết 3 ứng dụng chính trên màn hình: Weather, Carbon/CFD, Molecular/PINO. Fade sang text: \textbf{Section 6: Bài toán mở \& Tương lai}. 
+& \textit{"Tóm lại: Neural Operators không chỉ là lý thuyết. Chúng đang thay đổi dự báo thời tiết, tối ưu carbon capture, tăng tốc thiết kế khí động học, mô phỏng phân tử liên tục, tích hợp vật lý qua PINO, và mô hình hóa bất định qua GANO. Phần tiếp theo: những bài toán mở và tương lai của AI for Science."} 
+& Application icons/labels \manim{FadeIn} in grid. Clean \manim{FadeOut} $\to$ section title \manim{Write}. Hold 1s before cut. \\ \hline
+\end{tabularx}
+
+\section{NHỮNG BÀI TOÁN MỞ VÀ TƯƠNG LAI CỦA AI FOR SCIENCE}
+\textit{Tổng thời lượng: khoảng 6 phút}
+
+% NOTE: Section 6 content was truncated in original outline submission
+% The remaining scenes cover:
+% - Open problems in PINO
+% - Uncertainty quantification  
+% - Scaling and multi-dataset training
+% - Physics domain knowledge integration
+% - Future directions for AI for Science
+% - Closing synthesis
