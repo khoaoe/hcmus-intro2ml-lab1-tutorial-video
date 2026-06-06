@@ -29,7 +29,7 @@
 \end{tabularx}
 
 % ================= SCENE 1.2 =================
-\subsection{Scene 1.2: Plot twist -- Thế giới khoa học: dữ liệu là hàm số}
+\subsection{Scene 1.2: Plot twist -- Bản chất dữ liệu: ``Đầu dò'' và ``Trường liên tục''}
 \textbf{Timestamp tổng:} \texttt{0:45 -- 1:45}
 
 \noindent
@@ -38,19 +38,30 @@
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-
-\textbf{[0:45--1:00]} \newline Khung $\mathbb{R}^n$ shatter effect $\to$ lộ cầu Trái Đất với 3 lớp trường chồng lên: nhiệt độ (đỏ), gió (xanh), áp suất (vàng). 
-& \textit{"Tuy nhiên, nếu chúng ta bước ra khỏi Khoa học Máy tính và đi dạo qua các khoa khác trong trường đại học, bức tranh thực tế sẽ thay đổi hoàn toàn:"} 
-& Shatter: \manim{FadeOut} $\mathbb{R}^n$ + \manim{Create} globe. Layers fade-in sequentially (0.5s each). \\ \hline
-
-\textbf{[1:00--1:25]} \newline Lần lượt hiện 4 icon + mini-animation: \textcolor{orange}{Da liễu} (gradient da), \textcolor{orange}{Địa vật lý} (sóng 3D), \textcolor{orange}{CFD} (dòng khí), \textcolor{orange}{Khí hậu} (100+ hàm trên cầu). 
-& \textit{"Da liễu nghiên cứu mô da trên bề mặt liên tục. Địa vật lý phân tích hàm 3D mô tả sóng địa chấn. Cơ khí tính toán trường vector 4D. Khí hậu mô phỏng hàng trăm hàm trên cầu. Ở đó, dữ liệu của họ không phải là ảnh hay token. Dữ liệu của họ là \textbf{hàm số}."} 
-& Mỗi icon: \manim{Scale} in (0.3s) $\to$ zoom $\to$ surface/field \manim{Create} $\to$ label \manim{Write}. Sync mỗi domain với 6-7s VO. \\ \hline
-
-\textbf{[1:25--1:45]} \newline Zoom cực gần vào 1 điểm trên cầu $\to$ vẫn thấy gradient liên tục, \textbf{không pixel}. Overlay: \textbf{Data = Functions}. 
-& \textit{"Và đây là điểm then chốt: khi ta cố ép một mô hình Deep Learning truyền thống xử lý dữ liệu này bằng cách rời rạc hóa thành lưới 64x64..."} 
-& Infinite zoom: \manim{CameraFrame} move + \manim{Scale} field. Emphasize continuity with smooth gradient, no grid lines. \\ \hline
-
+\textbf{[0:45--1:05]}
+\newline Khung $\mathbb{R}^n$ vỡ vụn (shatter). Từ các mảnh vỡ, một \textbf{Trường vô hướng 2D} (Scalar Field - vd: nhiệt độ) nổi lên dưới dạng một mặt cong 3D mượt mà (surface), uốn lượn liên tục.
+\newline Một \textbf{"Đầu dò" (Probe)} phát sáng xuất hiện, bay tự do trong không gian. Đến đâu, nó thả xuống một tọa độ $(x,y)$ và nhổ lên một con số $T = 24.5^\circ C$.
+& \textit{"Tuy nhiên, nếu bước ra khỏi Khoa học Máy tính, dữ liệu không nằm sẵn trong một ma trận pixel. Nó là một \textbf{trường liên tục} (continuous field) tồn tại ở khắp mọi nơi. Dù là nhiệt độ khí quyển, áp suất dưới lòng đất, hay vận tốc dòng khí... bản chất của chúng là một hàm số $u(x)$."}
+& \manim{Shatter} $\mathbb{R}^n$ $\to$ \manim{Surface} morphs from shards.
+\newline \textbf{Probe}: \manim{Dot} glowing, di chuyển theo \manim{Path}.
+\newline \manim{DashedLine} từ Probe xuống mặt phẳng tọa độ, \manim{MathTex} $T(x,y)$ hiện ra và update realtime theo vị trí Probe. \\ \hline
+\textbf{[1:05--1:25]}
+\newline Chia đôi màn hình.
+\newline \textbf{Trái (Camera/CNN):} Một lưới grid 64x64 (như một cái khuôn) ụp xuống trường liên tục. Nó chỉ "nhìn" thấy data qua các ô vuông cố định.
+\newline \textbf{Phải (Neural Operator):} Không có lưới. Chỉ có hàm số $u(x)$ và hàng loạt các Probe bay vào truy vấn (query) ở bất kỳ tọa độ nào, kể cả những điểm nằm "giữa" các ô lưới cũ.
+& \textit{"Một bức ảnh giống như một tấm lưới cứng được ụp xuống thế giới: bạn chỉ thấy những gì lọt vào ô lưới. Nhưng trong khoa học, chúng ta cần truy vấn (query) giá trị tại \textbf{bất kỳ tọa độ nào}, tính đạo hàm tại mọi điểm, và tích phân trên mọi miền. Dữ liệu không phải là ảnh. Dữ liệu là một \textbf{Toán tử} (Operator)."}
+& \textbf{Left:} \manim{Grid} drops, locks onto surface. Các điểm ngoài grid bị mờ đi (fade opacity).
+\newline \textbf{Right:} \manim{VGroup} của nhiều Probes bay loạn xạ, "chọc" vào mặt cong và lấy data. Overlay text: \textbf{Query Anywhere}. \\ \hline
+\textbf{[1:25--1:45]}
+\newline Hiện một \textbf{Nút vặn (Dial)} ghi chữ "Resolution".
+\newline Vặn nút lên Max: 
+\newline - Bên CNN: Lưới grid chia nhỏ ra chằng chịt $\to$ nặng nề, nhưng bản chất vẫn là các ô vuông rời rạc.
+\newline - Bên NO: Mặt cong (hàm số) vẫn giữ nguyên shape, chỉ là ta đang "lấy mẫu" (sample) nó dày đặc hơn. Overlay: \textbf{Discretization Invariance}.
+& \textit{"Và đây là điểm then chốt: khi ta cố ép một mô hình Deep Learning truyền thống xử lý dữ liệu này bằng cách rời rạc hóa... ta đã ném đi bản chất liên tục của nó. Neural Operator sinh ra để học chính cái \textbf{hàm số gốc}, chứ không phải học cái lưới rời rạc."}
+& \manim{ValueTracker} điều khiển Dial.
+\newline Grid bên trái \manim{Transform} thành lưới dày đặc (visual noise).
+\newline Surface bên phải vẫn \manim{Smooth}, các Probe chỉ là xuất hiện nhiều hơn.
+\newline Text \manim{Write} sync với nhịp "ném đi bản chất". \\ \hline
 \end{tabularx}
 
 % ================= SCENE 1.3 =================
@@ -70,7 +81,7 @@
 
 
 % ================= SCENE 1.4 =================
-\subsection{Scene 1.4: Traditional Solvers \& 4 hạn chế}
+\subsection{Scene 1.4: Traditional Solvers \& Nỗi đau của Giải tích số}
 \textbf{Timestamp tổng:} \texttt{2:30 -- 3:30}
 
 \noindent
@@ -79,9 +90,9 @@
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[2:30--2:50]} \newline Hiện PDE: $-\nabla \cdot (a\nabla u)=f$ với từng thành phần highlight theo lời. Flowchart: PDE $\to$ Finite Diff $\to$ Fixed Grid. & \textit{"Trước khi có Neural Operators, các nhà khoa học giải quyết những bài toán này bằng phương pháp số truyền thống. Quy trình chuẩn là: mô hình hóa hiện tượng bằng Phương trình Đạo hàm Riêng (PDE) như Navier-Stokes cho chất lưu hay Schrödinger cho cơ học lượng tử, sau đó dùng sai phân hữu hạn hoặc phần tử hữu hạn để giải trên một lưới cố định."} & Equation build-up: each term \manim{Write} + color highlight. Flowchart: \manim{Arrow} nối nodes sequentially. \\ \hline
-\textbf{[2:50--3:10]} \newline Lưới mịn dần: $16^2 \to 32^2 \to 64^2 \to 128^2$. Đồng hồ bên cạnh chạy nhanh dần $\to$ "bùng nổ" icon. & \textit{"Cách tiếp cận này rất mạnh mẽ nhưng tồn tại những nút thắt khó gỡ: Sai số tích lũy... Bùng nổ chi phí tính toán: Khi độ phân giải tăng lên để đạt độ chính xác cần thiết, chi phí tính toán tăng theo lũy thừa, vượt quá khả năng chi trả của nhiều tổ chức."} & Grid refinement: \manim{Transform} with increasing density. Timer: \manim{ValueTracker} exponential speed-up $\to$ explosion effect. \\ \hline
-\textbf{[3:10--3:30]} \newline 4 icon hiện lần lượt, mỗi icon có mini-animation: \textcolor{red}{ Sai số tham số hóa}, \textcolor{red}{Chi phí bùng nổ}, \textcolor{red}{Rào cản chuyên môn}, \textcolor{red}{Không khả vi}. & \textit{"Và còn những nút thắt khó gỡ: sai số tích lũy do tham số hóa, chi phí tính toán tăng theo lũy thừa, rào cản chuyên môn, tính không khả vi khiến việc đưa dữ liệu thực tế ngược lại vào mô hình trở nên cực kỳ phức tạp. Đừng hiểu lầm, các bộ giải truyền thống là thành tựu vĩ đại. Mục tiêu không phải thay thế, mà bổ sung ML vào toolbox."} & Icons: \manim{FadeIn} + \manim{Scale} (0.5s each). Micro-animation: cloud distortion, money chart, book stack, gradient blocked. \\ \hline
+\textbf{[2:30--2:50]} \newline Một trường vector liên tục (mượt mà) bị một tấm lưới (Grid) đè xuống. Các gradient bị "băm" thành các ô vuông rời rạc (Pixelation). Phương trình PDE hiện lên như một cái khuôn ép. & \textit{"Trước khi có Neural Operators, các nhà khoa học giải quyết những bài toán này bằng phương pháp số truyền thống. Bản chất là ép một thế giới liên tục vào một chiếc khuôn rời rạc: Phương trình Đạo hàm Riêng (PDE) được xấp xỉ bằng Sai phân hữu hạn trên một lưới cố định."} & \manim{ContinuousField} morphs thành \manim{DiscreteBlocks}. Grid lines \manim{Create} đè lên. Cảm giác "mất mát" chi tiết vật lý. \\ \hline
+\textbf{[2:50--3:10]} \newline Animation "Solver Sweep": Một tia sáng quét qua lưới để giải lặp. Lưới nhân đôi độ mịn $\to$ tia sáng quét chậm rì. Biểu đồ Cost bên cạnh vẽ đường cong $O(N^3)$ vọt lên và đâm thủng trần màn hình. & \textit{"Vấn đề là, solver truyền thống phải giải lặp đi lặp lại. Khi độ phân giải tăng lên để bắt được các chi tiết vật lý nhỏ, chi phí tính toán không tăng tuyến tính, mà bùng nổ theo lũy thừa. Ta chạm phải một bức tường tính toán không thể vượt qua."} & \manim{ScanLine} di chuyển. Grid \manim{Transform} dày đặc. \manim{Axes} vẽ đường cong hàm mũ \manim{Create} và \manim{Flash} đỏ khi chạm đỉnh. \\ \hline
+\textbf{[3:10--3:30]} \newline Hiện "Black Box" Solver. Mũi tên Forward (Xanh) đi qua. Mũi tên Gradient/Inverse (Đỏ) cố đi ngược lại nhưng đập vào bức tường "Non-differentiable" và vỡ tan. Overlay: \textbf{Bổ sung ML, không thay thế}. & \textit{"Hơn nữa, các solver này thường là những hộp đen không khả vi. Bạn không thể dễ dàng lấy đạo hàm để giải các bài toán ngược (inverse problems) hay tối ưu hóa thiết kế. Mục tiêu của ML không phải là vứt bỏ solver, mà là bổ sung một công cụ linh hoạt hơn vào toolbox."} & Mũi tên đỏ \manim{MoveAlongPath} $\to$ \manim{Shatter} khi chạm hộp đen. Text overlay \manim{Write} chậm, dứt khoát. \\ \hline
 \end{tabularx}
 
 % ================= SCENE 1.5 =================
@@ -96,32 +107,52 @@
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
 \textbf{[3:30--3:45]} \newline Màn hình chia đôi: Trái $\mathbb{R}^n \to \mathbb{R}^m$ (vector), Phải $\mathcal{A} \to \mathcal{U}$ (hàm số). & \textit{"Câu hỏi đặt ra là: Liệu Machine Learning có thể học được trực tiếp ánh xạ từ không gian hàm này sang không gian hàm kia mà không cần giải PDE thủ công mỗi lần hay không?"} & Split screen: \manim{VGroup} with \manim{Transform} labels. Pause 0.5s after question. \\ \hline
 \textbf{[3:45--3:55]} \newline Dấu hỏi lớn "nổ" thành logo Neural Operator (chữ N cách điệu + $\int$). & \textit{"Và câu trả lời chính là \textbf{Neural Operators} — thế hệ AI mới học trên không gian vô hạn chiều."} & Explosion: \manim{Flash} $\to$ logo \manim{Create} with subtle glow. Sync "Neural Operators" with reveal. \\ \hline
-\textbf{[3:55--4:00]} \newline Fade to black + text: \textbf{Section 2: Thế giới hàm số}. & \textit{(nhạc chuyển cảnh, pause ngắn)} & Clean \manim{FadeOut} $\to$ text \manim{Write} centered. Hold 1s before cut. \\ \hline
+\textbf{[3:55--4:00]} \newline Fade to black + text: \textbf{Thế giới hàm số}. & \textit{(nhạc chuyển cảnh, pause ngắn)} & Clean \manim{FadeOut} $\to$ text \manim{Write} centered. Hold 1s before cut. \\ \hline
 \end{tabularx}
+
 
 
 \section{THẾ GIỚI HÀM SỐ}
 \textit{Tổng thời lượng: 3 phút 30 giây}
 
-\subsection{Scene 2.1: Bản chất dữ liệu khoa học -- Mọi thứ đều là hàm số}
+\subsection{Scene 2.1: Bản chất dữ liệu khoa học -- Không gian, Hình học và Trường}
 \textbf{Timestamp tổng:} \texttt{4:00 -- 5:00}
 
 \noindent 
-
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[4:00--4:30]} \newline Hiện cầu Trái Đất với các lớp dữ liệu ERA5 (nhiệt, gió, áp suất). Mũi tên nối "Trạng thái hôm nay" $\to$ "Trạng thái ngày mai". Overlay: \textbf{Hàm $\to$ Hàm}. 
-& \textit{"Trước khi đi sâu vào định nghĩa Neural Operator, hãy quan sát bản chất dữ liệu khoa học. Dự báo thời tiết: nhiệt độ, vận tốc gió, áp suất tại mỗi điểm trên mặt cầu đều là các hàm số. Bài toán dự báo thực chất là ánh xạ từ tập hợp hàm số hôm nay sang tập hợp hàm số ngày mai. Đạo hàm và tích phân của chúng phải tuân định luật vật lý, cho ra năng lượng hay moment động lượng."} 
-& Globe rotate chậm. Layers \manim{FadeIn} tuần tự. Arrow \manim{Create} nối 2 trạng thái. Text overlay \manim{Write} sync với từ khóa "ánh xạ". \\ \hline
-\textbf{[4:30--4:50]} \newline Hiện khối 3D dưới lòng đất với sóng lan truyền. Chuyển cảnh sang geometry xe/máy bay + trường áp suất bao quanh. 
-& \textit{"Địa chấn học: trường vận tốc ba chiều $a(x)$ mô tả sóng lan truyền. Bài toán ngược quan trọng là từ quan sát bề mặt suy ra cấu trúc bên trong. Khí động học: hình dạng vật thể là hàm geometry, output là trường áp suất và vận tốc thỏa mãn Navier-Stokes. Neural Operator cho kết quả tương đương solver truyền thống chỉ trong vài giây."} 
-& 3D block \manim{Create} với wave propagation effect. Geometry surface \manim{Transform} sang flow field. Highlight PDE constraint subtly. \\ \hline
-\textbf{[4:50--5:00]} \newline Hiện quỹ đạo nguyên tử liên tục. Text overlay: \textbf{Input = Hàm, Output = Hàm, Ràng buộc vật lý liên tục}. 
-& \textit{"Động lực học phân tử: nguyên tử chuyển động liên tục theo Schrödinger. Quỹ đạo không phải dãy điểm rời rạc mà là hàm số liên tục. Điểm chung của tất cả bài toán này: dữ liệu vào là hàm số, dữ liệu ra là hàm số, và output phải thỏa mãn các ràng buộc vật lý liên tục."} 
-& Particle trajectory \manim{ParametricCurve} moving smoothly. Checklist text \manim{FadeIn} từng dòng. Sync VO nhịp cuối. \\ \hline
+\textbf{[4:00--4:20]} \newline 
+Một khối khí quyển 3D (Fluid Volume) trong suốt. Bên trong là các đường dòng (streamlines) uốn lượn và gradient nhiệt độ. 
+Một "Thấu kính Toán tử" (Operator Lens) quét qua, biến trạng thái $t$ thành $t+\Delta t$. 
+Overlay: \textbf{Tiến hóa thời gian \& Bảo toàn}.
+& \textit{"Hãy quên những bức ảnh đi. Trong khí tượng hay cơ học chất lưu, dữ liệu là một khối không gian 3D chứa các trường vector và vô hướng. Bài toán dự báo thực chất là một toán tử tiến hóa: ánh xạ toàn bộ trạng thái hôm nay sang ngày mai. Và output bắt buộc phải là một hàm liên tục, vì ta cần tính divergence hay curl để kiểm tra xem khối lượng và năng lượng có được bảo toàn hay không."} 
+& \texttt{VGroup} các \texttt{Streamline} mượt mà. 
+\texttt{Surface} gradient nhiệt độ mờ. 
+Toán tử \texttt{Transform} block $t \to t+1$. 
+Hiện biểu tượng $\nabla \cdot \mathbf{u} = 0$ (divergence-free) nhấp nháy nhẹ. \\ \hline
+\textbf{[4:20--4:40]} \newline 
+Chuyển sang lát cắt địa chất 2D/3D (Stratified layers). 
+Một điểm nổ (earthquake) tạo ra các vòng tròn sóng (wavefronts) lan truyền, khúc xạ qua các lớp. 
+Trên mặt đất, các sensor vẽ ra các đồ thị 1D (seismograms). 
+Mũi tên \textbf{INVERSE} ngược từ đồ thị 1D $\to$ cấu trúc 3D ẩn dưới sâu.
+& \textit{"Trong địa chấn, ta đối mặt với bài toán ngược. Sóng địa chấn lan truyền trong lòng đất tuân theo phương trình Helmholtz. Ta chỉ thu thập được các hàm tín hiệu 1D trên bề mặt. Thách thức là: từ không gian hàm 1D trên mặt, suy ngược ra không gian hàm 3D của cấu trúc địa chất ẩn bên dưới. Một ánh xạ giữa hai miền không gian hoàn toàn khác biệt."} 
+& \texttt{Circle} wavefronts lan tỏa, \texttt{Bend} khi qua ranh giới lớp.
+Sensor \texttt{Plot} ra hàm 1D dao động.
+Mũi tên đỏ \texttt{GrowArrow} ngược từ $1D \to 3D$. Overlay: \textbf{Cross-Domain Mapping}. \\ \hline
+\textbf{[4:40--5:00]} \newline 
+Profile cánh máy bay (Airfoil) trừu tượng. 
+Hình dáng vật thể (Geometry) là một hàm biên. 
+Trường áp suất (Pressure field) bám sát bề mặt (Boundary layer) và tách dòng (Wake).
+Chuyển cảnh: Hàm sóng xác suất (Schrödinger) tiến hóa liên tục.
+Text: \textbf{Geometry $\to$ Field, Time $\to$ Continuum}.
+& \textit{"Khí động học: hình dáng vật thể chính là một hàm số mô tả biên, và output là trường áp suất bám sát lớp biên nơi đạo hàm biến thiên cực mạnh. Động lực học phân tử: quỹ đạo không phải là các frame rời rạc, mà là một hàm liên tục trong không gian pha. Điểm chung: Input là Hàm, Output là Hàm, và Hình học của miền xác định mọi thứ."}
+& \texttt{ParametricCurve} Airfoil. 
+\texttt{Heatmap} áp suất rực rỡ ở lớp biên (nơi đạo hàm lớn).
+Chuyển morph sang \texttt{ProbabilityCloud} của hàm sóng.
+Chốt scene bằng text \texttt{Write} đồng bộ nhịp VO cuối. \\ \hline
 \end{tabularx}
 
 \subsection{Scene 2.2: Lưu ý then chốt -- Ảnh không phải là Hàm số}

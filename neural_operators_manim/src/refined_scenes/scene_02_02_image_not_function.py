@@ -85,7 +85,7 @@ class Scene0202_ImageIsNotFunction(TimedScene):
 
         barrier = Rectangle(width=8, height=0.15, fill_color=WARNING,
                             fill_opacity=0.8, stroke_width=0).shift(DOWN * 0.3)
-        barrier_label = Text("🚫", font_size=40, color=WARNING).next_to(barrier, UP, buff=0.3)
+        barrier_label = MathTex(r"\times", font_size=60, color=WARNING).next_to(barrier, UP, buff=0.1)
 
         warning_lines = VGroup(
             Text("Ném đi bản chất liên tục", font_size=24, color=WARNING),

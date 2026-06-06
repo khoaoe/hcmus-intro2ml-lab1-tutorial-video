@@ -97,10 +97,12 @@ class Scene0401_FNO(TimedScene):
             pipe_arrows.add(a)
 
         # Convolution theorem
-        conv_theorem = MathTex(
-            r"\text{Tích chập } O(N^2) \;\leftrightarrow\; \text{Nhân } O(N \log N)",
-            font_size=24, color=NVIDIA_GREEN
-        ).shift(DOWN * 1.8)
+        conv_theorem = VGroup(
+            Text("Tích chập", font_size=20, color=NVIDIA_GREEN),
+            MathTex(r"O(N^2) \leftrightarrow", font_size=24, color=NVIDIA_GREEN),
+            Text("Nhân", font_size=20, color=NVIDIA_GREEN),
+            MathTex(r"O(N \log N)", font_size=24, color=NVIDIA_GREEN)
+        ).arrange(RIGHT, buff=0.15).shift(DOWN * 1.8)
 
         # Global vs Local branches
         branch_global = Text("Nhánh toàn cục: tương tác xa", font_size=18, color=INPUT).shift(DOWN * 2.8 + LEFT * 3)

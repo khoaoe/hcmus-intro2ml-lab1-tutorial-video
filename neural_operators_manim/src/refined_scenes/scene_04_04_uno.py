@@ -128,11 +128,18 @@ class Scene0404_UNO(TimedScene):
         ).arrange(DOWN, buff=0.4).shift(DOWN * 0.8)
 
         # Map analogy
-        analogy = VGroup(
-            Text("🗺️ Giống vẽ bản đồ:", font_size=20, color=MUTED),
+        map_icon = VGroup(
+            Rectangle(width=0.6, height=0.4, fill_color=CARD_BG, fill_opacity=1, stroke_color=MUTED, stroke_width=1.5),
+            Line(DL*0.2, UR*0.2, color=MUTED, stroke_width=1),
+            Line(UL*0.1, DR*0.2, color=MUTED, stroke_width=1)
+        )
+        analogy_text = VGroup(
+            Text("Giống vẽ bản đồ:", font_size=20, color=MUTED),
             Text("Toàn cảnh cho cao tốc + Chi tiết cho tên đường nhỏ",
                  font_size=18, color=MUTED),
-        ).arrange(DOWN, buff=0.2).to_edge(DOWN, buff=0.5)
+        ).arrange(DOWN, buff=0.2)
+        
+        analogy = VGroup(map_icon, analogy_text).arrange(RIGHT, buff=0.3).to_edge(DOWN, buff=0.5)
 
         self.play_timed("skip_title", 35.5, 37, FadeIn(skip_title))
         self.play_timed("skip_eq", 37, 40, FadeIn(skip_eq))

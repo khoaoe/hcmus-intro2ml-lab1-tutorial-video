@@ -28,7 +28,7 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
                           color=OPERATOR, weight=BOLD).to_edge(UP, buff=0.4)
 
         # Attention matrix visualization
-        variables = ["p", "v_x", "v_y", "T", "ρ"]
+        variables = ["p", "v_x", "v_y", "T", r"\rho"]
         n_vars = len(variables)
         matrix_group = VGroup()
 
