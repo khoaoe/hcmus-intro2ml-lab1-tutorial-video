@@ -39,21 +39,31 @@ class Scene0201_NatureOfScientificData(TimedScene):
             ])
 
         # 2. Vẽ khung hộp chất lưu (Fluid Volume)
-        box_lines = VGroup()
-        # Bottom face
-        box_lines.add(Line(iso(-2,-2,0), iso(2,-2,0), color=GREY_B, stroke_width=1.5))
-        box_lines.add(Line(iso(2,-2,0), iso(2,2,0), color=GREY_B, stroke_width=1.5))
-        box_lines.add(Line(iso(2,2,0), iso(-2,2,0), color=GREY_B, stroke_width=1.5))
-        box_lines.add(Line(iso(-2,2,0), iso(-2,-2,0), color=GREY_B, stroke_width=1.5))
-        # Top face
-        box_lines.add(Line(iso(-2,-2,2), iso(2,-2,2), color=GREY_B, stroke_width=1.5))
-        box_lines.add(Line(iso(2,-2,2), iso(2,2,2), color=GREY_B, stroke_width=1.5))
-        box_lines.add(Line(iso(2,2,2), iso(-2,2,2), color=GREY_B, stroke_width=1.5))
-        box_lines.add(Line(iso(-2,2,2), iso(-2,-2,2), color=GREY_B, stroke_width=1.5))
-        # Vertical edges
-        for x in [-2, 2]:
-            for y in [-2, 2]:
-                box_lines.add(Line(iso(x,y,0), iso(x,y,2), color=GREY_B, stroke_width=1.5))
+        back_box_lines = VGroup()
+        front_box_lines = VGroup()
+        
+        # Mặt trên (z=0) - nhìn thấy toàn bộ
+        front_box_lines.add(Line(iso(-2,-2,0), iso(2,-2,0), color=GREY_B, stroke_width=1.5))
+        front_box_lines.add(Line(iso(2,-2,0), iso(2,2,0), color=GREY_B, stroke_width=1.5))
+        front_box_lines.add(Line(iso(2,2,0), iso(-2,2,0), color=GREY_B, stroke_width=1.5))
+        front_box_lines.add(Line(iso(-2,2,0), iso(-2,-2,0), color=GREY_B, stroke_width=1.5))
+        
+        # Mặt dưới (z=2) - có 2 cạnh khuất
+        front_box_lines.add(Line(iso(-2,-2,2), iso(2,-2,2), color=GREY_B, stroke_width=1.5))
+        back_box_lines.add(DashedLine(iso(2,-2,2), iso(2,2,2), color=GREY_C, stroke_width=1.5, dashed_ratio=0.5))
+        back_box_lines.add(DashedLine(iso(2,2,2), iso(-2,2,2), color=GREY_C, stroke_width=1.5, dashed_ratio=0.5))
+        front_box_lines.add(Line(iso(-2,2,2), iso(-2,-2,2), color=GREY_B, stroke_width=1.5))
+        
+        # Cạnh dọc - có 1 cạnh khuất ở góc (2,2)
+        front_box_lines.add(Line(iso(-2,-2,0), iso(-2,-2,2), color=GREY_B, stroke_width=1.5))
+        front_box_lines.add(Line(iso(2,-2,0), iso(2,-2,2), color=GREY_B, stroke_width=1.5))
+        front_box_lines.add(Line(iso(-2,2,0), iso(-2,2,2), color=GREY_B, stroke_width=1.5))
+        back_box_lines.add(DashedLine(iso(2,2,0), iso(2,2,2), color=GREY_C, stroke_width=1.5, dashed_ratio=0.5))
+        
+        # Sắp xếp z_index để tạo chiều sâu 3D chuẩn xác
+        back_box_lines.set_z_index(0)
+        front_box_lines.set_z_index(2)
+        box_lines = VGroup(back_box_lines, front_box_lines)
 
         # 3. Vẽ các đường dòng (Streamlines) xuyên qua khối
         flow_lines = VGroup()
@@ -75,6 +85,7 @@ class Scene0201_NatureOfScientificData(TimedScene):
             arrow.rotate(np.arctan2(tangent[1], tangent[0]))
             arrow.move_to(mid_point)
             flow_lines.add(arrow)
+        flow_lines.set_z_index(1)
 
         # 4. Highlight một Voxel nhỏ (Control Volume) để nói về Divergence
         voxel = VGroup()
@@ -88,6 +99,7 @@ class Scene0201_NatureOfScientificData(TimedScene):
         for f in faces:
             poly = Polygon(*f, color=YELLOW, fill_opacity=0.2, stroke_width=1.5)
             voxel.add(poly)
+        voxel.set_z_index(1.5)
 
         # Text & Equation
         title_1 = Text("Fluid Volume (Khối chất lưu)", font_size=32, color=WHITE, weight=BOLD).to_edge(UP, buff=0.5)
@@ -145,11 +157,12 @@ class Scene0201_NatureOfScientificData(TimedScene):
         seismo_title = Text("1D Surface Signals", font_size=20, color=AMBER).next_to(axes, UP, buff=0.2)
 
         # 4. Mũi tên Toán tử (Cross-Domain Operator)
+        # Bỏ .flip(UP) vì nó làm sai lệch hoàn toàn tọa độ start/end. Dùng angle để bẻ cong mũi tên.
         op_arrow = CurvedArrow(
-            axes.get_bottom() + DOWN * 0.2, 
-            earth_layers.get_bottom() + DOWN * 0.2, 
-            color=NVIDIA_GREEN, stroke_width=4
-        ).flip(UP)
+            axes.get_left() + LEFT * 0.2, 
+            earth_layers.get_right() + RIGHT * 0.5, 
+            color=NVIDIA_GREEN, stroke_width=4, angle=PI/3
+        )
         op_text = Text("Inverse Operator", font_size=22, color=NVIDIA_GREEN, weight=BOLD).next_to(op_arrow, DOWN, buff=0.2)
         map_text = MathTex(r"\text{1D Time} \to \text{3D Space}", font_size=36, color=WHITE).to_edge(DOWN, buff=0.5)
 
@@ -214,17 +227,22 @@ class Scene0201_NatureOfScientificData(TimedScene):
         # Zoom vào vùng Boundary Layer & Wake (Đuôi cánh)
         self.play_timed("cfd_zoom", 45, 47, cfd_group.animate.scale(2.5).shift(LEFT * 1.5 + DOWN * 0.5))
         
-        # Highlight Bracket & Text
-        bracket = Brace(Line(UP*1.2, UP*2.5), LEFT, color=RED).shift(RIGHT * 2.5 + DOWN * 0.5)
-        bl_text = Text("Boundary Layer\n(Sharp Gradients)", font_size=18, color=RED, weight=BOLD)
-        bl_text.next_to(bracket, LEFT, buff=0.1)
+        # 3. Tạo Brace cho "Boundary Layer"
+        # Vùng boundary layer sau khi zoom nằm trong khoảng y = 0.9 đến y = 1.7
+        brace = Brace(Line(UP*0.9, UP*1.7), RIGHT, color=WARNING).shift(RIGHT * 2.5)
+        # Manim Brace(RIGHT) mặc định chỉ sang trái '{', ta lật ngang thành '}' để mũi nhọn chỉ về text
+        brace.flip(RIGHT)
         
-        self.play_timed("bl_highlight", 47, 49, GrowFromCenter(bracket), FadeIn(bl_text))
+        brace_text = Text("Boundary Layer\n(Sharp Gradients)", font_size=20, color=WARNING, line_spacing=0.8)
+        # Đặt text bên phải brace, và đẩy lên cao để nằm gọn giữa đường xanh và vàng
+        brace_text.next_to(brace, RIGHT, buff=0.2).shift(UP * 0.9)
+        
+        self.play_timed("bl_highlight", 47, 49, GrowFromCenter(brace), FadeIn(brace_text))
         self.wait_timed("wait_cfd", 49, 50)
 
         # 4. Transition sang Quantum / Schrödinger (Continuous Time)
         # Xóa CFD, hiện Probability Cloud
-        self.play_timed("quantum_transition", 50, 52, FadeOut(cfd_group), FadeOut(bracket), FadeOut(bl_text), FadeOut(cfd_title))
+        self.play_timed("quantum_transition", 50, 52, FadeOut(cfd_group), FadeOut(brace), FadeOut(brace_text), FadeOut(cfd_title))
 
         # Vẽ đám mây xác suất (Probability Cloud) bằng các vòng tròn đồng tâm mờ dần
         cloud_group = VGroup()
