@@ -485,15 +485,15 @@ Text overlay \manim{Write} chậm. Nhấn mạnh sự đối lập Topo vs Metri
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[17:25--18:10]} \newline Hiện cầu Trái Đất với các lớp dữ liệu ERA5 (nhiệt, gió, áp suất). Mũi tên thời gian chạy từ hôm nay sang ngày mai. Hiện 3 số liệu tốc độ nổi bật. 
+\textbf{[17:25--18:10]} \newline Hiện cầu Trái Đất với các lớp dữ liệu thời tiết (nhiệt, gió). Mũi tên thời gian Hôm nay $\to$ Ngày mai. \newline \textbf{Cuộc đua tốc độ}: Thanh tiến trình đỏ (IFS) nhích cực chậm (1 Giờ) vs thanh xanh (FourCastNet) vọt lẹ tức thì (< 1 Giây). Bảng metrics (45,000x).
 & \textit{"Bây giờ, hãy cùng xem Neural Operators thực sự thay đổi thế giới như thế nào. FourCastNet dựa trên FNO, train trên 40 năm dữ liệu ERA5. Nhiệm vụ: dự báo trạng thái khí quyển ngày mai từ hôm nay. So với mô hình IFS truyền thống: nhanh hơn 45,000 lần, tiết kiệm năng lượng 25,000 lần, độ chính xác tương đương ở dự báo ngắn và trung hạn."} 
-& Globe rotate slowly. Data layers \manim{FadeIn} sequentially. Time arrow \manim{Create}. Speed metrics \manim{GrowFromEdge} with emphasis. \\ \hline
-\textbf{[18:10--18:40]} \newline Minh họa ensemble forecasting: một đường dự báo đơn lẻ $\to$ tách thành hàng trăm đường mờ chồng lên nhau tạo dải xác suất. 
+& \manim{Circle} globe \& arcs. \textbf{Speed race}: \manim{Rectangle} \texttt{stretch\_to\_fit\_width}. IFS chậm (5s), FourCastNet chớp mắt (0.5s) + \manim{Flash} xanh. Metrics \manim{FadeIn}. \\ \hline
+\textbf{[18:10--18:40]} \newline \textbf{Ensemble forecasting}: Đồ thị Nhiệt độ/Thời gian. Đường dự báo Deterministic (trắng) $\to$ bùng nổ thành đám mây 60 đường cong ngẫu nhiên (Spaghetti plot, Stochastic). Hiện dải xác suất upper/lower bounds.
 & \textit{"Con số này có hệ quả thực tế: thay vì chạy một dự báo duy nhất, ta chạy hàng trăm kịch bản song song. Thay vì ngày mai 25 độ, model nói: 70 phần trăm khả năng 24 đến 26 độ, 20 phần trăm 22 đến 24 độ. Đây là thứ hệ thống cảnh báo thiên tai thực sự cần."} 
-& Single line \manim{Transform} into probability cloud. Opacity layers stack smoothly. Text overlay syncs with VO. \\ \hline
-\textbf{[18:40--19:10]} \newline Chuyển sang mặt cầu với lưới spherical harmonics (kinh độ + vĩ độ). Highlight sự tương đồng với solver truyền thống. 
-& \textit{"Biến thể nâng cao là Spherical FNO. Thay vì Fourier thông thường, SFNO dùng spherical harmonics: Fourier theo kinh độ, Legendre theo vĩ độ. Đây chính xác là cơ sở domain experts dùng trong solver truyền thống. Neural Operator nói cùng ngôn ngữ với họ."} 
-& Sphere grid morphs from planar to harmonic. Lat/Lon lines highlight. Smooth camera orbit. Clean transition. \\ \hline
+& \manim{Axes} plot. \manim{TransformFromCopy} đường trắng thành cụm \manim{ParametricFunction} opacity thấp (vàng). \manim{Create} dải xác suất đỏ/xanh. \\ \hline
+\textbf{[18:40--19:10]} \newline \textbf{Khắc phục Singularity}: \newline Trái (Planar FNO): Lưới bị nhiễu/rách tại cực Bắc (Dấu X đỏ). \newline Phải (SFNO): Cơn bão di chuyển mượt mà qua cực. \newline Morphing phương trình Fourier $\to$ Spectral ($Y_l^m$).
+& \textit{"Biến thể nâng cao là Spherical FNO. Khi dùng lưới phẳng chiếu lên cầu, model thường bị sai số kỳ dị (singularity) ở các cực. SFNO thay sin/cos bằng hàm điều hòa cầu. Cơn bão đi qua cực hoàn toàn mượt mà. Đáng chú ý: đây chính xác là cơ sở toán học domain experts dùng trong solver truyền thống. Neural Operator nói cùng ngôn ngữ với họ."} 
+& \textbf{Planar}: Grid hội tụ + \manim{Cross} glitch. \textbf{SFNO}: \manim{MoveAlongPath} (cơn bão qua cực). \textbf{Morphing}: \manim{TransformMatchingTex} từ $\mathcal{G}_\theta$ sang $\sum \hat{u}_{l,m} Y_l^m$. \\ \hline
 \end{tabularx}
 
 \subsection{Scene 5.2: Carbon Storage \& Khí động học công nghiệp}

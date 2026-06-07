@@ -24,60 +24,90 @@ class Scene0406_ArchitectureSummary(TimedScene):
         title = Text("Tổng kết: Chọn kiến trúc nào?", font_size=28,
                      color=TEXT, weight=BOLD).to_edge(UP, buff=0.4)
 
-        # Decision grid — 4 architectures
+        # Decision grid — 4 architectures (giảm height, tăng buff)
         grid_data = [
             ("FNO", "Lưới đều\nTốc độ", INPUT),
             ("GNO", "Mesh phức tạp", PURPLE),
-            ("U-NO", "Nghiệm đa tỷ lệ", OUTPUT),
-            ("CoDANO", "Nhiều biến\ntương tác", OPERATOR),
+            ("U-NO", "Đa tỷ lệ", OUTPUT),  # Rút gọn text
+            ("CoDANO", "Nhiều biến", OPERATOR),  # Rút gọn text
         ]
 
         grid_cards = VGroup()
         for name, use_case, color in grid_data:
-            box = RoundedRectangle(width=3.0, height=1.8, corner_radius=0.1,
-                                   stroke_color=color, fill_color=CARD_BG, fill_opacity=0.6)
-            arch_name = Text(name, font_size=24, color=color, weight=BOLD).move_to(
-                box.get_top() + DOWN * 0.4)
-            desc = Text(use_case, font_size=14, color=MUTED).move_to(
-                box.get_center() + DOWN * 0.2)
-            check = Text("✓", font_size=22, color=NVIDIA_GREEN).move_to(
-                box.get_corner(UR) + DL * 0.25)
+            box = RoundedRectangle(width=2.8, height=1.4, corner_radius=0.1,
+                                   stroke_color=color, stroke_width=2,
+                                   fill_color=CARD_BG, fill_opacity=0.6)
+            arch_name = Text(name, font_size=22, color=color, weight=BOLD).move_to(
+                box.get_top() + DOWN * 0.35)
+                
+            if "\n" in use_case:
+                desc = VGroup(*[Text(line, font_size=16, color=MUTED) for line in use_case.split("\n")])
+                desc.arrange(DOWN, buff=0.1)
+            else:
+                desc = Text(use_case, font_size=16, color=MUTED)
+                
+            desc.move_to(box.get_center() + DOWN * 0.1)
+            
+            check = Text("✓", font_size=20, color=NVIDIA_GREEN).move_to(
+                box.get_corner(UR) + DL * 0.2)
             grid_cards.add(VGroup(box, arch_name, desc, check))
 
-        grid_cards.arrange_in_grid(rows=2, cols=2, buff=0.4).shift(UP * 0.3)
+        grid_cards.arrange_in_grid(rows=2, cols=2, buff=0.5).shift(UP * 0.5)
 
-        # Hybrid SOTA badge
+        self.play_timed("title", 0, 1.5, FadeIn(title))
+        
+        # FadeIn từng card sync với VO
+        for i, card in enumerate(grid_cards):
+            start = 1.5 + i * 1.2
+            end = start + 1.2
+            self.play_timed(f"card_{i}", start, end, FadeIn(card, shift=UP*0.2))
+
+        # Hybrid badge - nhấn mạnh với pulse
         hybrid_badge = VGroup(
-            RoundedRectangle(width=4, height=0.6, corner_radius=0.1,
-                             stroke_color=NVIDIA_GREEN, fill_color=NVIDIA_GREEN, fill_opacity=0.15),
-            Text("Hybrid = SOTA", font_size=22, color=NVIDIA_GREEN, weight=BOLD),
+            RoundedRectangle(width=3.5, height=0.5, corner_radius=0.1,
+                             stroke_color=NVIDIA_GREEN, fill_color=NVIDIA_GREEN, 
+                             fill_opacity=0.2, stroke_width=2),
+            Text("Hybrid = SOTA", font_size=20, color=NVIDIA_GREEN, weight=BOLD),
         )
         hybrid_badge[1].move_to(hybrid_badge[0])
-        hybrid_badge.shift(DOWN * 2.5)
+        hybrid_badge.shift(DOWN * 1.8)
 
-        # 4 core components
+        self.play_timed("hybrid", 6.5, 8, 
+                        FadeIn(hybrid_badge, scale=0.8),
+                        *[m.animate.set_opacity(0.4) for m in grid_cards])  # Mờ grid
+        
+        # Pulse hybrid badge
+        self.play_timed("hybrid_pulse", 8, 9.5,
+                        hybrid_badge.animate.scale(1.05).set_stroke(width=3),
+                        rate_func=there_and_back)
+
+        # 4 core components - xuất hiện tuần tự
         components = VGroup(
-            Text("Tích phân", font_size=14, color=OPERATOR),
-            Text("Residual", font_size=14, color=NVIDIA_GREEN),
-            Text("Bias hàm", font_size=14, color=MUTED),
-            Text("CNN đạo hàm", font_size=14, color=INPUT),
-        ).arrange(RIGHT, buff=0.8).to_edge(DOWN, buff=0.3)
+            Text(" Tích phân", font_size=15, color=OPERATOR, weight=BOLD),
+            Text("+ Residual", font_size=15, color=NVIDIA_GREEN),
+            Text("+ Bias hàm", font_size=15, color=MUTED),
+            Text("+ CNN đạo hàm", font_size=15, color=INPUT),
+        ).arrange(RIGHT, buff=0.6).shift(DOWN * 2.8)
 
-        self.play_timed("title", 0, 2, FadeIn(title))
-        self.play_timed("grid", 2, 7, FadeIn(grid_cards))
-        self.play_timed("hybrid", 7, 9, FadeIn(hybrid_badge))
-        self.play_timed("components", 9, 12, FadeIn(components))
-        self.wait_timed("hold_summary", 12, 20)
+        for i, comp in enumerate(components):
+            start = 9.5 + i * 0.6
+            end = start + 0.6
+            self.play_timed(f"comp_{i}", start, end, FadeIn(comp, shift=RIGHT*0.2))
 
-        # Section transition
-        self.play_timed("clear", 20, 20.5,
-                        *[FadeOut(m) for m in [title, grid_cards, hybrid_badge, components]])
+        self.wait_timed("hold_summary", 12, 17)  # Giảm từ 8s → 5s
 
-        next_section = Text(
-            "Section 5: Ứng dụng thực tế",
-            font_size=34, color=TEXT, weight=BOLD
-        )
-        self.play_timed("next", 20.5, 22, FadeIn(next_section))
-        self.wait_timed("hold_next", 22, 24)
-        self.play_timed("cut", 24, 25, FadeOut(next_section, run_time=0.3))
+        # Transition sang Section 5 - mạnh hơn
+        self.play_timed("clear", 17, 17.5,
+                        *[FadeOut(m, run_time=0.3) for m in [title, grid_cards, 
+                                                              hybrid_badge, components]])
+
+        next_section = VGroup(
+            Text("Section 5", font_size=40, color=TEXT, weight=BOLD),
+            Text("Ứng dụng thực tế", font_size=28, color=MUTED),
+        ).arrange(DOWN, buff=0.2)
+
+        self.play_timed("next", 17.5, 19.5, 
+                        FadeIn(next_section, shift=UP*0.5, scale=0.9))
+        self.wait_timed("hold_next", 19.5, 23)
+        self.play_timed("cut", 23, 25, FadeOut(next_section, run_time=0.5))
         self.pad_to(self.SCENE_DURATION)
