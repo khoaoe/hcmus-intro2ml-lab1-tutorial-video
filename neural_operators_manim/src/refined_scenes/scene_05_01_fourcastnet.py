@@ -25,36 +25,69 @@ class Scene0501_FourCastNet(TimedScene):
         title = Text("FourCastNet: Dự báo thời tiết", font_size=28,
                      color=SCIENCE, weight=BOLD).to_edge(UP, buff=0.4)
 
-        # 1. Stylized 2D Globe
-        globe = Circle(radius=2.2, color=WHITE, stroke_width=2, fill_color=BLUE_E, fill_opacity=0.2)
-        globe.shift(LEFT * 3.5)
+        # 1. Stylized 2D Globe with 9 Heatmap bands
+        globe_base = Circle(radius=2.2, color=WHITE, stroke_width=2, fill_color=BLUE_E, fill_opacity=0.2)
         
-        # Lat/Lon lines giả lập 3D
-        lat_lines = VGroup(*[Ellipse(width=4.4, height=h, color=WHITE, stroke_width=1, stroke_opacity=0.3) 
-                             for h in [0.5, 1.5, 2.5, 3.5]])
-        lat_lines.move_to(globe.get_center())
+        E05 = Ellipse(width=4.4, height=0.5)
+        E15 = Ellipse(width=4.4, height=1.5)
+        E25 = Ellipse(width=4.4, height=2.5)
+        E35 = Ellipse(width=4.4, height=3.5)
         
-        # Weather layers (Temperature/Wind bands)
-        weather_bands = VGroup()
-        colors = [RED, ORANGE, YELLOW, GREEN, BLUE]
-        for i, color in enumerate(colors):
-            band = Arc(radius=2.2, start_angle=PI/6 + i*0.2, angle=0.4, 
-                       color=color, stroke_width=6, stroke_opacity=0.6)
-            band.move_arc_center_to(globe.get_center())
-            weather_bands.add(band)
-            
-        globe_group = VGroup(globe, lat_lines, weather_bands)
+        lat_lines = VGroup(E05, E15, E25, E35).set_color(WHITE).set_stroke(width=1, opacity=0.3)
+
+        top_mask = Rectangle(width=5, height=5).move_to(UP * 2.5)
+        bot_mask = Rectangle(width=5, height=5).move_to(DOWN * 2.5)
+
+        def get_diff_regions(outer, inner):
+            diff = Difference(outer, inner).set_stroke(width=0)
+            top_part = Intersection(diff, top_mask).set_stroke(width=0)
+            bot_part = Intersection(diff, bot_mask).set_stroke(width=0)
+            return top_part, bot_part
+
+        R5 = Ellipse(width=4.4, height=0.5).set_stroke(width=0)
+        R4, R6 = get_diff_regions(E15, E05)
+        R3, R7 = get_diff_regions(E25, E15)
+        R2, R8 = get_diff_regions(E35, E25)
+        R1, R9 = get_diff_regions(globe_base, E35)
+
+        R1.set_fill(RED, opacity=0.6)
+        R2.set_fill(ORANGE, opacity=0.6)
+        R3.set_fill(YELLOW, opacity=0.6)
+        nhiet_group = VGroup(R1, R2, R3)
+
+        R4.set_fill(TEAL, opacity=0.6)
+        R5.set_fill(BLUE, opacity=0.6)
+        R6.set_fill(DARK_BLUE, opacity=0.6)
+        gio_group = VGroup(R4, R5, R6)
+
+        R7.set_fill(PURPLE, opacity=0.6)
+        R8.set_fill(PINK, opacity=0.6)
+        R9.set_fill(LIGHT_PINK, opacity=0.6)
+        ap_suat_group = VGroup(R7, R8, R9)
+
+        weather_bands = VGroup(nhiet_group, gio_group, ap_suat_group)
+
+        globe_group = VGroup(globe_base, weather_bands, lat_lines)
+        globe_group.shift(LEFT * 3.5)
+
+        nhiet_label = Text("Nhiệt độ", font_size=16, color=RED).move_to(globe_base.get_right() + RIGHT * 0.7 + UP * 1.5)
+        gio_label = Text("Gió", font_size=16, color=TEAL).move_to(globe_base.get_right() + RIGHT * 0.7)
+        ap_suat_label = Text("Áp suất", font_size=16, color=PINK).move_to(globe_base.get_right() + RIGHT * 0.7 + DOWN * 1.5)
+        feature_labels = VGroup(nhiet_label, gio_label, ap_suat_label)
 
         # Time Arrow
-        today_label = Text("Hôm nay", font_size=18, color=TEXT).next_to(globe, DOWN, buff=0.3)
-        tomorrow_label = Text("Ngày mai", font_size=18, color=TEXT).shift(RIGHT * 3.5 + DOWN * 2.5)
-        time_arrow = Arrow(globe.get_right() + RIGHT*0.2, tomorrow_label.get_left() + LEFT*0.2, 
+        today_label = Text("Hôm nay", font_size=18, color=TEXT).next_to(globe_base, DOWN, buff=0.3)
+        tomorrow_label = Text("Ngày mai", font_size=18, color=TEXT).shift(RIGHT * 3.5)
+        tomorrow_label.set_y(today_label.get_y())
+        
+        time_arrow = Arrow(today_label.get_right() + RIGHT*0.2, tomorrow_label.get_left() + LEFT*0.2, 
                            color=NVIDIA_GREEN, stroke_width=3, buff=0.1)
 
-        self.play_timed("title_globe", 0, 5, FadeIn(title), Create(globe), FadeIn(lat_lines))
-        self.play_timed("weather_layers", 5, 10, *[Create(b) for b in weather_bands])
-        self.play_timed("time_arrow", 10, 15, 
-                        FadeIn(today_label), GrowArrow(time_arrow), FadeIn(tomorrow_label))
+        self.play_timed("title_globe", 0, 4, FadeIn(title), Create(globe_base), FadeIn(lat_lines))
+        self.play_timed("weather_nhiet", 4, 6, FadeIn(nhiet_group), FadeIn(nhiet_label))
+        self.play_timed("weather_gio", 6, 8, FadeIn(gio_group), FadeIn(gio_label))
+        self.play_timed("weather_ap_suat", 8, 10, FadeIn(ap_suat_group), FadeIn(ap_suat_label))
+        self.play_timed("time_arrow", 10, 15, FadeIn(today_label), GrowArrow(time_arrow), FadeIn(tomorrow_label))
 
         # 2. Speed Race: IFS vs FourCastNet
         race_title = Text("Cuộc đua tốc độ", font_size=20, color=TEXT, weight=BOLD).shift(RIGHT * 3.5 + UP * 2)
@@ -94,7 +127,7 @@ class Scene0501_FourCastNet(TimedScene):
 
         # ── Beat 2: [18:10–18:40] Ensemble Forecasting ──
         self.play_timed("clear_beat1", 40, 41,
-                        *[FadeOut(m) for m in [title, globe_group, today_label, time_arrow, 
+                        *[FadeOut(m) for m in [title, globe_group, feature_labels, today_label, time_arrow, 
                                                tomorrow_label, race_title, ifs_bar, ifs_label, ifs_time,
                                                fc_bar, fc_label, fc_time, metrics]])
 
@@ -182,10 +215,20 @@ class Scene0501_FourCastNet(TimedScene):
         sfno_globe = Circle(radius=1.5, color=WHITE, stroke_width=1.5, fill_color=BLUE_E, fill_opacity=0.1)
         sfno_globe.shift(RIGHT * 3.5)
         
-        # Bão di chuyển mượt mà qua cực
-        storm = Dot(radius=0.2, color=RED).move_to(sfno_globe.get_top() + DOWN*0.5)
-        storm_path = Arc(radius=1.0, start_angle=PI/2 + 0.5, angle=-1.0, color=YELLOW, stroke_width=2, stroke_opacity=0.5)
-        storm_path.move_arc_center_to(sfno_globe.get_center())
+        # Bão di chuyển mượt mà qua cực với quỹ đạo phức tạp (looping)
+        storm_path = VMobject(color=YELLOW, stroke_width=2, stroke_opacity=0.8)
+        c = sfno_globe.get_center()
+        storm_path.set_points_smoothly([
+            c + LEFT*1.2 + DOWN*0.2,
+            c + LEFT*0.8 + UP*0.8,
+            c + LEFT*0.1 + UP*1.4,   # Gần cực Bắc (bán kính 1.5)
+            c + RIGHT*0.4 + UP*0.8,  # Vòng xuống
+            c + LEFT*0.2 + UP*1.0,   # Vòng ngược lại (loop)
+            c + RIGHT*0.5 + UP*1.4,  # Cắt qua cực một lần nữa
+            c + RIGHT*1.0 + UP*0.5,
+            c + RIGHT*1.2 + DOWN*0.5
+        ])
+        storm = Dot(radius=0.15, color=RED).move_to(storm_path.get_start())
         
         sfno_label = Text("Spherical FNO", font_size=16, color=NVIDIA_GREEN).next_to(sfno_globe, DOWN, buff=0.3)
         sfno_note = Text("Hàm điều hòa cầu (Harmonics)", font_size=14, color=NVIDIA_GREEN).next_to(sfno_label, DOWN, buff=0.1)
@@ -195,9 +238,9 @@ class Scene0501_FourCastNet(TimedScene):
                         Create(planar_globe), FadeIn(planar_grid), 
                         FadeIn(pole_glitch), FadeIn(planar_label), FadeIn(planar_note))
         
-        self.play_timed("sfno_setup", 75, 79, 
+        self.play_timed("sfno_setup", 75, 77, 
                         Create(sfno_globe), FadeIn(sfno_label), FadeIn(sfno_note),
-                        Create(storm_path), MoveAlongPath(storm, storm_path, rate_func=smooth))
+                        Create(storm_path), FadeIn(storm))
 
         # "Nói cùng ngôn ngữ với Domain Experts"
         # Morph equation
@@ -210,10 +253,15 @@ class Scene0501_FourCastNet(TimedScene):
         lang_note = Text("Neural Operator nói cùng ngôn ngữ với Solver truyền thống", 
                          font_size=18, color=MUTED).next_to(spectral_eq, DOWN, buff=0.4)
 
-        self.play_timed("eq_morph", 79, 85, 
-                        FadeIn(no_eq), 
-                        TransformMatchingTex(no_eq, spectral_eq),
-                        FadeIn(lang_note))
+        self.play_timed("sfno_action_and_eq", 77, 85,
+                        MoveAlongPath(storm, storm_path, rate_func=linear),
+                        Succession(
+                            Wait(2),
+                            FadeIn(no_eq, run_time=1),
+                            TransformMatchingTex(no_eq, spectral_eq, run_time=3),
+                            FadeIn(lang_note, run_time=1),
+                            Wait(1)
+                        ))
 
         self.wait_timed("hold_beat3", 85, 103)
 
