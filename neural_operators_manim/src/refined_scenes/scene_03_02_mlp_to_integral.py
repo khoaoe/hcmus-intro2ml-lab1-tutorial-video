@@ -1,5 +1,5 @@
 """
-Scene 3.2 — Bước nhảy từ MLP sang Toán tử Tích phân
+Scene 3.2 — The Geometric Morphing: MLP to Integral Operator
 Source: original_outline.tex, Section 3, Scene 3.2
 Global time: 8:15 – 9:15
 Duration: 60s
@@ -13,7 +13,6 @@ from src.common.theme import *
 
 apply_global_config()
 
-
 class Scene0302_MLPToIntegralOperator(TimedScene):
     SCRIPT_ID = "3.2"
     SCRIPT_TITLE = "MLP → Toán tử Tích phân"
@@ -22,85 +21,162 @@ class Scene0302_MLPToIntegralOperator(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ── Beat 1: [8:15–8:45] MLP equation → morph to integral operator ──
-        mlp_title = Text("MLP Layer", font_size=28, color=MUTED, weight=BOLD).to_edge(UP, buff=0.5)
-
+        # ═══════════════════════════════════════════════════════════════
+        # Beat 1: [8:15–8:45] The Geometric Melting (Discrete -> Continuous)
+        # ═══════════════════════════════════════════════════════════════
+        
+        # 1. Equation at the top
         mlp_eq = MathTex(
             r"y_j", r"=", r"\sigma", r"\left(", r"\sum_i",
             r"W_{ji}", r"x_i", r"+", r"b_j", r"\right)",
-            font_size=36
-        ).shift(UP * 1.5)
+            font_size=38
+        ).to_edge(UP, buff=0.6)
         mlp_eq[0].set_color(OUTPUT)    # y_j
         mlp_eq[5].set_color(OPERATOR)  # W_ji
         mlp_eq[6].set_color(INPUT)     # x_i
-        mlp_eq[8].set_color(MUTED)     # b_j
-
-        self.play_timed("mlp_title", 0, 2, FadeIn(mlp_title))
-        self.play_timed("mlp_eq", 2, 5, FadeIn(mlp_eq))
-        self.wait_timed("hold_mlp", 5, 10)
-
-        # Morph annotations
-        morph_arrows = VGroup()
-        morph_data = [
-            (mlp_eq[0], r"j \to y", LEFT * 4 + DOWN * 0.5),
-            (mlp_eq[5], r"W \to \kappa(y,x;\theta)", DOWN * 1.5),
-            (mlp_eq[4], r"\sum \to \int", RIGHT * 4 + DOWN * 0.5),
-        ]
-        morph_labels = VGroup()
-        for target, label_text, offset in morph_data:
-            label = MathTex(label_text, font_size=24, color=NVIDIA_GREEN).move_to(
-                mlp_eq.get_center() + offset
+        
+        self.play_timed("mlp_eq", 0, 3, Write(mlp_eq))
+        
+        # 2. Discrete Geometry (Bottom half)
+        # Input nodes (x_i)
+        x_nodes = VGroup(*[Dot(LEFT*4 + UP*(i*0.6 - 0.9), color=INPUT, radius=0.08) for i in range(4)])
+        # Output nodes (y_j)
+        y_nodes = VGroup(*[Dot(RIGHT*4 + UP*(i*0.6 - 0.9), color=OUTPUT, radius=0.08) for i in range(4)])
+        
+        # Weights (Lines connecting them)
+        w_lines = VGroup()
+        for x in x_nodes:
+            for y in y_nodes:
+                line = Line(x.get_right(), y.get_left(), stroke_width=1.5, stroke_color=OPERATOR, stroke_opacity=0.4)
+                w_lines.add(line)
+        discrete_graph = VGroup(x_nodes, y_nodes, w_lines).shift(UP * 0.5)
+        
+        self.play_timed("discrete_graph", 3, 6, FadeIn(discrete_graph))
+        self.wait_timed("hold_discrete", 6, 10)
+        
+        # 3. The Melting (Morphing to Continuous)
+        # Continuous input curve a(x)
+        axes_in = Axes(
+            x_range=[0, 3.5, 1], y_range=[-1.5, 1.5, 1],
+            x_length=3.5, y_length=2.5,
+            axis_config={"color": GREY_B, "stroke_width": 1, "include_ticks": False, "tip_width": 0.15, "tip_height": 0.15}
+        ).shift(LEFT * 4 + UP * 0.5)
+        
+        func_a = axes_in.plot(lambda x: np.sin(x) * 0.8, x_range=[0, 3], color=INPUT, stroke_width=3)
+        label_a = MathTex("a(x)", font_size=24, color=INPUT).next_to(axes_in, UP, buff=0.1)
+        
+        # Continuous Kernel Heatmap (kappa(y,x))
+        # Tạo một rectangle gradient giả lập heatmap 2D
+        kernel_box = Rectangle(width=2.5, height=2.5, stroke_width=0).shift(UP * 0.5)
+        # Dùng các đường line màu để giả lập gradient heatmap cho nhẹ render
+        kernel_heatmap = VGroup()
+        for i in range(25):
+            color_val = interpolate_color(BLUE_D, RED_D, i/24)
+            line = Line(
+                kernel_box.get_corner(DOWN + LEFT) + RIGHT*(i*0.1), 
+                kernel_box.get_corner(UP + LEFT) + RIGHT*(i*0.1),
+                stroke_width=12, stroke_color=color_val, stroke_opacity=0.8
             )
-            morph_labels.add(label)
-
-        for i, ml in enumerate(morph_labels):
-            t = 10 + i * 3
-            self.play_timed(f"morph_{i}", t, t + 2, FadeIn(ml))
-
-        self.wait_timed("hold_morph", 19, 22)
-
-        # Hard cut to integral form
-        self.play_timed("clear_mlp", 22, 22.5,
-                        FadeOut(mlp_title), FadeOut(mlp_eq), FadeOut(morph_labels))
-
-        no_title = Text("Neural Operator Layer", font_size=28,
-                        color=NVIDIA_GREEN, weight=BOLD).to_edge(UP, buff=0.5)
-
+            kernel_heatmap.add(line)
+            
+        label_k = MathTex(r"\kappa(y,x;\theta)", font_size=24, color=OPERATOR).next_to(kernel_box, UP, buff=0.1)
+        
+        # Continuous output curve v(y)
+        axes_out = Axes(
+            x_range=[0, 3.5, 1], y_range=[-1.5, 1.5, 1],
+            x_length=3.5, y_length=2.5,
+            axis_config={"color": GREY_B, "stroke_width": 1, "include_ticks": False, "tip_width": 0.15, "tip_height": 0.15}
+        ).shift(RIGHT * 4 + UP * 0.5)
+        
+        func_v = axes_out.plot(lambda x: np.cos(x) * 0.6, x_range=[0, 3], color=OUTPUT, stroke_width=3)
+        label_v = MathTex("v(y)", font_size=24, color=OUTPUT).next_to(axes_out, UP, buff=0.1)
+        
+        # Morph Equation
         integral_eq = MathTex(
-            r"v(y)", r"=", r"\sigma", r"\left(",
-            r"\int", r"\kappa(y,x;\theta)", r"a(x)", r"\,dx",
+            r"v(y)", r"=", r"\sigma", r"\left(", r"\int",
+            r"\kappa(y,x;\theta)", r"a(x)", r"\,dx",
             r"+", r"b(y)", r"\right)",
-            font_size=36
-        ).shift(UP * 1.0)
-        integral_eq[0].set_color(OUTPUT)    # v(y)
-        integral_eq[5].set_color(OPERATOR)  # kappa
-        integral_eq[6].set_color(INPUT)     # a(x)
-        integral_eq[9].set_color(MUTED)     # b(y)
+            font_size=38
+        ).to_edge(UP, buff=0.6)
+        integral_eq[0].set_color(OUTPUT)
+        integral_eq[5].set_color(OPERATOR)
+        integral_eq[6].set_color(INPUT)
+        
+        # Animate the Melting
+        self.play_timed("melting", 10, 16,
+            # Transform discrete nodes to continuous axes/curves
+            Transform(x_nodes, axes_in), FadeIn(func_a), FadeIn(label_a),
+            Transform(y_nodes, axes_out), FadeIn(func_v), FadeIn(label_v),
+            # Transform weight lines to heatmap
+            Transform(w_lines, kernel_box), FadeIn(kernel_heatmap), FadeIn(label_k),
+            # Transform Equation
+            Transform(mlp_eq, integral_eq)
+        )
+        
+        self.wait_timed("hold_continuous", 16, 25)
 
-        self.play_timed("no_title", 22.5, 24, FadeIn(no_title))
-        self.play_timed("integral_eq", 24, 28, FadeIn(integral_eq))
+        # ═══════════════════════════════════════════════════════════════
+        # Beat 2: [8:45–9:15] The Kernel Lens & Physics Connection
+        # ═══════════════════════════════════════════════════════════════
+        
+        # 1. The Kernel Lens (Scanning window)
+        # Một cửa sổ phát sáng quét qua hàm a(x)
+        scanner = Rectangle(width=0.2, height=2.5, color=YELLOW, fill_opacity=0.3, stroke_width=2)
+        scanner.move_to(axes_in.get_left())
+        
+        # Mũi tên kết nối từ Scanner qua Kernel tới Output
+        connect_arrow = Arrow(
+            kernel_box.get_right(), axes_out.get_left() + LEFT*0.2,
+            color=YELLOW, stroke_width=3, buff=0.1
+        )
+        
+        self.play_timed("scanner_appear", 25, 27, FadeIn(scanner), GrowArrow(connect_arrow))
+        
+        # Animation: Scanner quét từ trái sang phải, đồng thời vẽ ra hàm v(y)
+        self.play_timed("scan_and_draw", 27, 33,
+            scanner.animate.move_to(axes_in.get_right()),
+            Create(func_v), # Vẽ lại hàm v(y) để tạo cảm giác nó đang được "sinh ra"
+            rate_func=linear
+        )
+        
+        # 2. Physics Flash (Green's Function / Impulse Response)
+        # Hiện nhanh một gợn sóng (ripple) để neo lại trực giác vật lý
+        ripple_center = kernel_box.get_center()
+        ripples = VGroup(*[
+            Circle(radius=r, color=WHITE, stroke_width=1.5, stroke_opacity=0.8 - r*0.15)
+            for r in np.linspace(0.2, 1.2, 5)
+        ]).move_to(ripple_center)
+        
+        physics_text = Text("Hàm Green / Đáp ứng xung", font_size=20, color=WHITE)
+        physics_text.next_to(kernel_box, DOWN, buff=0.2)
+        
+        self.play_timed("physics_flash", 33, 36,
+            FadeIn(ripples, scale=0.5),
+            FadeIn(physics_text)
+        )
+        self.play_timed("ripple_expand", 36, 38,
+            ripples.animate.scale(1.5).set_stroke(opacity=0),
+            FadeOut(ripples)
+        )
+        
+        # 3. The Punchline (Kết luận)
+        self.play_timed("clear_clutter", 38, 40,
+            FadeOut(scanner), FadeOut(connect_arrow), FadeOut(physics_text)
+        )
+        
+        punchline = VGroup(
+            Text("Trong Vật lý: Kernel được", font_size=24, color=MUTED),
+            Text("THIẾT KẾ BẰNG TAY", font_size=28, color=WARNING, weight=BOLD),
+            Text("Trong Neural Operator: Kernel được", font_size=24, color=MUTED),
+            Text("HỌC TỪ DỮ LIỆU", font_size=28, color=NVIDIA_GREEN, weight=BOLD),
+        ).arrange(DOWN, buff=0.25).to_edge(DOWN, buff=0.6)
+        
+        self.play_timed("punchline", 40, 45,
+            LaggedStart(*[FadeIn(line, shift=UP*0.2) for line in punchline], lag_ratio=0.2)
+        )
+        
+        self.wait_timed("hold_end", 45, 59)
 
-        # ── Beat 2: [8:45–9:15] Definition overlay + physics connections ──
-        overlay = Text(
-            "Định nghĩa Lớp Neural Operator",
-            font_size=26, color=NVIDIA_GREEN, weight=BOLD
-        ).shift(DOWN * 1.0)
-
-        connections = VGroup(
-            Text("• Đáp ứng xung", font_size=18, color=MUTED),
-            Text("• Hàm Green", font_size=18, color=MUTED),
-            Text("• Tích chập", font_size=18, color=MUTED),
-        ).arrange(DOWN, buff=0.25, aligned_edge=LEFT).shift(DOWN * 2.5 + LEFT * 2)
-
-        diff_note = Text(
-            "Khác biệt: trước kernel cho trước, giờ học từ data",
-            font_size=20, color=OPERATOR
-        ).to_edge(DOWN, buff=0.5)
-
-        self.play_timed("overlay", 28, 30, FadeIn(overlay))
-        self.play_timed("connections", 30, 35, FadeIn(connections))
-        self.play_timed("diff_note", 35, 37, FadeIn(diff_note))
-        self.wait_timed("hold_end", 37, 59)
-
-        self.play_timed("cut", 59, 60, *[FadeOut(m, run_time=0.3) for m in self.mobjects])
+        # Cut to black
+        self.play_timed("cut", 59, 60, *[FadeOut(m, run_time=0.5) for m in self.mobjects])
         self.pad_to(self.SCENE_DURATION)

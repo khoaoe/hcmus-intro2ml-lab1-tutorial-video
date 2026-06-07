@@ -262,19 +262,25 @@ Text overlay \manim{Write}: "Học ánh xạ G". \\ \hline
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[8:15--8:45]} \newline Hiện phương trình MLP: $y_j = \sigma(\sum W_{ji}x_i + b_j)$. Highlight nodes, weights, bias. Sau đó morph mượt: chỉ số $j \to y$, $W \to \kappa(y,x;\theta)$, $\sum \to \int$. 
-
-% __________ Fix _____________ %
-& \textit{"Hãy nhìn MLP: tầng rời rạc, nhân trọng số, cộng bias, đi qua phi tuyến. Bản chất: tổng có trọng số rồi áp dụng phi tuyến. Bây giờ là bước nhảy vọt: xử lý hàm số thay vector. Thay chỉ số $j$ bằng tọa độ $y$ và chỉ số $i$ bằng tọa độ $x$. Khi đó, vector đầu vào $x_i$ trở thành hàm liên tục $a(x)$, và vector đầu ra $y_j$ trở thành hàm liên tục $v(y)$. Và ta thay ma trận $W$ bằng kernel $\kappa(y,x;\theta)$, tổng bằng tích phân."} 
-
-
-& Discrete MLP graph $\to$ \manim{Transform} thành continuous field. Kernel heatmap xuất hiện dần. Integral sign \manim{Create} lớn dần. Sync morph với nhịp VO. \\ \hline
-\textbf{[8:45--9:15]} \newline Hiện công thức cuối: $v(y) = \sigma(\int \kappa(y,x;\theta)a(x)dx + b(y))$. Overlay: \textbf{Định nghĩa Lớp Neural Operator}. 
-& \textit{"Khi khoảng cách điểm tiến về 0, tổng có trọng số của MLP chính xác trở thành Toán tử tích phân. Đây chính là định nghĩa của một lớp Neural Operator. Dạng tích phân này xuất hiện khắp nơi: đáp ứng xung, hàm Green, tích chập. Khác biệt: trước kernel cho trước, giờ học từ data."} 
-& Equation build-up \manim{Write}. Physics examples flash briefly (impulse, Green's function). Text overlay pulses. Clean transition. \\ \hline
+\textbf{[8:15--8:45]} \newline 
+Trên: Phương trình MLP. 
+Dưới: Đồ thị rời rạc (các node nối nhau). 
+Morphing: Các node tan chảy thành đường cong $a(x)$. Ma trận trọng số tan thành Kernel Heatmap $\kappa(y,x)$. Ký hiệu $\sum$ kéo giãn thành $\int$.
+& \textit{"Hãy nhìn một layer MLP: một tổng có trọng số rời rạc. Bây giờ, hãy tưởng tượng số lượng node tiến tới vô cùng. Vector đầu vào tan chảy thành một hàm liên tục $a(x)$. Ma trận trọng số $W$ hòa tan thành một bề mặt Kernel liên tục $\kappa(y,x;\theta)$. Và phép tổng $\sum$ kéo giãn ra, trở thành tích phân $\int$."} 
+& \manim{Graph} morphs thành \manim{ParametricCurve}. 
+\manim{MatrixGrid} morphs thành \manim{Heatmap}. 
+Ký hiệu $\sum$ \manim{Transform} mượt mà thành $\int$. \\ \hline
+\textbf{[8:45--9:15]} \newline 
+Hiện "Thấu kính Kernel" (Kernel Lens) quét dọc theo $a(x)$ để vẽ ra $v(y)$. 
+Flash nhanh hình ảnh gợn sóng (Green's function). 
+Chốt: \textbf{Kernel không còn cho trước, nó được học từ data}.
+& \textit{"Về mặt hình học, toán tử tích phân giống như một thấu kính quét qua không gian: tại mỗi điểm $y$, nó gom thông tin từ toàn bộ hàm $a(x)$ thông qua kernel $\kappa$. Dạng toán này không mới — nó chính là hàm Green hay đáp ứng xung trong vật lý. Điểm khác biệt duy nhất: thay vì thiết kế kernel bằng tay, ta để mạng neural tự học nó từ dữ liệu."} 
+& \manim{Window} quét dọc trục $x$, đồng thời \manim{Draw} đường cong $v(y)$. 
+\manim{Flash} hình ảnh gợn sóng 2D. 
+Text overlay \manim{Write} chậm, dứt khoát. \\ \hline
 \end{tabularx}
 
-\subsection{Scene 3.3: So sánh MLP vs Neural Operator \& Thành phần Lớp}
+\subsection{Scene 3.3: Từ điển Hình học \& Nghịch lý Làm mịn}
 \textbf{Timestamp tổng:} \texttt{9:15 -- 10:15}
 
 \noindent
@@ -283,15 +289,22 @@ Text overlay \manim{Write}: "Học ánh xạ G". \\ \hline
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[9:15--9:45]} \newline Màn hình chia đôi: Trái MLP (vector, ma trận, tổng rời rạc). Phải Neural Operator (hàm, kernel, tích phân liên tục). Highlight sự tương ứng 1-1. 
-& \textit{"Neural Operator không phải kiến trúc kỳ lạ mới. Nó là sự tổng quát hóa tự nhiên của MLP lên không gian hàm. Input $x$ là vector $\mathbb{R}^n$ $\to$ input $a$ là hàm số. Trọng số $W$ là ma trận $\to$ kernel $\kappa(y,x)$. Tổng rời rạc $\to$ tích phân liên tục. Bias vector $\to$ bias hàm $b(y)$."} 
-& \manim{VGroup} split screen. Left: discrete dots/matrix. Right: smooth surfaces/kernel. Synced highlight lines connect corresponding terms. \\ \hline
-\textbf{[9:45--10:15]} \newline Zoom vào 1 lớp NO hoàn chỉnh: hiện 3 thành phần: (1) Lõi tích phân, (2) Bias hàm $b(y)$, (3) Residual Connection (mũi tên bypass). 
-& \textit{"Một lớp toán tử hoàn chỉnh gồm ba thành phần: Lõi tích phân tổng hợp thông tin toàn cục qua kernel. Bias hàm số $b(y)$ biến thiên theo không gian. Và Residual Connection: cộng trực tiếp input vào output. Cực kỳ quan trọng vì tích phân có xu hướng làm mịn dữ liệu, residual giúp giữ chi tiết sắc nét."} 
-& 3 components \manim{FadeIn} sequentially. Residual arrow \manim{Create} with subtle glow. Smoothness vs sharpness visual demo (blurred vs original function). \\ \hline
+\textbf{[9:15--9:45]} \newline 
+\textbf{Từ điển Hình học:} 
+1. Cột chấm (Vector) morph thành Đường cong (Hàm). 
+2. Lưới ô vuông (Ma trận W) morph thành Heatmap 2D (Kernel $\kappa$). 
+3. Ký hiệu $\sum$ morph thành $\int$.
+& \textit{"Neural Operator không phải một kiến trúc kỳ lạ. Nó là sự dịch chuyển tự nhiên từ không gian hữu hạn sang vô hạn. Vector đầu vào tan chảy thành hàm số. Ma trận trọng số mở rộng thành một kernel liên tục. Và phép tổng rời rạc kéo giãn ra thành tích phân. Mọi thứ đều có một cặp song sinh trong không gian hàm."} 
+& Các object \manim{Transform} mượt mà. Không dùng text liệt kê. Nhấn mạnh sự tương đồng về mặt cấu trúc (structural isomorphism). \\ \hline
+\textbf{[9:45--10:15]} \newline 
+\textbf{Nghịch lý Làm mịn:} 
+Hiện một hàm có gai nhọn (shock wave). Đi qua Khối tích phân $\to$ Output bị nhòe (mất gai). 
+Hiện mũi tên Bypass (Residual) nối thẳng Input $\to$ Output. 
+Kết quả: Gai nhọn được phục hồi.
+& \textit{"Nhưng tích phân mang theo một nghịch lý: nó là một bộ lọc thông thấp, có xu hướng làm mịn và xóa sổ các chi tiết sắc nét như sóng xung kích. Đây là lý do Residual Connection không chỉ là một thủ thuật, mà là một yêu cầu sinh tồn. Nó bơm thẳng tín hiệu gốc bypass qua lõi tích phân, giữ lại những chi tiết vật lý quan trọng nhất."} 
+& Hàm sắc nét \manim{Create}. Qua kernel \manim{Transform} thành hàm nhòe. Mũi tên Residual \manim{GrowArrow} phát sáng. Hàm cuối cùng \manim{Flash} lại độ sắc nét. \\ \hline
 \end{tabularx}
-
-\subsection*{Scene 3.4: Deep Neural Operator \& Phân tích Sai số}
+\subsection*{Scene 3.4: Deep Neural Operator \& Bẫy Rời rạc hóa}
 \textbf{Timestamp tổng:} \texttt{10:15 -- 11:15}
 
 \noindent
@@ -300,19 +313,28 @@ Text overlay \manim{Write}: "Học ánh xạ G". \\ \hline
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[10:15--10:45]} \newline Xếp chồng $L$ lớp toán tử tích phân dọc theo trục đứng. Hiện pipeline: Encoder $\to$ $L$ layers $\to$ Decoder. Highlight dòng chảy không bị phá vỡ tính chất. 
-
-% ----------------- Add --------------- %
-$$v^{(\ell+1)} = \sigma \left( \int_{\Omega} \kappa^{\ell}(y, x; \theta) \cdot v^{\ell}(x) dx + b^{\ell}(y) \right)$$
-
-
-& \textit{"Giống Deep Learning, xếp chồng nhiều lớp tạo Deep Neural Operator. Phép xếp chồng không phá vỡ tính chất cốt lõi: input vẫn ở bất kỳ discretization nào, output query được tại mọi điểm. Kiến trúc đầy đủ: Encoder pointwise $\to$ $L$ lớp toán tử $\to$ Decoder pointwise."} 
-
-
-& Layers \manim{Shift} up sequentially. Pipeline flowchart \manim{Create}. Checkmarks appear next to invariance/query properties. \\ \hline
-\textbf{[10:45--11:15]} \newline Hiện 3 thanh sai số: Tổng quát hóa, Xấp xỉ, Rời rạc hóa. Highlight công thức $O(N^{-s})$. So sánh hàm trơn (giảm nhanh) vs hàm shock (dao động). 
-& \textit{"Phân tích sai số có 3 thành phần: tổng quát hóa, xấp xỉ, và rời rạc hóa. Sai số rời rạc tỷ lệ với $N^{-s}$ ($s$ là độ trơn Sobolev). Hàm càng trơn, sai số giảm càng nhanh. Đây là lý do FNO tốt với nghiệm trơn nhưng khó với shock waves. Và có sự đánh đổi giữa độ chính xác số và độ phân giải lưới."} 
-& 3 error bars \manim{GrowFromEdge}. Formula zoom in. Smooth vs jagged function comparison. Final hold 0.5s before section cut. \\ \hline
+\textbf{[10:15--10:45]} \newline 
+\textbf{Pipeline Lift-Operate-Project:} 
+Input là 1 đường cong vật lý. 
+Encoder (Pointwise) "ép" nó thành một chồng dày các đường cong đặc trưng (latent channels). 
+Chồng này đi qua các "Thấu kính Tích phân" (Operator Layers). 
+Decoder (Pointwise) nén chồng đó lại thành 1 đường cong output. 
+Overlay: \textbf{Dữ liệu luôn là Hàm số}.
+& \textit{"Giống Deep Learning, ta xếp chồng nhiều lớp để tạo Deep Neural Operator. Nhưng kiến trúc đầy đủ tuân theo triết lý 'Lift - Operate - Project'. Encoder pointwise nâng hàm vật lý lên không gian đặc trưng ẩn. Các lớp toán tử tích phân trộn thông tin không gian mà không phá vỡ tính liên tục. Cuối cùng, Decoder chiếu về lại biến vật lý. Suốt quá trình, dữ liệu vẫn là hàm số, truy vấn được tại mọi điểm."} 
+& Đường cong đơn \manim{Transform} thành chồng lớp (stack). 
+Stack trượt qua các khối \manim{IntegralLens}. 
+Stack nén lại thành đường cong đơn. 
+Text overlay \manim{Write} sync VO. \\ \hline
+\textbf{[10:45--11:15]} \newline 
+\textbf{Bẫy Rời rạc hóa (Discretization Error):} 
+Chia đôi màn hình. 
+Trên: Hàm trơn (Smooth). Lưới $N$ tăng $\to$ Riemann sum ôm sát đường cong. 
+Dưới: Hàm Shock (gián đoạn). Lưới $N$ tăng $\to$ vẫn bị sai số lớn ở điểm gãy (highlight đỏ). 
+Hiện công thức $O(N^{-s})$.
+& \textit{"Phân tích sai số của Neural Operator có ba thành phần: Xấp xỉ, Tổng quát hóa, và nhân tố mới: Rời rạc hóa. Sai số rời rạc hóa tuân theo $O(N^{-s})$, với $s$ là độ trơn Sobolev. Hàm càng trơn, sai số giảm càng nhanh khi lưới mịn dần. Nhưng với các nghiệm có shock wave hay gián đoạn, $s$ thấp, và sai số giảm rất chậm. Đây là lý do FNO tỏa sáng với dòng chảy trơn, nhưng cần các kiến trúc lai để bắt được các điểm gãy vật lý."} 
+& \manim{RiemannSum} animation cho 2 hàm song song. 
+Highlight vùng sai số (màu đỏ) ở điểm Shock. 
+Công thức \manim{Write} và nhấn mạnh $s$. \\ \hline
 \end{tabularx}
 
 \section{KIẾN TRÚC: FNO, GNO, U-NO}

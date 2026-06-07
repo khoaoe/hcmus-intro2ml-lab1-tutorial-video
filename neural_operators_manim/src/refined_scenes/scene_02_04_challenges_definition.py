@@ -1,6 +1,6 @@
 """
 Scene 2.4 — Thách thức & Định nghĩa Neural Operator
-Source: original_outline.tex, Section 2, Scene 2.4
+Source: Director's Cut
 Global time: 6:40 – 7:30
 Duration: 50s
 """
@@ -22,106 +22,203 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ── Beat 1: [6:40–7:00] 3 different grids + discretization invariance ──
-        grids = VGroup()
-        grid_data = [
-            ("64×64 vuông", 8, INPUT),
-            ("Tam giác bất quy tắc", 0, PURPLE),  # special handling
-            ("128×128 mịn", 14, OUTPUT),
-        ]
-
-        # Regular grid
-        g1 = VGroup(*[
-            Square(side_length=0.22, stroke_width=0.5, stroke_color=INPUT,
-                   fill_color=INPUT, fill_opacity=0.1)
-            for _ in range(64)
-        ]).arrange_in_grid(rows=8, cols=8, buff=0.02)
-        l1 = Text("64×64", font_size=16, color=INPUT).next_to(g1, DOWN, buff=0.15)
-        grids.add(VGroup(g1, l1))
-
-        # Irregular mesh (triangle-ish dots)
+        # ═══════════════════════════════════════════════════════════════
+        # Beat 1A: [6:40-6:52] Discretization Invariance (Local 0 - 12s)
+        # ═══════════════════════════════════════════════════════════════
+        
+        di_label = Text("Discretization Invariance", font_size=36, color=NVIDIA_GREEN, weight=BOLD).to_edge(UP, buff=1.0)
+        
+        # 1. CAD Mesh (Triangles)
+        cad_mesh = VGroup()
+        for i in range(6):
+            for j in range(6):
+                triangle = Polygon(
+                    np.array([-0.4, -0.4, 0]),
+                    np.array([0.4, -0.4, 0]),
+                    np.array([0, 0.4, 0]),
+                    stroke_color=INPUT, stroke_width=1, fill_color=INPUT, fill_opacity=0.3
+                ).shift(RIGHT * (i - 2.5) * 0.8 + UP * (j - 2.5) * 0.8)
+                if (i+j) % 2 == 1:
+                    triangle.rotate(PI, about_point=triangle.get_center())
+                cad_mesh.add(triangle)
+        cad_mesh.move_to(ORIGIN)
+                
+        # 2. Globe mesh (Satellite)
+        globe_mesh = VGroup()
+        circle = Circle(radius=2.5, stroke_color=PURPLE, stroke_width=2, fill_color=PURPLE, fill_opacity=0.1)
+        globe_mesh.add(circle)
+        for i in range(1, 5):
+            ellipse = Ellipse(width=5, height=5 - i, stroke_color=PURPLE, stroke_width=1)
+            globe_mesh.add(ellipse)
+            ellipse2 = Ellipse(width=5 - i, height=5, stroke_color=PURPLE, stroke_width=1)
+            globe_mesh.add(ellipse2)
+        globe_mesh.move_to(ORIGIN)
+            
+        # 3. Sparse sensors (Dots)
+        sparse_sensors = VGroup()
         np.random.seed(42)
-        irregular = VGroup(*[
-            Dot(point=np.array([np.random.uniform(-1.2, 1.2),
-                                np.random.uniform(-1.2, 1.2), 0]),
-                radius=0.04, color=PURPLE)
-            for _ in range(40)
-        ])
-        l2 = Text("Bất quy tắc", font_size=16, color=PURPLE).next_to(irregular, DOWN, buff=0.15)
-        grids.add(VGroup(irregular, l2))
+        for _ in range(80):
+            pt = np.array([np.random.uniform(-3, 3), np.random.uniform(-3, 3), 0])
+            if np.linalg.norm(pt) <= 2.5:
+                sparse_sensors.add(Dot(pt, color=OPERATOR, radius=0.08))
+        sparse_sensors.move_to(ORIGIN)
+        
+        self.play_timed("di_title", 0, 1.5, Write(di_label))
+        self.play_timed("cad_mesh", 1.5, 3.5, Create(cad_mesh))
+        
+        self.play_timed("morph_to_globe", 5, 7, Transform(cad_mesh, globe_mesh))
+        
+        self.play_timed("morph_to_sparse", 8.5, 10.5, Transform(cad_mesh, sparse_sensors))
+        
+        self.play_timed("clear_beat1a", 11.5, 12, FadeOut(cad_mesh), FadeOut(di_label))
 
-        # Fine grid
-        g3 = VGroup(*[
-            Square(side_length=0.12, stroke_width=0.3, stroke_color=OUTPUT,
-                   fill_color=OUTPUT, fill_opacity=0.1)
-            for _ in range(196)
-        ]).arrange_in_grid(rows=14, cols=14, buff=0.01)
-        l3 = Text("128×128", font_size=16, color=OUTPUT).next_to(g3, DOWN, buff=0.15)
-        grids.add(VGroup(g3, l3))
+        # ═══════════════════════════════════════════════════════════════
+        # Beat 1B: [6:52-7:05] Continuous Query (Local 12 - 25s)
+        # ═══════════════════════════════════════════════════════════════
+        
+        cq_label = Text("Continuous Query", font_size=36, color=OPERATOR, weight=BOLD).to_edge(UP, buff=1.0)
+        
+        axes = Axes(x_range=[0, 10, 1], y_range=[0, 4, 1], x_length=10, y_length=4).shift(DOWN * 0.5)
+        curve = axes.plot(lambda x: 2 + np.sin(x), color=INPUT, stroke_width=4)
+        
+        x_tracker = ValueTracker(1)
+        
+        # Tangent line
+        def get_tangent():
+            x = x_tracker.get_value()
+            dx = 0.01
+            p1 = axes.c2p(x, 2 + np.sin(x))
+            p2 = axes.c2p(x + dx, 2 + np.sin(x + dx))
+            angle = np.arctan2(p2[1] - p1[1], p2[0] - p1[0])
+            line = Line(LEFT, RIGHT, color=WARNING, stroke_width=4).scale(1.5).rotate(angle).move_to(p1)
+            return line
+            
+        tangent = always_redraw(get_tangent)
+        
+        # Area
+        def get_area():
+            x = x_tracker.get_value()
+            # Ensure max > min to avoid ValueError
+            x_end = max(1.01, x)
+            return axes.get_area(curve, x_range=[1, x_end], color=PURPLE, opacity=0.4)
+            
+        area = always_redraw(get_area)
+        
+        # Caliper Crosshair
+        def get_caliper():
+            x = x_tracker.get_value()
+            p = axes.c2p(x, 2 + np.sin(x))
+            cross = VGroup(
+                Line(p + UP*0.3, p + DOWN*0.3, color=WHITE, stroke_width=3),
+                Line(p + LEFT*0.3, p + RIGHT*0.3, color=WHITE, stroke_width=3)
+            )
+            return cross
+            
+        caliper = always_redraw(get_caliper)
+        
+        # Labels
+        def get_labels():
+            x = x_tracker.get_value()
+            p = axes.c2p(x, 2 + np.sin(x))
+            d_text = MathTex("f'(x)", font_size=24, color=WARNING).next_to(p, UP+RIGHT, buff=0.2)
+            i_text = MathTex(r"\int f(x) dx", font_size=24, color=PURPLE).move_to(axes.c2p(max(1.5, x/2 + 0.5), 1.0))
+            return VGroup(d_text, i_text)
+            
+        labels = always_redraw(get_labels)
+        
+        self.play_timed("cq_setup", 12.5, 14, FadeIn(cq_label), Create(axes), Create(curve))
+        self.play_timed("caliper_in", 14.5, 15.5, FadeIn(caliper), FadeIn(tangent), FadeIn(area), FadeIn(labels))
+        
+        # Slide caliper
+        self.play_timed("slide_caliper", 16, 21, x_tracker.animate.set_value(9), rate_func=smooth)
+        
+        self.play_timed("clear_beat1b", 24, 25, 
+                        *[FadeOut(m) for m in [cq_label, axes, curve, caliper, tangent, area, labels]])
 
-        grids.arrange(RIGHT, buff=1.0).shift(UP * 0.5)
-
-        self.play_timed("grids", 0, 4, FadeIn(grids))
-
-        # Discretization Invariance label
-        di_label = Text("Discretization Invariance", font_size=28,
-                        color=NVIDIA_GREEN, weight=BOLD).to_edge(UP, buff=0.5)
-        self.play_timed("di_label", 4, 6, FadeIn(di_label))
-
-        # Query dot moving freely
-        query_dot = Dot(radius=0.1, color=OPERATOR)
-        query_label = Text("Query tại bất kỳ điểm", font_size=20,
-                           color=OPERATOR).to_edge(DOWN, buff=1.5)
-        cq_label = Text("Continuous Query", font_size=28,
-                        color=OPERATOR, weight=BOLD).next_to(di_label, DOWN, buff=0.3)
-
-        self.play_timed("query_label", 6, 8, FadeIn(query_label), FadeIn(cq_label))
-
-        # Animate query dot moving
-        path_points = [LEFT * 5, LEFT * 2, ORIGIN, RIGHT * 2, RIGHT * 5]
-        query_dot.move_to(path_points[0])
-        self.add(query_dot)
-        for i, pt in enumerate(path_points[1:]):
-            self.play_timed(f"query_move_{i}", 8 + i * 2, 10 + i * 2,
-                            query_dot.animate.move_to(pt))
-
-        self.wait_timed("hold_challenges", 16, 20)
-
-        # ── Beat 2: [7:00–7:30] 4-criteria checklist ──
-        self.play_timed("clear_beat1", 20, 20.5,
-                        *[FadeOut(m) for m in [grids, di_label, query_label,
-                                               cq_label, query_dot]])
-
-        checklist_title = Text("Neural Operator: 4 tiêu chí", font_size=30,
-                               color=TEXT, weight=BOLD).shift(UP * 3)
-
-        criteria = [
-            "1. Input mọi độ phân giải",
-            "2. Output truy vấn mọi điểm",
-            "3. Hội tụ giới hạn liên tục",
-            "4. Nhanh hơn solver hàng nghìn lần",
+        # ═══════════════════════════════════════════════════════════════
+        # Beat 2: [7:05-7:30] The Mathematical Manifesto (Local 25 - 50s)
+        # ═══════════════════════════════════════════════════════════════
+        
+        manifesto_title = Text("Bản chất của Neural Operator", font_size=36, color=WHITE, weight=BOLD).to_edge(UP, buff=0.5)
+        
+        # 3 Pillars
+        pillars = VGroup()
+        texts = [
+            "", # placeholder for index 0
+            "2. Độc lập lưới rời rạc",
+            "3. Hội tụ giới hạn liên tục"
         ]
-        checks = VGroup()
-        for cr in criteria:
-            check = Text("✓", font_size=28, color=NVIDIA_GREEN)
-            text = Text(cr, font_size=22, color=TEXT)
-            row = VGroup(check, text).arrange(RIGHT, buff=0.3)
-            checks.add(row)
-        checks.arrange(DOWN, buff=0.5, aligned_edge=LEFT).shift(DOWN * 0.3)
-
-        self.play_timed("checklist_title", 20.5, 22, FadeIn(checklist_title))
-
-        for i, ch in enumerate(checks):
-            t = 22 + i * 3.0
-            self.play_timed(f"check_{i}", t, t + 1.5, FadeIn(ch))
-
-        self.wait_timed("hold_checklist", 34, 38)
-
-        # Section transition
-        section_hint = Text("Phần tiếp theo: cấu trúc bên trong",
-                            font_size=22, color=MUTED).to_edge(DOWN, buff=0.5)
-        self.play_timed("hint", 38, 40, FadeIn(section_hint))
+        
+        for i in range(3):
+            # Make it look like a glowing pillar / stone tablet
+            pillar_box = RoundedRectangle(
+                width=7.5, height=1.0, corner_radius=0.1, 
+                stroke_color=NVIDIA_GREEN, stroke_width=2, 
+                fill_color=CARD_BG, fill_opacity=0.9
+            )
+            
+            if i == 0:
+                t = VGroup(
+                    Text("1. Ánh xạ Function", font_size=24, color=WHITE, weight=BOLD),
+                    MathTex(r"\rightarrow", font_size=24, color=WHITE),
+                    Text("Function", font_size=24, color=WHITE, weight=BOLD)
+                ).arrange(RIGHT, buff=0.1)
+            else:
+                t = Text(texts[i], font_size=24, color=WHITE, weight=BOLD)
+                
+            t.move_to(pillar_box)
+            t.align_to(pillar_box, LEFT).shift(RIGHT * 0.5)
+            pillars.add(VGroup(pillar_box, t))
+            
+        pillars.arrange(DOWN, buff=0.4).to_edge(LEFT, buff=0.5).shift(DOWN * 0.5)
+        
+        # Visual for Continuum Limit (Right side)
+        local_axes = Axes(x_range=[0, 4, 1], y_range=[-1.5, 1.5, 1], x_length=5, y_length=4)
+        local_axes.to_edge(RIGHT, buff=0.5).shift(DOWN * 0.5)
+        
+        grid_bg = NumberPlane(
+            x_range=[0, 4, 0.5], y_range=[-1.5, 1.5, 0.5], 
+            x_length=5, y_length=4, 
+            background_line_style={"stroke_color": TEAL, "stroke_width": 1, "stroke_opacity": 0.4}
+        ).move_to(local_axes.get_center())
+        
+        # Noisy curve (Grid artifacts)
+        np.random.seed(42)
+        x_vals = np.linspace(0, 4, 15)
+        y_vals = np.sin(x_vals * 1.5) + np.random.normal(0, 0.3, len(x_vals))
+        
+        noisy_curve = VGroup()
+        for i in range(len(x_vals)-1):
+            p1 = local_axes.c2p(x_vals[i], y_vals[i])
+            p2 = local_axes.c2p(x_vals[i+1], y_vals[i+1])
+            # Step function look
+            noisy_curve.add(Line(p1, local_axes.c2p(x_vals[i+1], y_vals[i]), color=WARNING, stroke_width=3))
+            noisy_curve.add(Line(local_axes.c2p(x_vals[i+1], y_vals[i]), p2, color=WARNING, stroke_width=3))
+            
+        grid_hallucination_text = Text("Ảo giác của lưới", font_size=18, color=WARNING).next_to(local_axes, UP, buff=0.2)
+        
+        # Smooth curve
+        smooth_curve = local_axes.plot(lambda x: np.sin(x * 1.5), color=NVIDIA_GREEN, stroke_width=5)
+        continuum_text = Text("Hội tụ liên tục", font_size=18, color=NVIDIA_GREEN).next_to(local_axes, UP, buff=0.2)
+        
+        self.play_timed("manifesto_title", 25.5, 27, FadeIn(manifesto_title))
+        
+        # Pillars appear
+        self.play_timed("pillar_1", 27, 28.5, FadeIn(pillars[0], shift=UP*0.2))
+        self.play_timed("pillar_2", 29, 30.5, FadeIn(pillars[1], shift=UP*0.2))
+        self.play_timed("pillar_3", 31, 32.5, FadeIn(pillars[2], shift=UP*0.2))
+        
+        # Visual appears
+        self.play_timed("grid_visual_in", 33, 35, 
+                        FadeIn(local_axes), FadeIn(grid_bg), 
+                        Create(noisy_curve), FadeIn(grid_hallucination_text))
+                        
+        # Transform to smooth
+        self.play_timed("transform_continuum", 37, 40,
+                        ReplacementTransform(noisy_curve, smooth_curve),
+                        ReplacementTransform(grid_hallucination_text, continuum_text),
+                        grid_bg.animate.set_opacity(0.1))
+                        
         self.wait_timed("hold_end", 40, 49)
-
-        self.play_timed("cut", 49, 50, *[FadeOut(m, run_time=0.3) for m in self.mobjects])
+        self.play_timed("cut", 49, 50, *[FadeOut(m, run_time=0.5) for m in self.mobjects])
         self.pad_to(self.SCENE_DURATION)
