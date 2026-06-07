@@ -291,50 +291,57 @@ Text overlay \manim{Write} chậm, dứt khoát. \\ \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
 \textbf{[9:15--9:45]} \newline 
 \textbf{Từ điển Hình học:} 
-1. Cột chấm (Vector) morph thành Đường cong (Hàm). 
-2. Lưới ô vuông (Ma trận W) morph thành Heatmap 2D (Kernel $\kappa$). 
-3. Ký hiệu $\sum$ morph thành $\int$.
+1. Cột chấm (Vector) mờ đi, Đường cong mượt (Hàm) mọc lên xuyên qua vị trí các chấm. 
+2. Lưới ô vuông (Ma trận W) "tan chảy" (melt) thành Heatmap 2D mượt mà (Kernel $\kappa$). 
+3. Ký hiệu $\sum$ kéo giãn morph thành $\int$.
 & \textit{"Neural Operator không phải một kiến trúc kỳ lạ. Nó là sự dịch chuyển tự nhiên từ không gian hữu hạn sang vô hạn. Vector đầu vào tan chảy thành hàm số. Ma trận trọng số mở rộng thành một kernel liên tục. Và phép tổng rời rạc kéo giãn ra thành tích phân. Mọi thứ đều có một cặp song sinh trong không gian hàm."} 
-& Các object \manim{Transform} mượt mà. Không dùng text liệt kê. Nhấn mạnh sự tương đồng về mặt cấu trúc (structural isomorphism). \\ \hline
+& Không dùng text liệt kê. 
+\manim{Transform} hoặc \manim{Morph} mượt mà. Nhấn mạnh sự tương đồng cấu trúc (structural isomorphism). \\ \hline
 \textbf{[9:45--10:15]} \newline 
 \textbf{Nghịch lý Làm mịn:} 
-Hiện một hàm có gai nhọn (shock wave). Đi qua Khối tích phân $\to$ Output bị nhòe (mất gai). 
-Hiện mũi tên Bypass (Residual) nối thẳng Input $\to$ Output. 
-Kết quả: Gai nhọn được phục hồi.
-& \textit{"Nhưng tích phân mang theo một nghịch lý: nó là một bộ lọc thông thấp, có xu hướng làm mịn và xóa sổ các chi tiết sắc nét như sóng xung kích. Đây là lý do Residual Connection không chỉ là một thủ thuật, mà là một yêu cầu sinh tồn. Nó bơm thẳng tín hiệu gốc bypass qua lõi tích phân, giữ lại những chi tiết vật lý quan trọng nhất."} 
-& Hàm sắc nét \manim{Create}. Qua kernel \manim{Transform} thành hàm nhòe. Mũi tên Residual \manim{GrowArrow} phát sáng. Hàm cuối cùng \manim{Flash} lại độ sắc nét. \\ \hline
+Hiện hàm Input có gai nhọn (Shock wave - nét đỏ gắt). 
+Một \textbf{"Thấu kính Kernel" (Vầng hào quang vàng)} trượt dọc trục hoành. Khi lướt qua đỉnh nhọn, đỉnh nhọn bị \textbf{"bôi nhòe"} thành đường cong xanh mượt. 
+Đột ngột, một \textbf{Tia Laser Residual} (Cyan rực rỡ) bắn thẳng từ đỉnh nhọn Input, xuyên thấu/vòng qua thấu kính, cắm thẳng vào Output. 
+Kết quả: Đường cong mượt + Tia laser $\to$ \textbf{Gai nhọn phục hồi hoàn toàn}.
+& \textit{"Nhưng tích phân mang theo một nghịch lý: nó là một bộ lọc thông thấp. Khi Kernel quét qua không gian, nó lấy trung bình có trọng số, vô tình xóa sổ các chi tiết sắc nét như sóng xung kích. Đây là lý do Residual Connection là yêu cầu sinh tồn. Nó bơm thẳng tín hiệu gốc bypass qua lõi tích phân, giữ lại những chi tiết vật lý quan trọng nhất."}
+& \textbf{Kernel Lens:} \manim{Circle} mờ màu vàng trượt theo \manim{MoveAlongPath}. 
+\textbf{Smoothing:} \manim{Transform} đường đỏ thành xanh khi Lens đi qua. 
+\textbf{Residual:} \manim{ShowPassingFlash} hoặc \manim{Create} đường nét đứt Cyan rực rỡ. 
+\textbf{Restoration:} \manim{Flash} tại điểm giao, khôi phục đường cong sắc nét. \\ \hline
 \end{tabularx}
+
 \subsection*{Scene 3.4: Deep Neural Operator \& Bẫy Rời rạc hóa}
 \textbf{Timestamp tổng:} \texttt{10:15 -- 11:15}
 
 \noindent
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
-\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\raggedright\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
 \textbf{[10:15--10:45]} \newline 
-\textbf{Pipeline Lift-Operate-Project:} 
-Input là 1 đường cong vật lý. 
-Encoder (Pointwise) "ép" nó thành một chồng dày các đường cong đặc trưng (latent channels). 
-Chồng này đi qua các "Thấu kính Tích phân" (Operator Layers). 
-Decoder (Pointwise) nén chồng đó lại thành 1 đường cong output. 
+\textbf{Pipeline Lift-Operate-Project:} \newline 
+Input là 1 đường cong vật lý (xanh dương). \newline 
+Encoder: Đường cong biến đổi thành một \textbf{dải lụa không gian đa chiều} rực rỡ (gradient xanh $\to$ tím). \newline 
+Kernel Lens (vệt sáng vàng) quét ngang từ trái sang phải $\to$ dải lụa biến dạng uốn lượn theo. \newline 
+Decoder: Dải lụa thu gọn lại thành 1 đường cong output duy nhất (xanh lá). \newline 
 Overlay: \textbf{Dữ liệu luôn là Hàm số}.
 & \textit{"Giống Deep Learning, ta xếp chồng nhiều lớp để tạo Deep Neural Operator. Nhưng kiến trúc đầy đủ tuân theo triết lý 'Lift - Operate - Project'. Encoder pointwise nâng hàm vật lý lên không gian đặc trưng ẩn. Các lớp toán tử tích phân trộn thông tin không gian mà không phá vỡ tính liên tục. Cuối cùng, Decoder chiếu về lại biến vật lý. Suốt quá trình, dữ liệu vẫn là hàm số, truy vấn được tại mọi điểm."} 
-& Đường cong đơn \manim{Transform} thành chồng lớp (stack). 
-Stack trượt qua các khối \manim{IntegralLens}. 
-Stack nén lại thành đường cong đơn. 
-Text overlay \manim{Write} sync VO. \\ \hline
+& \textbf{Lift:} \texttt{Create} dải lụa không gian (Surface/VMobject nhiều layer màu) từ 1 đường cong. \newline 
+\textbf{Operate:} \texttt{Lens.animate.shift} quét ngang, dùng \texttt{Transform} biến đổi hình dạng dải lụa. \newline 
+\textbf{Project:} \texttt{Transform} dải lụa $\to$ 1 đường output. \newline 
+Thêm \texttt{Flash} hoặc các hạt \texttt{Particles} chạy dọc dải lụa. \\ \hline
 \textbf{[10:45--11:15]} \newline 
-\textbf{Bẫy Rời rạc hóa (Discretization Error):} 
-Chia đôi màn hình. 
-Trên: Hàm trơn (Smooth). Lưới $N$ tăng $\to$ Riemann sum ôm sát đường cong. 
-Dưới: Hàm Shock (gián đoạn). Lưới $N$ tăng $\to$ vẫn bị sai số lớn ở điểm gãy (highlight đỏ). 
-Hiện công thức $O(N^{-s})$.
+\textbf{Bẫy Rời rạc hóa:} \newline 
+Chia đôi màn hình. \newline 
+Trên: Hàm trơn. $N$ tăng $\to$ chấm xanh dày đặc, error glow \textbf{co lại rất nhanh rồi biến mất}. \newline 
+Dưới: Hàm Shock. $N$ tăng $\to$ chấm đỏ dày lên nhưng tại điểm gãy, error glow đỏ \textbf{co lại cực kỳ chậm}. \newline 
+Hiện đồ thị hội tụ Log-Log: đường xanh dốc xuống rất nhanh, đường đỏ là một đường là là, độ dốc thấp. \newline 
+Công thức $O(N^{-s})$.
 & \textit{"Phân tích sai số của Neural Operator có ba thành phần: Xấp xỉ, Tổng quát hóa, và nhân tố mới: Rời rạc hóa. Sai số rời rạc hóa tuân theo $O(N^{-s})$, với $s$ là độ trơn Sobolev. Hàm càng trơn, sai số giảm càng nhanh khi lưới mịn dần. Nhưng với các nghiệm có shock wave hay gián đoạn, $s$ thấp, và sai số giảm rất chậm. Đây là lý do FNO tỏa sáng với dòng chảy trơn, nhưng cần các kiến trúc lai để bắt được các điểm gãy vật lý."} 
-& \manim{RiemannSum} animation cho 2 hàm song song. 
-Highlight vùng sai số (màu đỏ) ở điểm Shock. 
-Công thức \manim{Write} và nhấn mạnh $s$. \\ \hline
+& \textbf{Sampling:} \texttt{Dot} + \texttt{DashedLine} nối với curve. \newline 
+\textbf{Error glow:} \texttt{SurroundingRectangle} lồng trong loop tăng $N$, dùng \texttt{.animate.scale} giảm kích thước (giảm nhanh ở trên, giảm chậm ở dưới). \newline 
+\textbf{Convergence plot:} \texttt{Axes} + \texttt{ax.plot} vẽ 2 đường thẳng có độ dốc (slope) khác nhau rõ rệt trên hệ trục Log-Log. \\ \hline
 \end{tabularx}
 
 \section{KIẾN TRÚC: FNO, GNO, U-NO}
@@ -350,14 +357,32 @@ Công thức \manim{Write} và nhấn mạnh $s$. \\ \hline
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
 
-\textbf{[11:15--11:50]} \newline Hiện công thức FFT: $\hat{a}(\omega) = \int_{\Omega} a(x) e^{-2\pi i \langle x, \omega \rangle} dx$. Highlight $\hat{a}(\omega)$ (phổ năng lượng, hệ số phức). Giữ hình 1.5s. 
+\textbf{[11:15--11:50]} \newline 
+\textbf{Phân rã sóng harmonic:} 
+Hiện hàm tổng hợp $a(x) = \sin(x) + 0.5\sin(3x) + 0.3\sin(5x)$.
+Tách thành 3 sóng riêng lẻ (mỗi sóng một màu) $\to$ chồng lên nhau.
+Spectrogram thể hiện các mode tần số (1, 3, 5) với amplitude tương ứng.
 & \textit{"Để tính tích phân hiệu quả, FNO không tính trực tiếp trên không gian thực. Thay vào đó, mô hình chuyển dịch hệ cơ sở sang miền tần số. Phép biến đổi Fourier phân rã hàm số thành tổ hợp sóng harmonic, cho phép ta quan sát dữ liệu dưới dạng phổ năng lượng với các hệ số phức. (ngắt 0.5s) Đây là bước đệm quan trọng nhất."} 
-& Equation build-up term-by-term. Glow on $\hat{a}(\omega)$. Hold 1.5s để viewer đọc công thức. Camera zoom nhẹ vào $\omega$. \\ \hline
+& \textbf{Phân rã sóng:} \manim{Transform} từ hàm tổng hợp $\to$ 3 sóng riêng lẻ. 
+\textbf{Spectrogram:} \manim{BarChart} với height = amplitude, color = frequency. 
+\textbf{Phổ năng lượng:} Highlight $\hat{a}(\omega)$ trong công thức FFT. 
+\textbf{Chú ý:} Giữ hình 1.5s để viewer đọc công thức. \\ \hline
 
-\textbf{[11:50--12:30]} \newline Morph sang sơ đồ 3 bước: FFT $\to$ Spectral Multiply $\to$ IFFT. Highlight nhánh Toàn cục \& Nhánh Cục bộ $W a(x)$. 
-& \textit{"Trọng tâm tăng tốc nằm ở Định lý Tích chập: tích chập phức tạp trong không gian thực tương đương phép nhân phần tử trong miền tần số. Thay vì học kernel $O(N^2)$, ta học trực tiếp ma trận trọng số $R(\omega)$ và nhân trong miền tần số. Một lớp FNO hoàn chỉnh gồm nhánh toàn cục học tương tác xa, và nhánh cục bộ $W a(x)$ bắt đặc trưng biến thiên nhanh. Nhờ FFT, độ phức tạp chỉ còn $O(N \log N)$."} 
-& Pipeline flowchart \manim{Create} tuần tự. $\mathcal{F}$ symbol \manim{Create} with glow. Signal \manim{ParametricCurve} $\to$ frequency bars $\to$ \manim{Flash} multiply $\to$ \manim{InverseTransform}. Nhánh cục bộ hiện sau, màu tương phản. \\ \hline
-
+\textbf{[11:50--12:30]} \newline 
+\textbf{Pipeline FNO \& Định lý Tích chập:} 
+1. \textbf{FFT}: Hàm input $\to$ Spectrogram (màu xanh)
+2. \textbf{Spectral Multiply}: Nhân với $R(\omega)$ (ma trận phức $d \times d$) $\to$ Highlight $R(\omega)$
+3. \textbf{IFFT}: Spectrogram $\to$ Output hàm (màu xanh lá)
+\textbf{So sánh:} 
+- Tích chập trong miền thực: kernel di chuyển, $O(N^2)$
+- Tích chập trong miền tần số: nhân phần tử, $O(N \log N)$
+& \textit{"Trọng tâm tăng tốc nằm ở Định lý Tích chập: tích chập phức tạp trong không gian thực tương đương phép nhân phần tử trong miền tần số. Thay vì học kernel $O(N^2)$, ta học trực tiếp \textbf{ma trận trọng số $R(\omega)$} và nhân trong miền tần số. Một lớp FNO hoàn chỉnh gồm nhánh toàn cục học tương tác xa, và nhánh cục bộ $W a(x)$ bắt đặc trưng biến thiên nhanh. \textbf{Lưu ý quan trọng}: $R(\omega)$ là ma trận phức (không phải scalar) để học tương tác giữa các kênh. Nhờ FFT, độ phức tạp chỉ còn $O(N \log N)$."} 
+& \textbf{Pipeline:} \manim{Create} tuần tự với \manim{Arrow} nối. 
+\textbf{Highlight $R(\omega)$:} \manim{SurroundingRectangle} + text "Ma trận phức $d \times d$". 
+\textbf{So sánh tốc độ:} Animation song song: 
+- Trái: kernel quét, $O(N^2)$ 
+- Phải: nhân phần tử, $O(N \log N)$ 
+\textbf{Lưu ý:} Hiển thị $k_{max}$ truncation (chỉ giữ low-frequency modes). \\ \hline
 \end{tabularx}
 
 \subsection{Scene 4.2: Tính chất FNO \& Giới hạn}
