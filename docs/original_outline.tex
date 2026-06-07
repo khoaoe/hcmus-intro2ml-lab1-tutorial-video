@@ -394,9 +394,11 @@ Spectrogram thể hiện các mode tần số (1, 3, 5) với amplitude tương 
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[12:30--13:15]} \newline Hiện 3 property cards: Tốc độ $O(N \log N)$, Tầm nhìn toàn cục (grid connected), Zero-shot resolution (64x64 $\to$ 256x256). Overlay: $\mathcal{A} \to \mathcal{U}$. Cuối cùng hiện warning: lưới đều/tuần hoàn. 
-& \textit{"FNO sở hữu ba tính chất đột phá. Thứ nhất: tốc độ xử lý lưới triệu điểm trong vài giây. Thứ hai: tầm nhìn toàn cục. Một phép nhân tần số kết nối mọi điểm cùng lúc, vượt xa CNN. Thứ ba: zero-shot generalization. Train 64x64, query 256x256 vẫn chính xác, vì model học ánh xạ hàm sang hàm, không phải vector sang vector. (ngắt 0.5s) Giới hạn: FNO phù hợp nhất với lưới đều và biên tuần hoàn, đồng thời khớp tự nhiên với nghiệm PDE trong miền tần số."} 
-& Cards \manim{FadeIn} lần lượt, mỗi card giữ 0.8s. Global connectivity: \manim{Arrow} network lan tỏa. Resolution zoom \manim{Transform} mượt. Function-space overlay \manim{FadeIn} nhẹ. Warning icon \manim{FadeIn} + pulse chậm. \\ \hline
+\textbf{[12:30--13:15]} \newline 
+Hiện 3 property cards: Tốc độ $O(N \log N)$, Tầm nhìn toàn cục (grid connected), Zero-shot resolution (64x64 $\to$ 256x256). 
+Cuối cùng hiện warning: lưới đều/tuần hoàn + Gibbs phenomenon với shock wave.
+& \textit{"FNO sở hữu ba tính chất đột phá. Thứ nhất: tốc độ xử lý lưới triệu điểm trong vài giây. Thứ hai: tầm nhìn toàn cục. Một phép nhân tần số kết nối mọi điểm cùng lúc, vượt xa CNN. Thứ ba: zero-shot generalization. Train 64x64, query 256x256 vẫn đạt độ chính xác chấp nhận được, vì FNO học ánh xạ hàm sang hàm. (ngắt 0.5s) Giới hạn: FNO phù hợp nhất với lưới đều và biên tuần hoàn. Nếu bài toán có shock wave, việc cắt giảm phổ tần số sẽ gây ra hiện tượng gợn sóng Gibbs, khiến sai số tăng vọt."} 
+& Cards \manim{FadeIn} lần lượt, mỗi card giữ 0.8s. Global connectivity: \manim{Arrow} network lan tỏa. Resolution zoom \manim{Transform} mượt. Warning icon \manim{FadeIn} + pulse chậm. \\ \hline
 \end{tabularx}
 
 \subsection{Scene 4.3: Graph Neural Operator (GNO) -- Xử lý lưới bất quy tắc}
@@ -408,9 +410,14 @@ Spectrogram thể hiện các mode tần số (1, 3, 5) với amplitude tương 
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[13:15--13:50]} \newline Mesh bất quy tắc (cánh turbine/IoT). Xây đồ thị $G=(V,E)$ nối theo bán kính $r$. Hiện phân vùng Voronoi mờ, highlight thể tích $w_{ij}$. Text overlay: \textbf{Hội tụ tích phân $\neq$ GNN thường}. 
-& \textit{"Thực tế kỹ thuật thường diễn ra trên miền bất quy tắc, nơi Fourier không áp dụng được. GNO chuyển dịch sang cấu trúc đồ thị: mỗi điểm dữ liệu là một node, nối nhau trong bán kính $r$. (ngắt 0.4s) Điểm khác biệt cốt lõi với GNN thông thường là GNO bảo toàn tính chất toán tử tích phân: nó xấp xỉ tích phân bằng tổng có trọng số, với $w_{ij}$ tỉ lệ thuận thể tích phân vùng Voronoi. Điều này đảm bảo mô hình không thiên lệch bởi mật độ điểm, và hội tụ đúng khi lưới mịn dần."} 
-& Point cloud \manim{Create} $\to$ edges \manim{GrowFromCenter}. Voronoi cells \manim{FadeIn} (opacity 0.3). Radius circle \manim{Create} động. Highlight $w_{ij}$ volume với \manim{Indicate} + hold 1s. Text overlay \manim{Write} chậm. \\ \hline
+\textbf{[13:15--13:50]} \newline 
+Mesh bất quy tắc. Xây đồ thị $G=(V,E)$ nối theo bán kính $r$. \newline
+\textbf{Highlight 1 cell Voronoi} của node lân cận, tô sáng thể tích $w_j$. \newline
+Text overlay: \textbf{GNN = Topo | GNO = Metric Space + Tích phân}. 
+& \textit{"Thực tế kỹ thuật thường diễn ra trên miền bất quy tắc, nơi Fourier không áp dụng được. GNO chuyển dịch sang cấu trúc đồ thị. (ngắt 0.4s) Điểm khác biệt cốt lõi: GNN chỉ nhìn topo, còn GNO bảo toàn tính chất toán tử tích phân. Nó xấp xỉ tích phân bằng tổng có trọng số, trong đó $w_j$ chính là thể tích Voronoi của node nguồn. Khi lưới mịn dần, $w_j$ nhỏ lại, giúp mô hình hội tụ đúng về giới hạn liên tục mà không bị thiên lệch bởi mật độ điểm."} 
+& Point cloud \manim{Create} $\to$ edges \manim{GrowFromCenter}. \newline
+Dùng \manim{Fill} tô sáng 1 vùng Voronoi đại diện cho $w_j$. \newline
+Text overlay \manim{Write} chậm. Nhấn mạnh sự đối lập Topo vs Metric. \\ \hline
 \textbf{[13:50--14:30]} \newline Animation message passing: thông tin chạy dọc edges $\to$ tổng hợp tại node trung tâm $\to$ update. Hiện MLP kernel $\kappa_\theta$ box nhỏ trên edge. 
 & \textit{"Kernel $\kappa$ không cố định mà là một MLP nhỏ tự học luật tương tác vật lý từ dữ liệu. GNO thực chất là Message Passing trong không gian hàm: node gửi thông điệp qua MLP, node nhận tổng hợp có trọng số Voronoi rồi áp dụng phi tuyến. Qua nhiều lớp, thông tin từ node xa nhảy cóc qua trung gian, giúp model nắm bắt tương tác toàn cục dù khởi đầu từ tổng hợp cục bộ."} 
 & Data packets \manim{MoveAlongPath} tốc độ vừa phải. Aggregation \manim{Flash} tại center node. MLP box \manim{Scale} sync VO. Giữ frame cuối 0.8s trước khi cut. \\ \hline
@@ -430,8 +437,8 @@ Spectrogram thể hiện các mode tần số (1, 3, 5) với amplitude tương 
 & \textit{"Nghiệm PDE mang tính lưỡng cực: vừa có sóng dài toàn cục, vừa có gradient dốc đứng cục bộ như shock waves. FNO ưu tiên tần số thấp nên dễ làm mờ chi tiết. U-NO giải quyết mâu thuẫn này bằng kiến trúc phân cấp. Encoder thu nhỏ miền để nắm tương tác tầm xa với chi phí thấp. Latent Space nén trạng thái năng lượng tổng thể. Decoder khôi phục độ phân giải để tái tạo biến động sắc nét tại biên."} 
 & U-structure \manim{Create} layer-by-layer. Downsampling \manim{Transform} kèm resolution label. Latent space \manim{Pulse} nhẹ. Skip arrows \manim{Create} màu sáng. Blur vs Sharp contrast effect chạy chậm 1.2s. \\ \hline
 \textbf{[15:05--15:45]} \newline Minh họa skip connection: đặc trưng encoder bơm thẳng sang decoder. Hiện công thức $v_{dec} = \sigma(T_{dec} u_{dec} + u_{enc})$. Ẩn dụ vẽ bản đồ merge. 
-& \textit{"Chìa khóa là Skip Connections. Vì toán tử tích phân có xu hướng làm mịn dữ liệu, các kết nối tắt bơm thẳng chi tiết hình học từ encoder sang decoder, bypass các lớp phi tuyến sâu. Công thức này đảm bảo nghiệm cuối cùng vừa tuân thủ logic vật lý toàn cục, vừa giữ độ chính xác tuyệt đối tại điểm biến động. Giống vẽ bản đồ: cần toàn cảnh cho cao tốc, cần chi tiết cho tên đường nhỏ. U-NO làm cả hai cùng lúc."} 
-& Feature maps \manim{Overlap} merge mượt. Formula \manim{Write} đồng bộ lời giải thích. Map metaphor visual transition giữ 1s. Cut nhẹ sang scene sau. \\ \hline
+& \textit{"Chìa khóa sinh tồn nằm ở Skip Connections. Bản chất của toán tử tích phân là một bộ lọc thông thấp — nó giỏi nắm bắt sóng dài nhưng lại vô tình 'bôi nhòe' các chi tiết sắc nét như shock waves hay lớp biên. *(Hiệu ứng đỉnh nhọn bị làm mờ)*. Các kết nối tắt này bơm thẳng đặc trưng hình học gốc từ encoder sang decoder, bypass qua lõi tích phân. *(Hiệu ứng đỉnh nhọn phục hồi)*. Công thức đảm bảo nghiệm cuối cùng vừa tuân thủ logic vật lý toàn cục, vừa giữ độ chính xác tuyệt đối tại điểm biến động. Giống vẽ bản đồ: cần toàn cảnh cho cao tốc, cần chi tiết cho tên đường nhỏ. U-NO làm cả hai cùng lúc."} 
+& 1D Shock Wave \manim{Create} $\to$ \manim{Transform} thành Blurred func $\to$ Skip arrow \manim{GrowArrow} $\to$ Phục hồi sharp func. Formula \manim{Write} đồng bộ với text notes. Map metaphor visual transition giữ 1s. Cut nhẹ sang scene sau. \\ \hline
 \end{tabularx}
 
 
