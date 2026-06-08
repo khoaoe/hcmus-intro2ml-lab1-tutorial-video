@@ -155,8 +155,9 @@ Chuyển morph sang \texttt{ProbabilityCloud} của hàm sóng.
 Chốt scene bằng text \texttt{Write} đồng bộ nhịp VO cuối. \\ \hline
 \end{tabularx}
 
-\subsection{Scene 2.2: Lưu ý then chốt -- Ảnh không phải là Hàm số}
-\textbf{Timestamp tổng:} \texttt{5:00 -- 5:40}
+\subsection{Scene 2.2: Lưu ý then chốt -- Ảnh không phải là Hàm số \& Sự sụp đổ số}
+\textbf{Timestamp tổng:} \texttt{5:00 -- 6:00} \textit{(Đã mở rộng từ 40s lên 60s để trình bày đầy đủ hơn)}
+
 
 \noindent
 
@@ -566,12 +567,14 @@ Text overlay \manim{Write} chậm. Nhấn mạnh sự đối lập Topo vs Metri
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[24:10--24:45]} \newline Hiện bản đồ "Known vs Unknown": bên trái là kiến trúc đã biết (FNO/GNO/U-NO), bên phải là vùng mờ với dấu hỏi. Hiện các câu hỏi: Max-pooling trong hàm? Attention biến thể? Scale 3D >10M points? 
-& \textit{"Chúng ta đã đi qua hầu như tất cả những gì đã biết về Neural Operators. Và điều thực sự hấp dẫn là: hầu như mọi thứ trong lĩnh vực này vẫn còn mở. Chúng ta cần viết lại toàn bộ Machine Learning — lần này cho không gian hàm. Các kiến trúc hiện tại còn sơ khai so với CNNs, ResNets, Transformers. Ta dùng tích phân để tổng hợp thông tin, nhưng liệu đó có phải cách duy nhất? Max-pooling trong không gian hàm trông như thế nào? Và làm sao scale lên bài toán 3D thực tế với hơn 10 triệu điểm?"} 
-& Map split screen \manim{Create}. Known side: icons \manim{FadeIn}. Unknown side: question marks \manim{Flash}. Text questions \manim{Write} sequentially. \\ \hline
-\textbf{[24:45--25:25]} \newline Hiện PINO pipeline: data loss + physics loss. Highlight các câu hỏi mở: hard-code conservation laws? Balance loss auto? Stable training với đạo hàm bậc cao? 
-& \textit{"Vấn đề mở thứ hai: tích hợp vật lý đúng cách. PINO là hướng đi đúng nhưng còn nhiều câu hỏi: làm sao hard-code các định luật bảo toàn vào kiến trúc, không chỉ vào loss? Làm sao cân bằng data loss và physics loss mà không tuning thủ công? Làm sao đảm bảo training ổn định khi physics loss yêu cầu tính đạo hàm bậc cao? Về lý thuyết, PINO nên tốt hơn solver thuần, nhưng thực tế ta chưa có phương pháp đủ tốt để khai thác."} 
-& PINO diagram \manim{Create}. Conservation laws icons \manim{Pulse}. Balance scale animation for loss weighting. Subtle warning glow on "chưa có phương pháp". \\ \hline
+\textbf{[24:10--24:45]} \newline
+\textbf{Beat 1 -- Architecture Open Questions:} Hiện title ``Bài toán mở: Kiến trúc \& Vật lý''. Bên trái: ``Known Architectures'' với 4 ô nhỏ (FNO xanh, GNO cam, U-NO tím, CoDANO vàng). Bên phải: ``Open Questions'' với 4 ô dấu hỏi mờ dần hiện text (Max-pooling hàm? / Attention biến thể? / Scale 3D 10M+? / Convolution hàm?).
+& \textit{``Chúng ta đã đi qua hầu như tất cả những gì đã biết về Neural Operators. Và điều thực sự hấp dẫn là: hầu như mọi thứ trong lĩnh vực này vẫn còn mở...''}
+& Title \manim{FadeIn}. Known panel: 4 ô \manim{FadeIn} + \manim{Chip} style. Open panel: question marks \manim{Flash} $\to$ text \manim{Write} tuần tự. Sử dụng \manim{RoundedRectangle} cho mỗi ô, text \manim{move\_to} trong ô. \\ \hline
+\textbf{[24:45--25:25]} \newline
+\textbf{Beat 2 -- Physics Integration:} Clear toàn bộ beat 1. Hiện ``Tích hợp Vật lý: PINO \& Beyond''. Trái: PINO Pipeline (Input hàm $\to$ Neural Operator $\to$ Output $u_\theta$ $\to$ PDE Residual). Phải: 3 câu hỏi mở xếp dọc (Hard-code conservation? / Balance losses? / High-order derivatives?). Dưới cùng: Thanh tiến trình ``Potential vs Reality'' cho thấy gap.
+& \textit{``Vấn đề mở thứ hai: tích hợp vật lý đúng cách...''}
+& PINO pipeline \manim{Create} left-to-right. Question cards \manim{FadeIn} tuần tự. Progress bar \manim{GrowFromEdge}. Fade to black kết thúc. \\ \hline
 \end{tabularx}
 
 \subsection{Scene 6.2: Lý thuyết nền tảng \& Lượng hóa bất định}
@@ -582,26 +585,33 @@ Text overlay \manim{Write} chậm. Nhấn mạnh sự đối lập Topo vs Metri
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[25:25--26:05]} \newline Knowledge Constellation: DL side (dense interconnected nodes: Approximation Theory, VC Dimension, Rademacher, PAC-Bayes) vs NO side (sparse fog, chỉ 1 node sáng mờ: Universal Approximation). 3 beacons xuất hiện: Convergence as $N\to\infty$? Architecture-specific limits? Param-Gen relation in function space? & \textit{"Vấn đề mở thứ ba: lý thuyết nền tảng. Trong Deep Learning, ta có hàng chục năm nghiên cứu — approximation theory, generalization bounds, VC dimension, Rademacher complexity — tất cả kết nối chặt chẽ. Trong Neural Operators, hầu hết những thứ tương đương vẫn là vùng trống. Ta có universal approximation, nhưng điều kiện hội tụ chính xác khi discretization tiến về vô hạn? Giới hạn xấp xỉ của FNO so với GNO? Mối quan hệ giữa độ phức tạp tham số và khả năng tổng quát trong không gian hàm vô hạn chiều? Tất cả vẫn là câu hỏi mở."} & Knowledge graph \manim{Create}. DL nodes glow + connect. NO side: fog + 1 weak node. Beacons \manim{Flash} sequentially. \\ \hline
-\textbf{[26:05--26:40]} \newline Function plot với prediction curve + confidence band mờ bao quanh (function-valued uncertainty). So sánh: Monte Carlo (50 đường cong rải rác, expensive) vs Conformal Prediction / GANO (1 band mượt mà với coverage guarantee). & \textit{"Vấn đề mở thứ tư: lượng hóa bất định. Trong vật lý và kỹ thuật, error bar không phải tùy chọn — đó là yêu cầu bắt buộc. Nhưng ở đây khác Deep Learning truyền thống: domain expert không hỏi 'model chính xác bao nhiêu phần trăm'. Họ hỏi: 'tại mỗi điểm x, error bar là bao nhiêu?' Monte Carlo chạy 50 solver thì tốn kém. Conformal Prediction và GANO cho ta confidence band trực tiếp trên không gian hàm — với coverage guarantee. Đây là hướng đi tiềm năng nhất."} & Prediction curve \manim{Create} + shaded band \manim{FadeIn}. Monte Carlo curves scatter \manim{Create} sequentially. Morph thành smooth conformal band. \\ \hline
+\textbf{[25:25--26:05]} \newline
+\textbf{Beat 1 -- Knowledge Constellation:} Chia đôi màn hình. Trái ``Deep Learning Theory'': đồ thị dày đặc các node liên kết (Approximation, VC Dim, Rademacher, PAC-Bayes, NTK). Phải ``Neural Operator Theory'': vùng sương mù, 1 node sáng mờ (Universal Approximation) + 3 ``beacon'' nhấp nháy (Convergence $N\to\infty$? / Architecture bounds? / Param-Gen in $\infty$-dim?).
+& \textit{``Vấn đề mở thứ ba: lý thuyết nền tảng...''}
+& Knowledge graph: DL nodes glow + \manim{Line} connect. NO side: fog \manim{FadeIn} + beacon \manim{Flash} tuần tự. \\ \hline
+\textbf{[26:05--26:40]} \newline
+\textbf{Beat 2 -- Uncertainty Quantification:} Clear beat 1. Hiện function plot: prediction curve (xanh) + confidence band (xanh nhạt mờ). So sánh 2 phương pháp: Monte Carlo (50 đường rải, đỏ, expensive label) vs Conformal/GANO (1 band mượt mà, xanh lá, guarantee label). \manim{SurroundingRectangle} highlight ``Recommended'' cho conformal.
+& \textit{``Vấn đề mở thứ tư: lượng hóa bất định...''}
+& Prediction \manim{Create} + band \manim{FadeIn}. MC curves \manim{Create} tuần tự. Morph thành conformal band. Highlight box \manim{Create}. \\ \hline
 \end{tabularx}
+
 \subsection{Scene 6.3: Active Learning \& RL trong không gian hàm}
 \textbf{Timestamp tổng:} \texttt{26:40 -- 27:55}
-
 
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[26:40--27:15]} \newline Hiện biểu đồ chi phí: mỗi simulation = nhiều giờ, mỗi thí nghiệm = triệu đô. Hiện câu hỏi active learning: với ngân sách cố định, lấy mẫu ở đâu để học tốt nhất? 
-& \textit{"Vấn đề mở thứ năm: active learning trong không gian hàm. Sinh dữ liệu cho operator learning rất tốn kém — dù là từ mô phỏng số hay thí nghiệm thực. Mỗi simulation có thể mất nhiều giờ. Mỗi thí nghiệm thực có thể tốn hàng triệu đô la. Active learning hỏi: với ngân sách data cố định, ta nên lấy mẫu ở đâu để học tốt nhất? Trong không gian hàm, câu hỏi này phức tạp hơn nhiều so với ML thông thường."} 
-& Cost bar chart \manim{GrowFromEdge}. Simulation timer \manim{ValueTracker}. Money icon with counter. Question text \manim{Write} with emphasis. \\ \hline
-\textbf{[27:15--27:55]} \newline Hiện vòng lặp RL cổ điển (state/action vector) $\to$ gạch chéo $\to$ hiện state/action là hàm số trong không gian vô hạn chiều. 
-& \textit{"Vấn đề mở thứ sáu: reinforcement learning trong không gian hàm. Điều khiển dòng chảy chất lưu, can thiệp khí hậu, điều khiển robot — trong tất cả những bài toán này, state và action đều là hàm số. Công thức RL thông thường không áp dụng trực tiếp được. Cần framework RL hoàn toàn mới cho không gian hàm."} 
-& Classic RL loop \manim{Create} $\to$ red strike-through \manim{Draw} $\to$ function-space RL \manim{Transform} in with glow. \\ \hline
+\textbf{[26:40--27:15]} \newline
+\textbf{Beat 1 -- Active Learning:} Hiện ``Active Learning trong không gian hàm''. Trên: Function space với candidate points (scattered). Giữa: Budget bar giảm dần (mỗi sample = cost). Dưới: So sánh Random (100 samples, xám mờ) vs Active (20 samples, xanh sáng). Hiệu ứng: Active samples được ``chọn'' thông minh ở vùng uncertainty cao.
+& \textit{``Vấn đề mở thứ năm: active learning trong không gian hàm...''}
+& Function space + candidate \manim{Dot} scatter. Budget bar \manim{GrowFromEdge} + animate giảm. So sánh side-by-side: Random grid vs Active targeted. \\ \hline
+\textbf{[27:15--27:55]} \newline
+\textbf{Beat 2 -- RL trong không gian hàm:} Trên: Classic RL loop (4 ô: State $\mathbf{s}\in\mathbb{R}^n$ $\to$ Policy $\pi$ $\to$ Action $\mathbf{a}\in\mathbb{R}^m$ $\to$ Environment). Chữ trong ô, ký hiệu MathTex ($\pi$, $\Pi$). Mũi tên cong \manim{CurvedArrow} nối Environment $\to$ State. Dấu X đỏ bự giữa mũi tên cong + chữ ``Không áp dụng cho function space!'' (2 dòng). Dưới: Function-Space RL loop (State $u(x)\in\mathcal{U}$ $\to$ Operator Policy $\Pi$ $\to$ Action $a(x)\in\mathcal{A}$ $\to$ PDE Environment). Viền xanh lá sáng, \manim{SurroundingRectangle}. Bullet points: Điều khiển dòng chảy, Can thiệp khí hậu, Tối ưu thiết kế.
+& \textit{``Vấn đề mở thứ sáu: reinforcement learning trong không gian hàm...''}
+& Classic RL \manim{FadeIn}. \manim{CurvedArrow} angle=$-75^\circ$. Cross \manim{Create} at arc midpoint. Function RL \manim{FadeIn} with glow. Apps \manim{LaggedStart}. \\ \hline
 \end{tabularx}
-
 
 \subsection{Scene 6.4: Thách thức hợp tác \& Recap 3 nguyên tắc}
 \textbf{Timestamp tổng:} \texttt{27:55 -- 28:55}
@@ -611,14 +621,15 @@ Text overlay \manim{Write} chậm. Nhấn mạnh sự đối lập Topo vs Metri
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[27:55--28:25]} \newline Hiện hai nhóm người: ML researcher và domain expert, có khoảng cách giao tiếp. Data biased/messy hiện ở giữa. Cầu nối dần được xây. 
-& \textit{"Và cuối cùng, một thách thức thực tế: hợp tác với domain experts. Nhà vật lý, kỹ sư, nhà khí tượng thường hoài nghi về ML — điều này hoàn toàn hợp lý. Họ đã xây solver truyền thống qua nhiều thập kỷ, và mô hình ML đầu tiên bạn đề xuất thường kém hơn. Khoảng cách giao tiếp là thực. Data khoa học thường biased, messy. Để Neural Operators thực sự có impact, ta cần xây cầu nối — không chỉ xây model."} 
-& Two groups \manim{Create} with gap. Messy data cloud \manim{FadeIn}. Bridge \manim{Create} connecting them. \\ \hline
-\textbf{[28:25--28:55]} \newline Hiện checklist 3 nguyên tắc cốt lõi: Discretization-invariant, Function output, Speedup. Highlight các con số 45k/140k/700k lần. 
-& \textit{"Nhìn toàn cảnh lại. Neural Operators thỏa mãn ba nguyên tắc: hoạt động trên bất kỳ discretization nào, output là hàm số thực sự để tính đạo hàm/tích phân, và đạt tốc độ vượt trội. Những con số 45,000, 140,000, 700,000 lần không chỉ là slide — nhanh hơn 700,000 lần trong mô phỏng CO₂ nghĩa là đánh giá nhiều kịch bản hơn, triển khai carbon capture nhanh hơn."} 
-& Checklist items \manim{FadeIn} with checkmarks. Speedup numbers \manim{CountUp} animation. Impact examples \manim{Write} below. \\ \hline
+\textbf{[27:55--28:25]} \newline
+\textbf{Beat 1 -- Building the Bridge:} \textit{(Đã redesign: thay ``hai nhóm người'' bằng hai thế giới trừu tượng.)} Trái: ``PHYSICS WORLD'' (ô xanh dương, chứa $\nabla\cdot\mathbf{u}=0$, Finite Element, Conservation Laws, 50+ years of solvers). Phải: ``ML WORLD'' (ô tím, chứa Neural Networks, $\mathcal{L}(\theta)$, Gradient Descent, Loss Functions). Giữa: ``THE GAP'' (ô đỏ nhạt, chứa Different Languages, Biased Data, Different Metrics, Skepticism) $\to$ Gap tan biến $\to$ Bridge band xanh lá sáng hiện ra phía dưới chứa ``Function Spaces'', ``Operators'', ``Discretization'', $\mathcal{G}:\mathcal{A}\to\mathcal{U}$. Mũi tên từ 2 thế giới xuống bridge.
+& \textit{``Và cuối cùng, một thách thức thực tế: hợp tác với domain experts...''}
+& Physics box \manim{Create} + equations \manim{LaggedStart}. ML box \manim{Create} + tools \manim{LaggedStart}. Gap \manim{FadeIn} $\to$ \manim{FadeOut}. Bridge \manim{Create} + \manim{Flash}. Arrows \manim{GrowArrow}. \\ \hline
+\textbf{[28:25--28:55]} \newline
+\textbf{Beat 2 -- Three Pillars Recap:} Clear beat 1. Hiện 3 ô dọc: (1) Discretization Invariant (icon lưới thô $\to$ mịn phóng to trong ô, xanh dương, tick $\checkmark$). (2) Function Output (đường cong tím + query dots xanh + $\nabla u, \int u\,dx$, tick $\checkmark$). (3) Speed Orders of Magnitude (icon tia sét vàng + 3 con số: 45,000$\times$ Weather / 140,000$\times$ CFD / 700,000$\times$ Carbon, tick $\checkmark$, chữ xanh lá trên 1 dòng). Dưới: impact statement ``Không chỉ là con số --- mở ra những phân tích trước đây không thể làm được''.
+& \textit{``Nhìn toàn cảnh lại...''}
+& 3 pillar boxes \manim{Create} lần lượt. Icons/motifs bên trong. Tick $\checkmark$ \manim{Write}. Impact text \manim{FadeIn} + \manim{Flash}. Clean \manim{FadeOut}. \\ \hline
 \end{tabularx}
-
 
 \subsection{Scene 6.5: Resources \& Closing remarks}
 \textbf{Timestamp tổng:} \texttt{28:55 -- 29:25}
@@ -628,10 +639,13 @@ Text overlay \manim{Write} chậm. Nhấn mạnh sự đối lập Topo vs Metri
 \begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
 \hline
 \textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
-\textbf{[28:55--29:10]} \newline Hiện logo + link: neuraloperator.github.io, NVIDIA Modulus, papers Kovachki 2021 \& Li 2021, ICML 2024 tutorial. 
-& \textit{"Nếu bạn muốn bắt đầu khám phá lĩnh vực này, có hai thư viện mã nguồn mở chính: neuraloperator trên PyTorch tại neuraloperator.github.io, và NVIDIA Modulus tại developer.nvidia.com/modulus. Về papers, bài quan trọng nhất để bắt đầu là 'Neural Operator' của Kovachki et al. 2021 trên JMLR, và 'Fourier Neural Operator' của Li et al. trên ICLR 2021."} 
-& Logos/links \manim{FadeIn} sequentially. Paper titles \manim{Write} with authors. Clean layout. \\ \hline
-\textbf{[29:10--29:25]} \newline Fade to soft background. Hiện message closing: "Neural Operators = tổng quát hóa tự nhiên của tổng Riemann, tích phân, MLP". Subscribe CTA. 
-& \textit{"Hy vọng video này giúp bạn thấy Neural Operators không phải một thứ gì bí ẩn. Chúng là sự tổng quát hóa tự nhiên của những thứ chúng ta đã biết — tổng Riemann, tích phân, MLP — lên một không gian rộng hơn. Lĩnh vực này mới đủ để có vô số câu hỏi mở, nhưng cũng đã đủ trưởng thành để bạn có thể bắt đầu đóng góp ngay. Cảm ơn bạn đã xem đến cuối. Hẹn gặp lại."} 
-& Closing message \manim{Write} centered. Subscribe button \manim{Scale} subtly. Fade to black hold 1s. \\ \hline
+\textbf{[28:55--29:10]} \newline
+\textbf{Beat 1 -- Resources:} Trái: 2 thư viện mã nguồn mở -- neuraloperator (ô xanh lá + link GitHub repo) và NVIDIA Modulus (ô NVIDIA green + link). Phải: 2 papers quan trọng trong ô viền xanh (Kovachki et al. JMLR 2021 ``Neural Operator: Learning Maps Between Function Spaces'' + Li et al. ICLR 2021 ``Fourier Neural Operator for Parametric PDEs''). Góc phải dưới: QR code giả lập (ô vuông trắng + pattern đen) + ``Scan để truy cập''.
+& \textit{``Nếu bạn muốn bắt đầu khám phá lĩnh vực này...''}
+& Libraries \manim{FadeIn} + links \manim{Write}. Papers \manim{FadeIn}. QR pattern \manim{LaggedStart FadeIn}. \\ \hline
+\textbf{[29:10--29:25]} \newline
+\textbf{Beat 2 -- Closing:} Clear beat 1. Typography focus: Dòng 1 ``Neural Operators không phải thứ gì bí ẩn.'' (trắng). Dòng 2 ``Chúng là sự tổng quát hóa tự nhiên của'' (xám). Dòng 3: 3 keywords highlighted xanh lá ``tổng Riemann | tích phân | MLP''. Dòng 4 ``lên không gian vô hạn chiều.'' (xám). Subscribe CTA (ô viền vàng, scale nhẹ). ``Cảm ơn bạn đã xem đến cuối. Hẹn gặp lại!'' Fade to black.
+& \textit{``Hy vọng video này giúp bạn thấy Neural Operators không phải một thứ gì bí ẩn...''}
+& \manim{Write} closing lines. Keywords \manim{FadeIn} shift UP. CTA \manim{FadeIn} + \manim{scale(1.05)} + \manim{there\_and\_back}. Thank you \manim{FadeIn}. All \manim{FadeOut} to black. \\ \hline
 \end{tabularx}
+
