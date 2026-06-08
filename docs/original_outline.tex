@@ -555,13 +555,83 @@ Text overlay \manim{Write} chậm. Nhấn mạnh sự đối lập Topo vs Metri
 \end{tabularx}
 
 \section{NHỮNG BÀI TOÁN MỞ VÀ TƯƠNG LAI CỦA AI FOR SCIENCE}
-\textit{Tổng thời lượng: khoảng 6 phút}
+\textit{Tổng thời lượng: 5 phút 15 giây}
 
-% NOTE: Section 6 content was truncated in original outline submission
-% The remaining scenes cover:
-% - Open problems in PINO
-% - Uncertainty quantification  
-% - Scaling and multi-dataset training
-% - Physics domain knowledge integration
-% - Future directions for AI for Science
-% - Closing synthesis
+\subsection{Scene 6.1: Open Problems -- Thiết kế kiến trúc \& Tích hợp vật lý}
+\textbf{Timestamp tổng:} \texttt{24:10 -- 25:25}
+
+\noindent
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[24:10--24:45]} \newline Hiện bản đồ "Known vs Unknown": bên trái là kiến trúc đã biết (FNO/GNO/U-NO), bên phải là vùng mờ với dấu hỏi. Hiện các câu hỏi: Max-pooling trong hàm? Attention biến thể? Scale 3D >10M points? 
+& \textit{"Chúng ta đã đi qua hầu như tất cả những gì đã biết về Neural Operators. Và điều thực sự hấp dẫn là: hầu như mọi thứ trong lĩnh vực này vẫn còn mở. Chúng ta cần viết lại toàn bộ Machine Learning — lần này cho không gian hàm. Các kiến trúc hiện tại còn sơ khai so với CNNs, ResNets, Transformers. Ta dùng tích phân để tổng hợp thông tin, nhưng liệu đó có phải cách duy nhất? Max-pooling trong không gian hàm trông như thế nào? Và làm sao scale lên bài toán 3D thực tế với hơn 10 triệu điểm?"} 
+& Map split screen \manim{Create}. Known side: icons \manim{FadeIn}. Unknown side: question marks \manim{Flash}. Text questions \manim{Write} sequentially. \\ \hline
+\textbf{[24:45--25:25]} \newline Hiện PINO pipeline: data loss + physics loss. Highlight các câu hỏi mở: hard-code conservation laws? Balance loss auto? Stable training với đạo hàm bậc cao? 
+& \textit{"Vấn đề mở thứ hai: tích hợp vật lý đúng cách. PINO là hướng đi đúng nhưng còn nhiều câu hỏi: làm sao hard-code các định luật bảo toàn vào kiến trúc, không chỉ vào loss? Làm sao cân bằng data loss và physics loss mà không tuning thủ công? Làm sao đảm bảo training ổn định khi physics loss yêu cầu tính đạo hàm bậc cao? Về lý thuyết, PINO nên tốt hơn solver thuần, nhưng thực tế ta chưa có phương pháp đủ tốt để khai thác."} 
+& PINO diagram \manim{Create}. Conservation laws icons \manim{Pulse}. Balance scale animation for loss weighting. Subtle warning glow on "chưa có phương pháp". \\ \hline
+\end{tabularx}
+
+\subsection{Scene 6.2: Lý thuyết nền tảng \& Lượng hóa bất định}
+\textbf{Timestamp tổng:} \texttt{25:25 -- 26:40}
+
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[25:25--26:05]} \newline Knowledge Constellation: DL side (dense interconnected nodes: Approximation Theory, VC Dimension, Rademacher, PAC-Bayes) vs NO side (sparse fog, chỉ 1 node sáng mờ: Universal Approximation). 3 beacons xuất hiện: Convergence as $N\to\infty$? Architecture-specific limits? Param-Gen relation in function space? & \textit{"Vấn đề mở thứ ba: lý thuyết nền tảng. Trong Deep Learning, ta có hàng chục năm nghiên cứu — approximation theory, generalization bounds, VC dimension, Rademacher complexity — tất cả kết nối chặt chẽ. Trong Neural Operators, hầu hết những thứ tương đương vẫn là vùng trống. Ta có universal approximation, nhưng điều kiện hội tụ chính xác khi discretization tiến về vô hạn? Giới hạn xấp xỉ của FNO so với GNO? Mối quan hệ giữa độ phức tạp tham số và khả năng tổng quát trong không gian hàm vô hạn chiều? Tất cả vẫn là câu hỏi mở."} & Knowledge graph \manim{Create}. DL nodes glow + connect. NO side: fog + 1 weak node. Beacons \manim{Flash} sequentially. \\ \hline
+\textbf{[26:05--26:40]} \newline Function plot với prediction curve + confidence band mờ bao quanh (function-valued uncertainty). So sánh: Monte Carlo (50 đường cong rải rác, expensive) vs Conformal Prediction / GANO (1 band mượt mà với coverage guarantee). & \textit{"Vấn đề mở thứ tư: lượng hóa bất định. Trong vật lý và kỹ thuật, error bar không phải tùy chọn — đó là yêu cầu bắt buộc. Nhưng ở đây khác Deep Learning truyền thống: domain expert không hỏi 'model chính xác bao nhiêu phần trăm'. Họ hỏi: 'tại mỗi điểm x, error bar là bao nhiêu?' Monte Carlo chạy 50 solver thì tốn kém. Conformal Prediction và GANO cho ta confidence band trực tiếp trên không gian hàm — với coverage guarantee. Đây là hướng đi tiềm năng nhất."} & Prediction curve \manim{Create} + shaded band \manim{FadeIn}. Monte Carlo curves scatter \manim{Create} sequentially. Morph thành smooth conformal band. \\ \hline
+\end{tabularx}
+\subsection{Scene 6.3: Active Learning \& RL trong không gian hàm}
+\textbf{Timestamp tổng:} \texttt{26:40 -- 27:55}
+
+
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[26:40--27:15]} \newline Hiện biểu đồ chi phí: mỗi simulation = nhiều giờ, mỗi thí nghiệm = triệu đô. Hiện câu hỏi active learning: với ngân sách cố định, lấy mẫu ở đâu để học tốt nhất? 
+& \textit{"Vấn đề mở thứ năm: active learning trong không gian hàm. Sinh dữ liệu cho operator learning rất tốn kém — dù là từ mô phỏng số hay thí nghiệm thực. Mỗi simulation có thể mất nhiều giờ. Mỗi thí nghiệm thực có thể tốn hàng triệu đô la. Active learning hỏi: với ngân sách data cố định, ta nên lấy mẫu ở đâu để học tốt nhất? Trong không gian hàm, câu hỏi này phức tạp hơn nhiều so với ML thông thường."} 
+& Cost bar chart \manim{GrowFromEdge}. Simulation timer \manim{ValueTracker}. Money icon with counter. Question text \manim{Write} with emphasis. \\ \hline
+\textbf{[27:15--27:55]} \newline Hiện vòng lặp RL cổ điển (state/action vector) $\to$ gạch chéo $\to$ hiện state/action là hàm số trong không gian vô hạn chiều. 
+& \textit{"Vấn đề mở thứ sáu: reinforcement learning trong không gian hàm. Điều khiển dòng chảy chất lưu, can thiệp khí hậu, điều khiển robot — trong tất cả những bài toán này, state và action đều là hàm số. Công thức RL thông thường không áp dụng trực tiếp được. Cần framework RL hoàn toàn mới cho không gian hàm."} 
+& Classic RL loop \manim{Create} $\to$ red strike-through \manim{Draw} $\to$ function-space RL \manim{Transform} in with glow. \\ \hline
+\end{tabularx}
+
+
+\subsection{Scene 6.4: Thách thức hợp tác \& Recap 3 nguyên tắc}
+\textbf{Timestamp tổng:} \texttt{27:55 -- 28:55}
+
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[27:55--28:25]} \newline Hiện hai nhóm người: ML researcher và domain expert, có khoảng cách giao tiếp. Data biased/messy hiện ở giữa. Cầu nối dần được xây. 
+& \textit{"Và cuối cùng, một thách thức thực tế: hợp tác với domain experts. Nhà vật lý, kỹ sư, nhà khí tượng thường hoài nghi về ML — điều này hoàn toàn hợp lý. Họ đã xây solver truyền thống qua nhiều thập kỷ, và mô hình ML đầu tiên bạn đề xuất thường kém hơn. Khoảng cách giao tiếp là thực. Data khoa học thường biased, messy. Để Neural Operators thực sự có impact, ta cần xây cầu nối — không chỉ xây model."} 
+& Two groups \manim{Create} with gap. Messy data cloud \manim{FadeIn}. Bridge \manim{Create} connecting them. \\ \hline
+\textbf{[28:25--28:55]} \newline Hiện checklist 3 nguyên tắc cốt lõi: Discretization-invariant, Function output, Speedup. Highlight các con số 45k/140k/700k lần. 
+& \textit{"Nhìn toàn cảnh lại. Neural Operators thỏa mãn ba nguyên tắc: hoạt động trên bất kỳ discretization nào, output là hàm số thực sự để tính đạo hàm/tích phân, và đạt tốc độ vượt trội. Những con số 45,000, 140,000, 700,000 lần không chỉ là slide — nhanh hơn 700,000 lần trong mô phỏng CO₂ nghĩa là đánh giá nhiều kịch bản hơn, triển khai carbon capture nhanh hơn."} 
+& Checklist items \manim{FadeIn} with checkmarks. Speedup numbers \manim{CountUp} animation. Impact examples \manim{Write} below. \\ \hline
+\end{tabularx}
+
+
+\subsection{Scene 6.5: Resources \& Closing remarks}
+\textbf{Timestamp tổng:} \texttt{28:55 -- 29:25}
+
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabularx}{\textwidth}{|p{3.6cm}|>{\RaggedRight\arraybackslash}X|p{4.6cm}|}
+\hline
+\textbf{Visual (Manim)} & \textbf{Audio / Voiceover} & \textbf{Ghi chú Animation} \\ \hline
+\textbf{[28:55--29:10]} \newline Hiện logo + link: neuraloperator.github.io, NVIDIA Modulus, papers Kovachki 2021 \& Li 2021, ICML 2024 tutorial. 
+& \textit{"Nếu bạn muốn bắt đầu khám phá lĩnh vực này, có hai thư viện mã nguồn mở chính: neuraloperator trên PyTorch tại neuraloperator.github.io, và NVIDIA Modulus tại developer.nvidia.com/modulus. Về papers, bài quan trọng nhất để bắt đầu là 'Neural Operator' của Kovachki et al. 2021 trên JMLR, và 'Fourier Neural Operator' của Li et al. trên ICLR 2021."} 
+& Logos/links \manim{FadeIn} sequentially. Paper titles \manim{Write} with authors. Clean layout. \\ \hline
+\textbf{[29:10--29:25]} \newline Fade to soft background. Hiện message closing: "Neural Operators = tổng quát hóa tự nhiên của tổng Riemann, tích phân, MLP". Subscribe CTA. 
+& \textit{"Hy vọng video này giúp bạn thấy Neural Operators không phải một thứ gì bí ẩn. Chúng là sự tổng quát hóa tự nhiên của những thứ chúng ta đã biết — tổng Riemann, tích phân, MLP — lên một không gian rộng hơn. Lĩnh vực này mới đủ để có vô số câu hỏi mở, nhưng cũng đã đủ trưởng thành để bạn có thể bắt đầu đóng góp ngay. Cảm ơn bạn đã xem đến cuối. Hẹn gặp lại."} 
+& Closing message \manim{Write} centered. Subscribe button \manim{Scale} subtly. Fade to black hold 1s. \\ \hline
+\end{tabularx}
