@@ -13,8 +13,13 @@ from src.common.theme import *
 apply_global_config()
 
 # Fallback colors
-CYAN = "#00FFFF"
-GREEN_SCREEN = "#00FF00"
+BLACK = "#0b1020"
+OPERATOR = "#76B900" # NVIDIA Green
+PHYSICS = "#00FFFF"  # Cyan
+NVIDIA_GREEN = "#76B900"
+GRAY_B = "#AAAAAA"
+YELLOW = "#FFFF00"
+WHITE = "#FFFFFF"
 
 class Scene0605_Resources_Closing(TimedScene):
     SCRIPT_ID = "6.5"
@@ -25,136 +30,139 @@ class Scene0605_Resources_Closing(TimedScene):
 
     def construct(self):
         # ═══════════════════════════════════════════════════════════════
-        # BEAT 1: [28:55–29:10] Resources (15s)
+        # BEAT 1: [28:55–29:10] The Starter Kit (15s)
         # ═══════════════════════════════════════════════════════════════
-        title = Text("Resources để bắt đầu", font_size=28,
-                     color=OPERATOR, weight=BOLD).to_edge(UP, buff=0.4)
-        self.play_timed("b1_title", 0, 1.5, FadeIn(title))
+        
+        # Title
+        title = Text("Starter Kit: Bắt đầu từ đâu?", font_size=32,
+                     color=OPERATOR, weight=BOLD).to_edge(UP, buff=0.5)
+        self.play_timed("b1_title", 0, 1.5, Write(title))
 
-        # ── LIBRARIES ──
-        lib_header = Text("Thư viện mã nguồn mở", font_size=20, color=GREEN_SCREEN, weight=BOLD).shift(LEFT*3.5 + UP*1.8)
+        # --- LEFT: THEORY (Papers) ---
+        theory_header = Text("1. Nền tảng Lý thuyết", font_size=20, color=PHYSICS, weight=BOLD).shift(LEFT*3.8 + UP*2.0)
         
-        # NeuralOperator library
-        no_logo = RoundedRectangle(width=2.8, height=0.7, corner_radius=0.1,
-                                   stroke_color=GREEN_SCREEN, fill_color=BLACK, fill_opacity=0.8, stroke_width=2)
-        no_txt = Text("neuraloperator", font_size=16, color=GREEN_SCREEN, weight=BOLD).move_to(no_logo)
-        no_group = VGroup(no_logo, no_txt).shift(LEFT*3.5 + UP*1.0)
-        
-        no_link = Text("neuraloperator.github.io", font_size=12, color=GRAY_B).next_to(no_group, DOWN, buff=0.15)
-        no_github = Text("github.com/neuraloperator/neuraloperator", font_size=10, color=GRAY_B).next_to(no_link, DOWN, buff=0.1)
-        
-        # NVIDIA Modulus
-        nvidia_logo = RoundedRectangle(width=2.8, height=0.7, corner_radius=0.1,
-                                       stroke_color=NVIDIA_GREEN, fill_color=BLACK, fill_opacity=0.8, stroke_width=2)
-        nvidia_txt = Text("NVIDIA Modulus", font_size=16, color=NVIDIA_GREEN, weight=BOLD).move_to(nvidia_logo)
-        nvidia_group = VGroup(nvidia_logo, nvidia_txt).shift(LEFT*3.5 + DOWN*0.5)
-        
-        nvidia_link = Text("developer.nvidia.com/modulus", font_size=12, color=GRAY_B).next_to(nvidia_group, DOWN, buff=0.15)
+        # Paper 1
+        p1_box = RoundedRectangle(width=4.8, height=1.1, corner_radius=0.15,
+                                  stroke_color=PHYSICS, fill_color="#111827", fill_opacity=0.8, stroke_width=1.5)
+        p1_line1 = Text("Neural Operator: Learning Maps", font_size=16, color=WHITE, weight=BOLD)
+        p1_line2 = Text("Between Function Spaces", font_size=16, color=WHITE, weight=BOLD)
+        p1_title = VGroup(p1_line1, p1_line2).arrange(DOWN, buff=0.1).move_to(p1_box.get_top() + DOWN*0.35)
+        p1_auth = Text("Kovachki, Li, et al. (JMLR 2021)", 
+                       font_size=13, color=GRAY_B).next_to(p1_title, DOWN, buff=0.2)
+        paper1 = VGroup(p1_box, p1_title, p1_auth).shift(LEFT*3.8 + UP*0.9)
 
-        self.play_timed("b1_libs", 1.5, 5,
-                        FadeIn(lib_header),
-                        FadeIn(no_group), Write(no_link), Write(no_github),
-                        FadeIn(nvidia_group), Write(nvidia_link))
+        # Paper 2
+        p2_box = RoundedRectangle(width=4.8, height=1.1, corner_radius=0.15,
+                                  stroke_color=PHYSICS, fill_color="#111827", fill_opacity=0.8, stroke_width=1.5)
+        p2_line1 = Text("Fourier Neural Operator for", font_size=16, color=WHITE, weight=BOLD)
+        p2_line2 = Text("Parametric PDEs", font_size=16, color=WHITE, weight=BOLD)
+        p2_title = VGroup(p2_line1, p2_line2).arrange(DOWN, buff=0.1).move_to(p2_box.get_top() + DOWN*0.35)
+        p2_auth = Text("Li, Kovachki, et al. (ICLR 2021)", 
+                       font_size=13, color=GRAY_B).next_to(p2_title, DOWN, buff=0.2)
+        paper2 = VGroup(p2_box, p2_title, p2_auth).shift(LEFT*3.8 + DOWN*0.9)
 
-        # ── PAPERS ──
-        paper_header = Text("Papers quan trọng", font_size=20, color=PHYSICS, weight=BOLD).shift(RIGHT*3.5 + UP*1.8)
+        self.play_timed("b1_theory", 1.5, 5.5,
+                        FadeIn(theory_header),
+                        FadeIn(paper1, shift=RIGHT*0.2),
+                        FadeIn(paper2, shift=RIGHT*0.2))
+
+        # --- RIGHT: CODE (Libraries & Terminal) ---
+        code_header = Text("2. Công cụ Thực chiến", font_size=20, color=OPERATOR, weight=BOLD).shift(RIGHT*3.8 + UP*2.0)
         
-        # Kovachki 2021
-        paper1_box = RoundedRectangle(width=5.5, height=1.2, corner_radius=0.1,
-                                      stroke_color=PHYSICS, fill_color=BLACK, fill_opacity=0.6, stroke_width=2)
-        paper1_title = Text("Neural Operator: Learning Maps\nBetween Function Spaces", 
-                           font_size=13, color=WHITE).move_to(paper1_box).shift(UP*0.2)
-        paper1_authors = Text("Kovachki, Li, et al. — JMLR 2021", 
-                             font_size=11, color=GRAY_B).next_to(paper1_title, DOWN, buff=0.15)
-        paper1 = VGroup(paper1_box, paper1_title, paper1_authors).shift(RIGHT*3.5 + UP*0.8)
+        # Terminal Window (macOS style)
+        term_bg = RoundedRectangle(width=6.8, height=3.2, corner_radius=0.15,
+                                   stroke_color=GRAY_B, fill_color="#0d1117", fill_opacity=0.95, stroke_width=1.5)
+        term_bg.shift(RIGHT*3.8 + UP*0.1)
         
-        # Li 2021 (FNO)
-        paper2_box = RoundedRectangle(width=5.5, height=1.2, corner_radius=0.1,
-                                      stroke_color=PHYSICS, fill_color=BLACK, fill_opacity=0.6, stroke_width=2)
-        paper2_title = Text("Fourier Neural Operator for\nParametric Partial Differential Equations", 
-                           font_size=13, color=WHITE).move_to(paper2_box).shift(UP*0.2)
-        paper2_authors = Text("Li, Kovachki, et al. — ICLR 2021", 
-                             font_size=11, color=GRAY_B).next_to(paper2_title, DOWN, buff=0.15)
-        paper2 = VGroup(paper2_box, paper2_title, paper2_authors).shift(RIGHT*3.5 + DOWN*0.8)
-
-        self.play_timed("b1_papers", 5, 9,
-                        FadeIn(paper_header),
-                        FadeIn(paper1),
-                        FadeIn(paper2))
-
-        # ── QR CODE (simplified representation) ──
-        qr_box = Square(side_length=1.2, color=WHITE, fill_color=WHITE, fill_opacity=0.9, stroke_width=2)
-        qr_box.shift(RIGHT*5.5 + DOWN*2.5)
+        # Terminal Dots
+        dots = VGroup(Dot(color="#FF5F56", radius=0.06), Dot(color="#FFBD2E", radius=0.06), Dot(color="#27C93F", radius=0.06)).arrange(RIGHT, buff=0.12)
+        dots.move_to(term_bg.get_top() + DOWN*0.15 + LEFT*(term_bg.width/2 - 0.3))
         
-        # Simplified QR pattern (just visual representation)
-        qr_pattern = VGroup(*[
-            Square(side_length=0.15, color=BLACK, fill_opacity=1, stroke_width=0)
-            .move_to(qr_box.get_center() + RIGHT*x*0.2 + UP*y*0.2)
-            for x in range(-2, 3) for y in range(-2, 3)
-            if (abs(x) == 2 or abs(y) == 2) or (x == 0 and y == 0)
-        ])
+        # Terminal Text (Dùng font Monospace để giả lập code)
+        t_line1 = Text("$ pip install neuraloperator", font="Monospace", font_size=18, color="#A5D6FF")
+        t_line2 = Text(">>> from neuralop.models import FNO", font="Monospace", font_size=18, color="#A5D6FF")
+        t_line3 = Text(">>> model = FNO(n_modes=(64,64), ...)", font="Monospace", font_size=18, color="#A5D6FF")
         
-        qr_label = Text("Scan để truy cập", font_size=10, color=GRAY_B).next_to(qr_box, DOWN, buff=0.1)
+        term_code = VGroup(t_line1, t_line2, t_line3).arrange(DOWN, aligned_edge=LEFT, buff=0.3)
+        term_code.move_to(term_bg).shift(DOWN*0.05)
+        
+        terminal = VGroup(term_bg, dots, term_code)
 
-        self.play_timed("b1_qr", 9, 11,
-                        FadeIn(qr_box),
-                        LaggedStart(*[FadeIn(s, scale=0.5) for s in qr_pattern], lag_ratio=0.05),
-                        Write(qr_label))
+        self.play_timed("b1_code", 5.5, 9.5,
+                        FadeIn(code_header),
+                        FadeIn(terminal, scale=0.9))
 
-        self.wait_timed("b1_hold", 11, 15)
+        # --- BOTTOM: HUB (No QR, just clean URL/Description callout) ---
+        hub_box = RoundedRectangle(width=11.5, height=1.0, corner_radius=0.2,
+                                   stroke_color=YELLOW, fill_color=YELLOW, fill_opacity=0.1, stroke_width=2)
+        hub_box.shift(DOWN*2.5)
+        
+        hub_text = Text("Toàn bộ Code, Slides và Papers đã được để sẵn ở phần MÔ TẢ (Description)", 
+                        font_size=20, color=YELLOW, weight=BOLD).move_to(hub_box)
+        
+        hub_group = VGroup(hub_box, hub_text)
+
+        self.play_timed("b1_hub", 9.5, 12.5,
+                        FadeIn(hub_group, shift=UP*0.2))
+        
+        self.wait_timed("b1_hold", 12.5, 15)
 
         # ═══════════════════════════════════════════════════════════════
-        # BEAT 2: [29:10–29:25] Closing Message (15s)
+        # BEAT 2: [29:10–29:25] The Final Synthesis (15s)
         # ═══════════════════════════════════════════════════════════════
         self.play_timed("clear_b1", 15, 16.5,
-                        *[FadeOut(m) for m in [title, lib_header, no_group, no_link, no_github,
-                                               nvidia_group, nvidia_link, paper_header,
-                                               paper1, paper2, qr_box, qr_pattern, qr_label]])
+                        *[FadeOut(m) for m in [title, theory_header, paper1, paper2, 
+                                               code_header, terminal, hub_group]])
 
-        # Closing message - Typography focus
+        # Mathematical Isomorphisms (Chốt hạ bằng Toán học)
+        iso1 = MathTex(r"\sum", r"\xrightarrow{\Delta x \to 0}", r"\int", font_size=36)
+        iso2 = MathTex(r"\mathbb{R}^n", r"\xrightarrow{N \to \infty}", r"\mathcal{A}", font_size=36)
+        iso3 = MathTex(r"W", r"\xrightarrow{\text{continuum}}", r"\kappa(y,x)", font_size=36)
+        
+        isos = VGroup(iso1, iso2, iso3).arrange(RIGHT, buff=1.5).shift(UP*2.0)
+        
+        self.play_timed("b2_isos", 16.5, 18.5,
+                        LaggedStart(*[Write(i) for i in isos], lag_ratio=0.3))
+        
+        # Hold math on screen
+        self.wait_timed("b2_hold_math", 18.5, 19.5)
+
+        # Closing Text
         closing_line1 = Text("Neural Operators không phải thứ gì bí ẩn.", 
-                            font_size=24, color=WHITE).shift(UP*1.2)
+                            font_size=28, color=WHITE, weight=BOLD).shift(UP*0.5)
         
         closing_line2 = Text("Chúng là sự tổng quát hóa tự nhiên của", 
-                            font_size=20, color=GRAY_B).shift(UP*0.5)
+                            font_size=20, color=GRAY_B).shift(DOWN*0.2)
         
         closing_keywords = VGroup(
-            Text("tổng Riemann", font_size=22, color=GREEN_SCREEN, weight=BOLD),
-            Text("tích phân", font_size=22, color=GREEN_SCREEN, weight=BOLD),
-            Text("MLP", font_size=22, color=GREEN_SCREEN, weight=BOLD)
-        ).arrange(RIGHT, buff=0.8).shift(DOWN*0.2)
+            Text("tổng Riemann", font_size=22, color=OPERATOR, weight=BOLD),
+            Text("tích phân", font_size=22, color=OPERATOR, weight=BOLD),
+            Text("và MLP", font_size=22, color=OPERATOR, weight=BOLD)
+        ).arrange(RIGHT, buff=0.6).shift(DOWN*0.8)
         
         closing_line3 = Text("lên không gian vô hạn chiều.", 
-                            font_size=20, color=GRAY_B).shift(DOWN*0.9)
+                            font_size=20, color=GRAY_B).shift(DOWN*1.4)
 
-        self.play_timed("b2_closing", 16.5, 21,
-                        Write(closing_line1),
+        # Show the main quote completely first
+        self.play_timed("b2_text_1", 19.5, 21.0,
+                        Write(closing_line1))
+
+        # Then show the rest of the explanation
+        self.play_timed("b2_text_2", 21.0, 24.5,
                         FadeIn(closing_line2),
-                        LaggedStart(*[FadeIn(k, shift=UP*0.2) for k in closing_keywords], lag_ratio=0.2),
+                        LaggedStart(*[FadeIn(k, shift=UP*0.1) for k in closing_keywords], lag_ratio=0.2),
                         FadeIn(closing_line3))
 
-        # Call to action
-        cta_box = RoundedRectangle(width=4.0, height=0.8, corner_radius=0.15,
-                                   stroke_color=YELLOW, fill_color=YELLOW, fill_opacity=0.15, stroke_width=2.5)
-        cta_txt = Text("Subscribe để không bỏ lỡ video tiếp theo", 
-                      font_size=16, color=YELLOW, weight=BOLD).move_to(cta_box)
-        cta_group = VGroup(cta_box, cta_txt).shift(DOWN*2.2)
-
-        self.play_timed("b2_cta", 21, 23.5,
-                        FadeIn(cta_group),
-                        cta_group.animate.scale(1.05),
-                        rate_func=there_and_back)
-
-        # Thank you
+        # Final CTA & Thank You
         thank_you = Text("Cảm ơn bạn đã xem đến cuối. Hẹn gặp lại!", 
-                        font_size=18, color=WHITE).to_edge(DOWN, buff=0.5)
+                        font_size=20, color=WHITE).shift(DOWN*2.5)
         
-        self.play_timed("b2_thanks", 23.5, 25, FadeIn(thank_you))
+        self.play_timed("b2_thanks", 24.5, 26.5, FadeIn(thank_you, shift=UP*0.2))
 
-        self.wait_timed("b2_hold", 25, 28)
+        self.wait_timed("b2_hold", 26.5, 28.5)
 
         # Fade to black
-        self.play_timed("fade_out", 28, 30,
+        self.play_timed("fade_out", 28.5, 30,
                         *[FadeOut(m, run_time=1.5) for m in self.mobjects])
         
         self.pad_to(self.SCENE_DURATION)
