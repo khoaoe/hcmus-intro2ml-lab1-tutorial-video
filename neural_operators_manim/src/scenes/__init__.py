@@ -1,2 +1,0 @@
-"""Production scene modules."""
-
