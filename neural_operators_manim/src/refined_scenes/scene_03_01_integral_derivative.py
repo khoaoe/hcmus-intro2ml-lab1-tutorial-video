@@ -1,9 +1,3 @@
-"""
-Scene 3.1 — Nền tảng Toán học: Tích phân & Đạo hàm
-Source: original_outline.tex, Section 3, Scene 3.1
-Global time: 7:30 – 8:15
-Duration: 45s
-"""
 
 from manim import *
 import numpy as np
@@ -22,7 +16,6 @@ class Scene0301_IntegralAndDerivative(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ── Beat 1: [7:30–7:55] Riemann sum: N rectangles → N grows → smooth ──
         axes = Axes(
             x_range=[0, 4, 1], y_range=[0, 3, 1],
             x_length=6, y_length=3,
@@ -35,7 +28,6 @@ class Scene0301_IntegralAndDerivative(TimedScene):
 
         self.play_timed("axes_func", 0, 3, FadeIn(axes), FadeIn(func), FadeIn(func_label))
 
-        # Riemann rectangles — start with N=4
         n_values = [4, 8, 20]
         prev_rects = None
 
@@ -63,7 +55,6 @@ class Scene0301_IntegralAndDerivative(TimedScene):
             self.wait_timed(f"hold_n{n}", t_start + 2, t_start + 4)
             prev_rects = rects
 
-        # Area fill
         area = axes.get_area(func, x_range=[0.1, 3.8], color=INPUT, opacity=0.4)
         self.play_timed("area_fill", 15, 17, FadeOut(prev_rects), FadeIn(area))
 
@@ -74,7 +65,6 @@ class Scene0301_IntegralAndDerivative(TimedScene):
         self.play_timed("riemann_eq", 17, 19, FadeIn(riemann_eq))
         self.wait_timed("hold_riemann", 19, 25)
 
-        # ── Beat 2: [7:55–8:15] Finite difference: secant → tangent ──
         self.play_timed("clear_beat1", 25, 25.5,
                         *[FadeOut(m) for m in [axes, func, func_label, area, riemann_eq]])
 
@@ -87,7 +77,6 @@ class Scene0301_IntegralAndDerivative(TimedScene):
         curve = axes2.plot(lambda x: 0.3 * x ** 2 - 0.5 * x + 1.5, x_range=[0.5, 4.5],
                            color=OUTPUT, stroke_width=3)
 
-        # Two points for secant
         x1, x2 = 1.5, 3.5
         y1 = 0.3 * x1 ** 2 - 0.5 * x1 + 1.5
         y2 = 0.3 * x2 ** 2 - 0.5 * x2 + 1.5
@@ -101,7 +90,6 @@ class Scene0301_IntegralAndDerivative(TimedScene):
         self.play_timed("axes2", 25.5, 27, FadeIn(axes2), FadeIn(curve))
         self.play_timed("secant_pts", 27, 29, FadeIn(dot1), FadeIn(dot2), FadeIn(secant))
 
-        # Move to tangent (x2 approaches x1)
         x_mid = 2.5
         y_mid = 0.3 * x_mid ** 2 - 0.5 * x_mid + 1.5
         dy = 0.6 * x_mid - 0.5  # derivative

@@ -1,9 +1,3 @@
-"""
-Scene 4.5 — CoDANO, Spherical FNO & Khối Đạo hàm
-Source: original_outline.tex, Section 4, Scene 4.5
-Global time: 15:45 – 17:00
-Duration: 75s
-"""
 
 from manim import *
 import numpy as np
@@ -22,14 +16,12 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ── Beat 1: [15:45–16:20] CoDANO attention + Spherical FNO ──
         coda_title = Text("CoDANO: Attention giữa biến vật lý", font_size=24,
                           color=OPERATOR, weight=BOLD).to_edge(UP, buff=0.4)
 
         variables = ["p", "v_x", "v_y", "T", r"\rho"]
         n_vars = len(variables)
         
-        # Build matrix centered at origin
         cell_size = 0.9
         spacing = 1.0
 
@@ -68,20 +60,16 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
         self.play_timed("clear_coda", 18, 18.5,
                         *[FadeOut(m) for m in [coda_title, matrix_group, alpha_group]])
 
-        # ── SPHERICAL FNO: Visualize Spherical Harmonics thực sự ──
         sphere_title = Text("Spherical FNO", font_size=24,
                             color=SCIENCE, weight=BOLD).to_edge(UP, buff=0.4)
 
-        # Tạo sphere với color mapping thể hiện function
         def sphere_surface(u, v):
-            # u: longitude [0, 2π], v: latitude [-π/2, π/2]
             x = 2.0 * np.cos(v) * np.cos(u)
             y = 2.0 * np.sin(v)
             z = 2.0 * np.cos(v) * np.sin(u)
             return np.array([x, y, z])
 
         def temperature_function(u, v):
-            # Kết hợp nhiều spherical harmonics modes
             return 0.5 * np.cos(v) + 0.3 * np.sin(2*v) * np.cos(2*u) + 0.2 * np.cos(3*v)
 
         sphere_surface_obj = Surface(
@@ -91,7 +79,6 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
             resolution=(32, 16),
         )
 
-        # Map color and cull back faces
         for face in sphere_surface_obj.submobjects:
             center = face.get_center()
             x, y, z = center
@@ -108,7 +95,6 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
         
         sphere_group = VGroup(sphere_surface_obj).shift(LEFT * 3)
 
-        # Spherical Harmonics modes visualization (bên phải)
         modes_title = Text("Spherical Harmonics Modes", font_size=18, 
                            color=SCIENCE).shift(RIGHT * 3.5 + UP * 2.2)
         
@@ -131,7 +117,6 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
 
         coeff_group = VGroup(coeff_bars, coeff_labels, modes_title)
 
-        # Notes
         sphere_note = VGroup(
             Text("Fourier → kinh độ (longitude)", font_size=16, color=INPUT),
             Text("Legendre → vĩ độ (latitude)", font_size=16, color=PURPLE),
@@ -151,7 +136,6 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
         self.play_timed("sphere_notes", 26, 28, FadeIn(sphere_note), FadeIn(pole_note))
         self.wait_timed("hold_sphere", 28, 35)
 
-        # ── Beat 2: [16:20–17:00] CNN stencil derivative block ──
         self.play_timed("clear_sphere", 35, 35.5,
                         *[FadeOut(m) for m in [sphere_title, sphere_group, coeff_group, sphere_note, pole_note]])
 
@@ -166,7 +150,6 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
         self.play_timed("deriv_title", 35.5, 37, FadeIn(deriv_title))
         self.play_timed("paradox", 37, 40, FadeIn(paradox))
 
-        # Show CNN Stencil large and centered
         large_stencil_units = VGroup()
         for val in ["-1", "0", "1"]:
             box = Square(side_length=0.8, fill_color=CARD_BG, fill_opacity=0.9, 
@@ -179,7 +162,6 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
         
         self.play_timed("stencil_intro", 40, 43, FadeIn(large_stencil_units), FadeIn(large_stencil_label))
 
-        # Axes & curve
         axes = Axes(
             x_range=[0, 6, 1], y_range=[-1.2, 2.2, 1],
             x_length=7, y_length=2.5,
@@ -190,7 +172,6 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
 
         self.play_timed("axes_curve", 43, 46, Create(axes), Create(curve), FadeIn(curve_label))
 
-        # Small Stencil on graph
         stencil_units = VGroup()
         for val in ["-1", "0", "1"]:
             box = Square(side_length=0.4, fill_color=CARD_BG, fill_opacity=0.9, 
@@ -214,12 +195,10 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
         stencil_label = Text("CNN stencil = [-1, 0, 1] / Δx", font_size=14, color=INPUT)
         stencil_label.next_to(stencil_units[1], DOWN, buff=0.3)
 
-        # Transform large to small
         self.play_timed("stencil_to_graph", 46, 48,
                         ReplacementTransform(large_stencil_units, stencil_units),
                         ReplacementTransform(large_stencil_label, stencil_label))
 
-        # Initialize dots and dashed lines at starting positions
         sample_dots = VGroup(*[Dot(color=YELLOW, radius=0.08) for _ in range(3)])
         curve_pts_start = [
             axes.input_to_graph_point(x_center_start - dx_start, curve),
@@ -273,7 +252,6 @@ class Scene0405_CoDANOSphericalDerivative(TimedScene):
 
         cnn_group = VGroup(stencil_units, sample_dots, dash_lines, stencil_label, tangent_line)
         
-        # Animation trượt thực sự
         self.play_timed("stencil_slide", 50, 62,
                         UpdateFromAlphaFunc(cnn_group, update_cnn_visuals))
 

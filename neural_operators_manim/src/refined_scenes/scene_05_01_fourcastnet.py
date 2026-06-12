@@ -1,9 +1,3 @@
-"""
-Scene 5.1 — FourCastNet & Spherical FNO: Dự báo thời tiết
-Source: original_outline.tex, Section 5, Scene 5.1
-Global time: 17:25 – 19:10
-Duration: 105s
-"""
 from manim import *
 import numpy as np
 
@@ -21,11 +15,9 @@ class Scene0501_FourCastNet(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ── Beat 1: [17:25–18:10] Globe, ERA5 layers & Speed race ──
         title = Text("FourCastNet: Dự báo thời tiết", font_size=28,
                      color=SCIENCE, weight=BOLD).to_edge(UP, buff=0.4)
 
-        # 1. Stylized 2D Globe with 9 Heatmap bands
         globe_base = Circle(radius=2.2, color=WHITE, stroke_width=2, fill_color=BLUE_E, fill_opacity=0.2)
         
         E05 = Ellipse(width=4.4, height=0.5)
@@ -75,7 +67,6 @@ class Scene0501_FourCastNet(TimedScene):
         ap_suat_label = Text("Áp suất", font_size=16, color=PINK).move_to(globe_base.get_right() + RIGHT * 0.7 + DOWN * 1.5)
         feature_labels = VGroup(nhiet_label, gio_label, ap_suat_label)
 
-        # Time Arrow
         today_label = Text("Hôm nay", font_size=18, color=TEXT).next_to(globe_base, DOWN, buff=0.3)
         tomorrow_label = Text("Ngày mai", font_size=18, color=TEXT).shift(RIGHT * 3.5)
         tomorrow_label.set_y(today_label.get_y())
@@ -89,7 +80,6 @@ class Scene0501_FourCastNet(TimedScene):
         self.play_timed("weather_ap_suat", 8, 10, FadeIn(ap_suat_group), FadeIn(ap_suat_label))
         self.play_timed("time_arrow", 10, 15, FadeIn(today_label), GrowArrow(time_arrow), FadeIn(tomorrow_label))
 
-        # 2. Speed Race: IFS vs FourCastNet
         race_title = Text("Cuộc đua tốc độ", font_size=20, color=TEXT, weight=BOLD).shift(RIGHT * 3.5 + UP * 2)
         
         ifs_bar = Rectangle(width=0.1, height=0.4, color=RED, fill_opacity=0.8)
@@ -106,7 +96,6 @@ class Scene0501_FourCastNet(TimedScene):
                         FadeIn(race_title), FadeIn(ifs_label), FadeIn(fc_label),
                         FadeIn(ifs_bar), FadeIn(fc_bar))
         
-        # Animate bars growing (IFS slow, FC instant)
         self.play_timed("race_ifs", 20, 25, 
                         ifs_bar.animate.stretch_to_fit_width(4.0, about_edge=LEFT),
                         FadeIn(ifs_time))
@@ -115,7 +104,6 @@ class Scene0501_FourCastNet(TimedScene):
                         fc_bar.animate.stretch_to_fit_width(4.0, about_edge=LEFT),
                         FadeIn(fc_time), Flash(fc_time, color=NVIDIA_GREEN))
 
-        # Metrics overlay
         metrics = VGroup(
             Text("Nhanh hơn 45,000 lần", font_size=18, color=NVIDIA_GREEN, weight=BOLD),
             Text("Tiết kiệm năng lượng 25,000 lần", font_size=18, color=NVIDIA_GREEN),
@@ -125,7 +113,6 @@ class Scene0501_FourCastNet(TimedScene):
         self.play_timed("metrics", 27, 35, FadeIn(metrics))
         self.wait_timed("hold_beat1", 35, 40)
 
-        # ── Beat 2: [18:10–18:40] Ensemble Forecasting ──
         self.play_timed("clear_beat1", 40, 41,
                         *[FadeOut(m) for m in [title, globe_group, feature_labels, today_label, time_arrow, 
                                                tomorrow_label, race_title, ifs_bar, ifs_label, ifs_time,
@@ -134,7 +121,6 @@ class Scene0501_FourCastNet(TimedScene):
         ens_title = Text("Hệ quả thực tế: Ensemble Forecasting", font_size=26,
                          color=SCIENCE, weight=BOLD).to_edge(UP, buff=0.5)
         
-        # Axes for time-series prediction (e.g., Temperature over 10 days)
         axes = Axes(
             x_range=[0, 10, 2], y_range=[15, 35, 5],
             x_length=10, y_length=4,
@@ -144,14 +130,12 @@ class Scene0501_FourCastNet(TimedScene):
         x_label = Text("Thời gian (Ngày)", font_size=14, color=MUTED).next_to(axes.x_axis, DOWN, buff=0.2)
         y_label = Text("Nhiệt độ", font_size=14, color=MUTED).next_to(axes.y_axis, UP, buff=0.2)
 
-        # Single deterministic line
         det_line = axes.plot(lambda x: 25 + 3 * np.sin(x/2) + 0.5 * x, color=WHITE, stroke_width=3)
         det_label = Text("1 Dự báo duy nhất\n(Deterministic)", font_size=16, color=WHITE).next_to(det_line, UR, buff=0.2)
 
         self.play_timed("ens_title", 41, 43, FadeIn(ens_title))
         self.play_timed("axes_det", 43, 48, Create(axes), FadeIn(x_label), FadeIn(y_label), Create(det_line), FadeIn(det_label))
 
-        # Spaghetti plot (Ensemble cloud)
         np.random.seed(42)
         ens_paths = VGroup()
         for i in range(60):
@@ -169,8 +153,6 @@ class Scene0501_FourCastNet(TimedScene):
                         TransformFromCopy(VGroup(det_line), ens_paths),
                         FadeIn(ens_note))
         
-        # Highlight probability band
-        # Upper and lower bounds
         upper_bound = axes.plot(lambda x: 25 + 1.5 * np.sin(x/2) + 0.5 * x + 1.5, color=RED, stroke_width=2, stroke_opacity=0.5)
         lower_bound = axes.plot(lambda x: 25 + 0.8 * np.sin(x/2) + 0.5 * x - 1.0, color=BLUE, stroke_width=2, stroke_opacity=0.5)
         
@@ -182,7 +164,6 @@ class Scene0501_FourCastNet(TimedScene):
         
         self.wait_timed("hold_beat2", 62, 68)
 
-        # ── Beat 3: [18:40–19:10] Spherical FNO & Pole Singularity ──
         self.play_timed("clear_beat2", 68, 69,
                         *[FadeOut(m) for m in [ens_title, axes, x_label, y_label, det_line, 
                                                ens_paths, upper_bound, lower_bound, prob_text]])
@@ -190,12 +171,9 @@ class Scene0501_FourCastNet(TimedScene):
         sfno_title = Text("Spherical FNO (SFNO)", font_size=26,
                           color=SCIENCE, weight=BOLD).to_edge(UP, buff=0.5)
 
-        # So sánh FNO thường vs SFNO tại Bắc Cực
-        # Left: Planar FNO (Grid chiếu lên cầu -> rách ở cực)
         planar_globe = Circle(radius=1.5, color=WHITE, stroke_width=1.5, fill_color=BLUE_E, fill_opacity=0.1)
         planar_globe.shift(LEFT * 3.5)
         
-        # Grid lines hội tụ ở cực (gây singularity)
         planar_grid = VGroup()
         for i in range(5):
             line = Line(planar_globe.get_bottom(), planar_globe.get_top(), color=GRID, stroke_width=1)
@@ -206,16 +184,13 @@ class Scene0501_FourCastNet(TimedScene):
             line.shift(UP * (i - 1.5) * 0.4)
             planar_grid.add(line)
             
-        # Glitch effect at the pole
         pole_glitch = Cross(color=RED, stroke_width=4).scale(0.3).move_to(planar_globe.get_top())
         planar_label = Text("FNO thường (Planar)", font_size=16, color=RED).next_to(planar_globe, DOWN, buff=0.3)
         planar_note = Text("Sai số kỳ dị tại hai cực", font_size=14, color=RED).next_to(planar_label, DOWN, buff=0.1)
 
-        # Right: SFNO (Smooth harmonic gradient)
         sfno_globe = Circle(radius=1.5, color=WHITE, stroke_width=1.5, fill_color=BLUE_E, fill_opacity=0.1)
         sfno_globe.shift(RIGHT * 3.5)
         
-        # Bão di chuyển mượt mà qua cực với quỹ đạo phức tạp (looping)
         storm_path = VMobject(color=YELLOW, stroke_width=2, stroke_opacity=0.8)
         c = sfno_globe.get_center()
         storm_path.set_points_smoothly([
@@ -242,8 +217,6 @@ class Scene0501_FourCastNet(TimedScene):
                         Create(sfno_globe), FadeIn(sfno_label), FadeIn(sfno_note),
                         Create(storm_path), FadeIn(storm))
 
-        # "Nói cùng ngôn ngữ với Domain Experts"
-        # Morph equation
         no_eq = MathTex(r"\mathcal{G}_\theta(u) = \text{Fourier}^{-1}(R \cdot \text{Fourier}(u))", 
                         font_size=28, color=OPERATOR).shift(DOWN * 2.5)
         

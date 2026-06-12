@@ -1,9 +1,3 @@
-"""
-Scene 1.5 — Câu hỏi then chốt & Teaser Neural Operators
-Source: original_outline.tex, Section 1, Scene 1.5
-Global time: 3:30 – 4:00
-Duration: 30s
-"""
 
 from manim import *
 
@@ -21,7 +15,6 @@ class Scene0105_KeyQuestionTeaser(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ── Beat 1: [3:30–3:45] Split screen: R^n→R^m vs A→U ──
         left_title = Text("DL truyền thống", font_size=22, color=MUTED).shift(LEFT * 4 + UP * 3)
         left_eq = MathTex(
             r"f_\theta: \mathbb{R}^n \to \mathbb{R}^m",
@@ -45,7 +38,6 @@ class Scene0105_KeyQuestionTeaser(TimedScene):
                         FadeIn(divider), FadeIn(left_group), FadeIn(right_group))
         self.wait_timed("hold_split", 3, 15)
 
-        # ── Beat 2: [3:45–3:55] Question mark → Neural Operator logo ──
         self.play_timed("clear_split", 15, 15.5,
                         FadeOut(left_group), FadeOut(right_group), FadeOut(divider))
 
@@ -61,7 +53,6 @@ class Scene0105_KeyQuestionTeaser(TimedScene):
         self.play_timed("logo", 17.3, 19, FadeIn(logo))
         self.wait_timed("hold_logo", 19, 25)
 
-        # ── Beat 3: [3:55–4:00] Fade to black + section title ──
         self.play_timed("clear_logo", 25, 25.5, FadeOut(logo))
 
         section_title = Text(

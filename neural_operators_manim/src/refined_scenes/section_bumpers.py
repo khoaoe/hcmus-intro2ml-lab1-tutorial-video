@@ -1,7 +1,6 @@
 from manim import *
 import numpy as np
 
-# Cấu hình màu sắc cho đồng bộ với project
 BG_COLOR = "#0b1020"
 ACCENT_GREEN = "#76B900"
 
@@ -15,19 +14,15 @@ class SectionBumper(Scene):
     def construct(self):
         self.camera.background_color = BG_COLOR
         
-        # 1. Số Section (Làm nền mờ phía sau)
         num_bg = Text(self.sec_num, font_size=250, weight=BOLD, color=ACCENT_GREEN, fill_opacity=0.2)
         num_bg.shift(UP * 0.5)
         
-        # 2. Tiêu đề chính (Ép căn giữa tuyệt đối)
         title_lines = [Text(t, font_size=52, weight=BOLD, color=WHITE) for t in self.title_text.split('\n')]
         title = VGroup(*title_lines).arrange(DOWN, buff=0.2)
         
-        # 3. Đường kẻ Accent
         line = Line(LEFT * 2.5, RIGHT * 2.5, color=ACCENT_GREEN, stroke_width=3)
         line.next_to(title, DOWN, buff=0.4)
         
-        # 4. Subtitle (Câu hook / Tóm tắt)
         if "R^n" in self.subtitle_text:
             parts = self.subtitle_text.split("R^n")
             sub_part1 = Text(parts[0], font_size=24, color=GRAY_B)
@@ -39,23 +34,17 @@ class SectionBumper(Scene):
             
         subtitle.next_to(line, DOWN, buff=0.4)
         
-        # Group lại để căn giữa
         content = VGroup(title, line, subtitle)
         content.move_to(ORIGIN) # Đảm bảo cụm này nằm chính giữa màn hình
         
-        # --- ANIMATION (Tổng ~ 5 giây) ---
-        # 0.0s - 1.5s: Hiện số nền và tiêu đề
         self.play(FadeIn(num_bg, scale=1.2), run_time=1.0)
         self.play(Write(title), run_time=1.2)
         
-        # 1.5s - 2.5s: Vẽ đường kẻ và hiện subtitle
         self.play(Create(line), run_time=0.6)
         self.play(FadeIn(subtitle, shift=UP*0.2), run_time=0.8)
         
-        # 2.5s - 4.0s: Hold (Giữ nguyên cho người xem đọc & Editor dễ cắt)
         self.wait(1.5)
         
-        # 4.0s - 5.0s: Fade out mượt mà
         self.play(*[FadeOut(mob, shift=UP*0.5) for mob in [num_bg, title, line, subtitle]], run_time=1.0)
         self.wait(0.5) # Đệm thêm 0.5s đen tuyệt đối để editor nối clip
 

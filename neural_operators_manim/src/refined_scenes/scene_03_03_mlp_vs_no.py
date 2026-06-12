@@ -1,9 +1,3 @@
-"""
-Scene 3.3 — Visual Dictionary & The Smoothing Paradox
-Source: original_outline.tex, Section 3, Scene 3.3
-Global time: 9:15 – 10:15
-Duration: 60s
-"""
 
 from manim import *
 import numpy as np
@@ -21,14 +15,10 @@ class Scene0303_MLPvsNOComponents(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ═══════════════════════════════════════════════════════════════
-        # BEAT 1: [9:15–9:45] Từ điển Hình học (Morphing)
-        # ═══════════════════════════════════════════════════════════════
         
         title = Text("Sự dịch chuyển sang Không gian Hàm", font_size=32, color=WHITE, weight=BOLD).to_edge(UP, buff=0.5)
         self.play_timed("title", 0, 2, FadeIn(title))
         
-        # --- 1. Vector (Chấm) -> Function (Đường cong) ---
         vector_dots = VGroup(*[
             Dot(LEFT*2.5 + UP*(i*0.48 - 0.16), color=INPUT, radius=0.1) 
             for i in range(5)
@@ -37,7 +27,6 @@ class Scene0303_MLPvsNOComponents(TimedScene):
                       axis_config={"color": GREY_B, "include_ticks": False}).shift(RIGHT*2.5 + UP*0.8)
         func_curve = axes_f.plot(lambda x: np.sin(x*2)*0.8, color=INPUT, stroke_width=3.6)
         
-        # --- 2. Matrix (Lưới) -> Kernel Heatmap ---
         matrix_grid = VGroup()
         for i in range(4):
             for j in range(4):
@@ -57,11 +46,9 @@ class Scene0303_MLPvsNOComponents(TimedScene):
             )
             kernel_heatmap.add(line)
             
-        # --- 3. Sum -> Integral ---
         sum_sym = MathTex(r"\sum_{i=1}^{n}", font_size=58, color=WHITE).shift(LEFT*2.5 + DOWN*3.0)
         int_sym = MathTex(r"\int_{\Omega}", font_size=58, color=WHITE).shift(RIGHT*2.5 + DOWN*3.0)
         
-        # Labels
         lbl_mlp = Text("Hữu hạn chiều (MLP)", font_size=22, color=MUTED).shift(LEFT*2.5 + UP*2.6)
         lbl_no = Text("Vô hạn chiều (NO)", font_size=22, color=NVIDIA_GREEN).shift(RIGHT*2.5 + UP*2.6)
         
@@ -82,9 +69,6 @@ class Scene0303_MLPvsNOComponents(TimedScene):
         )
         self.play_timed("highlight_no", 25, 30, Create(no_box))
 
-        # ═══════════════════════════════════════════════════════════════
-        # BEAT 2: [9:45–10:15] Nghịch lý Làm mịn & Residual Laser
-        # ═══════════════════════════════════════════════════════════════
         
         self.play_timed("clear_beat1", 30, 31, *[FadeOut(m) for m in self.mobjects])
         
@@ -94,7 +78,6 @@ class Scene0303_MLPvsNOComponents(TimedScene):
             axis_config={"color": GREY_B, "include_ticks": False}
         ).shift(DOWN * 0.5)
         
-        # Hàm Input đỏ gắt (Shock wave)
         def sharp_func(x):
             return np.sin(x * 4) * np.exp(-0.2 * (x - 3)**2) + 1.5 * np.exp(-10 * (x - 4.5)**2)
             
@@ -103,13 +86,11 @@ class Scene0303_MLPvsNOComponents(TimedScene):
         
         self.play_timed("sharp_in", 31, 34, Create(axes_p), Create(sharp_curve), FadeIn(sharp_label))
         
-        # Hàm Smooth xanh mượt
         def smooth_func(x):
             return np.sin(x * 1.5) * np.exp(-0.2 * (x - 3)**2) + 0.5 * np.exp(-2 * (x - 4.5)**2)
             
         smooth_curve = axes_p.plot(smooth_func, x_range=[0, 6.0], color=INPUT, stroke_width=3, stroke_opacity=0.8)
         
-        # Thấu kính Kernel (Circle mờ vàng)
         kernel_lens = Circle(radius=0.6, color=OPERATOR, fill_opacity=0.2, stroke_width=2).shift(LEFT*3 + DOWN*0.5)
         lens_glow = Circle(radius=0.8, color=OPERATOR, fill_opacity=0.1, stroke_width=0).move_to(kernel_lens)
         lens_group = VGroup(kernel_lens, lens_glow)
@@ -118,7 +99,6 @@ class Scene0303_MLPvsNOComponents(TimedScene):
         
         self.play_timed("lens_appear", 34, 35, FadeIn(lens_group))
         
-        # Quét lens và nhòe dần khi đi qua giữa
         self.play_timed("lens_sweep_and_smooth", 35, 40,
             MoveAlongPath(lens_group, lens_path, rate_func=linear),
             Transform(sharp_curve, smooth_curve, rate_func=squish_rate_func(smooth, 0.6, 0.9))
@@ -127,7 +107,6 @@ class Scene0303_MLPvsNOComponents(TimedScene):
         blur_note = Text("Tích phân = Bộ lọc thông thấp\n-> Mất chi tiết!", font_size=18, color=OPERATOR).next_to(axes_p, UP, buff=0.2).to_edge(RIGHT, buff=0.5)
         self.play_timed("blur_note", 40, 43, FadeIn(blur_note))
         
-        # Tia laser Bypass (vòng qua thấu kính)
         residual_line = ArcBetweenPoints(
             axes_p.c2p(0.0, 0.0),
             axes_p.c2p(6.0, 0.0),

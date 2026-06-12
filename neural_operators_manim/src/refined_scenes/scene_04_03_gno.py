@@ -1,9 +1,3 @@
-"""
-Scene 4.3 — Graph Neural Operator (GNO): Xử lý lưới bất quy tắc
-Source: original_outline.tex, Section 4, Scene 4.3
-Global time: 13:15 – 14:30
-Duration: 75s
-"""
 
 from manim import *
 import numpy as np
@@ -23,11 +17,9 @@ class Scene0403_GNO(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ── Beat 1: [13:15–13:50] Mesh → graph G=(V,E), Voronoi, w_ij ──
         title = Text("Graph Neural Operator", font_size=30,
                      color=PURPLE, weight=BOLD).to_edge(UP, buff=0.4)
 
-        # Irregular point cloud
         np.random.seed(123)
         n_points = 25
         positions = [
@@ -42,7 +34,6 @@ class Scene0403_GNO(TimedScene):
         self.play_timed("title", 0, 2, FadeIn(title))
         self.play_timed("nodes", 2, 4, FadeIn(nodes, lag_ratio=0.03))
 
-        # Build edges within radius r
         edges = VGroup()
         r = 2.5
         for i in range(n_points):
@@ -55,7 +46,6 @@ class Scene0403_GNO(TimedScene):
 
         self.play_timed("edges", 4, 8, FadeIn(edges, lag_ratio=0.01))
 
-        # Radius circle around center node
         center_idx = n_points // 2
         radius_circle = Circle(radius=r * 0.35, color=OPERATOR, stroke_width=2,
                                stroke_opacity=0.6).move_to(positions[center_idx])
@@ -63,13 +53,10 @@ class Scene0403_GNO(TimedScene):
 
         self.play_timed("radius", 8, 10, FadeIn(radius_circle), FadeIn(r_label))
 
-        # Graph label
         graph_eq = MathTex(r"G = (V, E)", font_size=30, color=PURPLE).to_corner(UL, buff=1.4)
         
-        # Calculate Voronoi
         vor = spatial.Voronoi([p[:2] for p in positions])
         
-        # We will pick a neighbor of the center_idx that has a finite region
         target_node_idx = -1
         for j in range(n_points):
             if j != center_idx and np.linalg.norm(positions[center_idx] - positions[j]) < r:
@@ -83,7 +70,6 @@ class Scene0403_GNO(TimedScene):
             region_idx = vor.point_region[target_node_idx]
             region_vertices = [vor.vertices[i] for i in vor.regions[region_idx]]
             
-            # Create polygon from vertices
             voronoi_cell = Polygon(*[np.append(v, 0) for v in region_vertices], 
                                    color=YELLOW, fill_opacity=0.3, stroke_width=1)
             wj_label = MathTex(r"w_j", font_size=24, color=YELLOW).move_to(voronoi_cell.get_center())
@@ -109,7 +95,6 @@ class Scene0403_GNO(TimedScene):
         self.play_timed("key_diff", 14, 16, FadeIn(key_diff))
         self.wait_timed("hold_graph", 16, 35)
 
-        # ── Beat 2: [13:50–14:30] Message passing animation ──
         beat1_mobjects = [nodes, edges, radius_circle, r_label, graph_eq, voronoi_note, key_diff]
         if target_node_idx != -1:
             beat1_mobjects.extend([voronoi_cell, wj_label])
@@ -117,11 +102,9 @@ class Scene0403_GNO(TimedScene):
         self.play_timed("clear_beat1", 35, 35.5,
                         *[FadeOut(m) for m in beat1_mobjects])
 
-        # Simplified message passing diagram
         mp_title = Text("Message Passing trong không gian hàm", font_size=24,
                         color=TEXT, weight=BOLD).to_edge(UP, buff=1.2)
 
-        # Center node + neighbors
         center = Dot(ORIGIN, radius=0.2, color=PURPLE)
         center_label = Text("Node i", font_size=16, color=PURPLE).next_to(center, DOWN, buff=0.25)
         neighbors = VGroup()
@@ -133,18 +116,15 @@ class Scene0403_GNO(TimedScene):
             dot = Dot(pos, radius=0.12, color=INPUT)
             neighbors.add(dot)
 
-        # Edges to center
         msg_edges = VGroup(*[
             Arrow(n.get_center(), center.get_center(), color=GRID,
                   buff=0.15, stroke_width=1.5, max_tip_length_to_length_ratio=0.15)
             for n in neighbors
         ])
 
-        # MLP kernel box on one edge
         mlp_box = RoundedRectangle(width=1.2, height=0.5, corner_radius=0.05,
                                    stroke_color=OPERATOR, fill_color=CARD_BG, fill_opacity=0.8)
         mlp_label = MathTex(r"\kappa_\theta", font_size=20, color=OPERATOR).move_to(mlp_box)
-        # Shift MLP box slightly so it doesn't clip the message
         mlp_group = VGroup(mlp_box, mlp_label).move_to(neighbor_positions[2] / 2).shift(UP * 0.4)
 
         self.play_timed("mp_title", 35.5, 37, FadeIn(mp_title))
@@ -153,7 +133,6 @@ class Scene0403_GNO(TimedScene):
         self.play_timed("msg_edges", 40, 44, FadeIn(msg_edges))
         self.play_timed("mlp_kernel", 44, 46, FadeIn(mlp_group))
 
-        # Aggregation highlight
         agg_text = Text(
             "Tổng hợp có trọng số Voronoi → σ(·)",
             font_size=20, color=OUTPUT

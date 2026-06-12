@@ -1,9 +1,3 @@
-"""
-Scene 1.1 — Hook: Giới hạn của DL hữu hạn chiều
-Source: original_outline.tex, Section 1, Scene 1.1
-Global time: 0:00 – 0:45
-Duration: 45s
-"""
 
 from manim import *
 import numpy as np
@@ -108,7 +102,6 @@ class Scene0101_HookFiniteDimensionalLimit(TimedScene):
                 fill_color=CARD_BG,
                 fill_opacity=0.74,
             )
-            # Giảm size chữ 2 đơn vị cho embedding để fit box
             font_size = 16 if name == "embedding" else 18
             text = Text(name, font_size=font_size, color=TEXT)
             text.move_to(box)
@@ -126,14 +119,12 @@ class Scene0101_HookFiniteDimensionalLimit(TimedScene):
             fill_color=CARD_BG,
             fill_opacity=0.82,
         )
-        # Giảm size chữ 2 đơn vị cho Transformer để fit box
         font_size = 16 if name == "Transformer" else 18
         text = Text(name, font_size=font_size, color=TEXT)
         text.move_to(box)
         return VGroup(box, text)
 
     def construct(self):
-        # Prepare the cat image and crop it
         cat_image_path = "/home/bui-anh-quan/hcmus-intro2ml-lab1-tutorial-video/cat_image.jpeg"
         cropped_path = "media/cropped_cat.jpg"
         
@@ -151,7 +142,6 @@ class Scene0101_HookFiniteDimensionalLimit(TimedScene):
         img_resized = img_cropped.resize((grid_size, grid_size), Image.Resampling.BILINEAR)
         cat_pixels = np.array(img_resized) / 255.0
 
-        # ── Beat 1: [0:00–0:12] Grid 64x64 fade-in → pixel fill → image ──
         square_size = 4.0 / grid_size
         squares = VGroup()
         cat_colors = []
@@ -196,8 +186,6 @@ class Scene0101_HookFiniteDimensionalLimit(TimedScene):
         self.play_timed("high_res", 4, 5, FadeIn(high_res_img), FadeIn(img_label))
         self.wait_timed("hold_img", 5, 12)
 
-        # ── Beat 2: [0:12–0:28] Image morph → tensor → matrix multiply ──
-        # Setup the pipeline
         vector_stack = self.make_vector_stack()
         vector_stack.move_to(LEFT * 4.5 + DOWN * 0.05)
         
@@ -230,7 +218,6 @@ class Scene0101_HookFiniteDimensionalLimit(TimedScene):
         
         pipeline = VGroup(vector_stack, input_to_network, neural_network, network_to_output, output_block, formula)
 
-        # Setup architectures chips
         chip_specs = [
             ("CNN", INPUT),
             ("ResNet", NVIDIA_GREEN),
@@ -243,15 +230,12 @@ class Scene0101_HookFiniteDimensionalLimit(TimedScene):
         chips.next_to(pipeline, DOWN, buff=0.7)
         chips.set_x(0) # Center the chips horizontally
 
-        # Morph the cat into the vector stack
         self.play_timed("morph_to_tensor", 12, 14, 
                         FadeOut(high_res_img), FadeOut(img_label), FadeOut(grid_label),
                         Transform(squares, vector_stack[0])) # Transform the 4096 squares into the tensor sheets
         
-        # Chỉ FadeIn label và brackets, KHÔNG FadeIn lại sheets (vì sheets chính là biến squares)
         self.play_timed("tensor_show", 14, 15, FadeIn(vector_stack[1:])) 
         
-        # Bring in the rest of the neural network
         self.play_timed("network_show", 15, 17, 
                         FadeIn(input_to_network),
                         Create(neural_network),
@@ -264,8 +248,6 @@ class Scene0101_HookFiniteDimensionalLimit(TimedScene):
                         
         self.wait_timed("hold_arch", 19, 28)
 
-        # ── Beat 3: [0:28–0:45] Zoom out → R^n frame → "Finite-dimensional" ──
-        # Everything fades out except squares (which currently look like vector sheets)
         self.play_timed("clear_beat2", 28, 28.8,
                         FadeOut(input_to_network), FadeOut(neural_network), 
                         FadeOut(network_to_output), FadeOut(output_block), 
@@ -284,7 +266,6 @@ class Scene0101_HookFiniteDimensionalLimit(TimedScene):
             for _ in range(len(squares))
         ])
 
-        # Đưa R^n vào inline cùng dòng text
         overlay_text = VGroup(
             Text("Finite-dimensional Euclidean Space", font_size=30, color=NVIDIA_GREEN, weight=BOLD),
             MathTex(r"\mathbb{R}^n", font_size=36, color=INPUT)
@@ -292,13 +273,11 @@ class Scene0101_HookFiniteDimensionalLimit(TimedScene):
 
         self.play_timed("rn_frame", 28.8, 30, FadeIn(rn_frame))
         
-        # The magical morph: squares (which are currently shaped like tensor sheets) morph into scattered dots!
         self.play_timed("morph_to_dots", 30, 33, Transform(squares, dots))
                         
         self.play_timed("overlay", 33, 35, FadeIn(overlay_text))
         self.wait_timed("hold_end", 35, 44)
 
-        # Hard cut to black
         self.play_timed("cut_to_black", 44, 45,
                         *[FadeOut(m, run_time=0.3) for m in self.mobjects])
         self.pad_to(self.SCENE_DURATION)

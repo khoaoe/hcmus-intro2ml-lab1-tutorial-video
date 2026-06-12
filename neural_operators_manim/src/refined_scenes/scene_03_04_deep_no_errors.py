@@ -1,9 +1,3 @@
-"""
-Scene 3.4 — Deep Neural Operator & Bẫy Rời rạc hóa
-Source: original_outline.tex, Section 3, Scene 3.4
-Global time: 10:15 – 11:15
-Duration: 60s
-"""
 
 from manim import *
 import numpy as np
@@ -21,18 +15,12 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ═══════════════════════════════════════════════════════════════
-        # Beat 1: [10:15–10:45] The Lift-Operate-Project Ribbon
-        # Local time: 0 - 30
-        # ═══════════════════════════════════════════════════════════════
         
         dummy_axes = Axes(x_range=[0, 6], y_range=[-3, 3], x_length=8, y_length=4)
         
-        # --- Input Function ---
         in_func = dummy_axes.plot(lambda x: np.sin(x) * 0.8, color=INPUT, stroke_width=4)
         in_label = Text("Hàm vật lý", font_size=20, color=INPUT).next_to(in_func, LEFT, buff=0.5)
         
-        # --- Latent Ribbon (Dải lụa không gian đa chiều) ---
         latent_ribbon = VGroup()
         n_layers = 20
         for i in range(n_layers):
@@ -43,7 +31,6 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
             )
             latent_ribbon.add(line)
             
-        # --- Operated Ribbon ---
         operated_ribbon = VGroup()
         for i in range(n_layers):
             c = interpolate_color(ManimColor(INPUT), ManimColor(PURPLE), i/(n_layers-1))
@@ -53,16 +40,13 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
             )
             operated_ribbon.add(line)
             
-        # --- Output Function ---
         out_func = dummy_axes.plot(lambda x: np.cos(x*1.5) * 0.8, color=OUTPUT, stroke_width=4)
         out_label = Text("Hàm dự báo", font_size=20, color=OUTPUT).next_to(out_func, RIGHT, buff=0.5)
         
-        # --- Kernel Lens ---
         kernel_lens = Rectangle(width=0.2, height=4, color=OPERATOR, fill_opacity=0.6, stroke_width=2)
         lens_glow = Rectangle(width=0.6, height=4.5, color=OPERATOR, fill_opacity=0.2, stroke_width=0)
         lens_group = VGroup(kernel_lens, lens_glow).shift(LEFT*4)
         
-        # --- Stage Labels ---
         enc_lbl = Text("Encoder\n(Pointwise)", font_size=18, color=INPUT)
         enc_lbl.set_x(in_label.get_x())
         enc_lbl.set_y(2.8)
@@ -73,16 +57,13 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
         dec_lbl.set_x(out_label.get_x())
         dec_lbl.set_y(2.8)
         
-        # ANIMATION BEAT 1
         self.play_timed("in_func", 0, 2, Create(in_func), FadeIn(in_label))
         
-        # Lift: in_func -> latent_ribbon
         self.play_timed("lift", 2, 6,
             ReplacementTransform(in_func, latent_ribbon),
             FadeIn(enc_lbl)
         )
         
-        # Particles running along the ribbon
         particles = VGroup()
         for i in [0, 4, 9, 14, 19]:
             dot = Dot(color=WHITE, radius=0.06)
@@ -92,7 +73,6 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
         self.play_timed("add_particles", 6, 7, FadeIn(particles))
         self.play_timed("lens_in", 7, 8, FadeIn(lens_group), FadeIn(op_lbl))
         
-        # Operate: Lens sweeps, ribbon transforms, particles move
         self.play_timed("operate_sweep", 8, 14,
             lens_group.animate.shift(RIGHT*8),
             Transform(latent_ribbon, operated_ribbon),
@@ -102,33 +82,25 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
         
         self.play_timed("lens_out", 14, 15, FadeOut(lens_group), FadeOut(particles))
         
-        # Project: Ribbon -> out_func
         self.play_timed("project", 15, 19,
             ReplacementTransform(latent_ribbon, out_func),
             FadeIn(dec_lbl), FadeIn(out_label)
         )
         
-        # Overlay
         overlay_text = Text("Dữ liệu luôn là Hàm số", font_size=24, color=WHITE, weight=BOLD).to_edge(DOWN, buff=1)
         self.play_timed("overlay", 19, 22, Write(overlay_text))
         
         self.wait_timed("hold_b1", 22, 29)
         self.play_timed("clear_b1", 29, 30, *[FadeOut(m) for m in self.mobjects])
         
-        # ═══════════════════════════════════════════════════════════════
-        # Beat 2: [10:45–11:15] Bẫy Rời rạc hóa
-        # Local time: 30 - 60
-        # ═══════════════════════════════════════════════════════════════
         
         error_title = Text("Bẫy Rời rạc hóa", font_size=28, color=WHITE, weight=BOLD).to_edge(UP, buff=0.3)
         
-        # --- Top: Smooth Function ---
         axes_smooth = Axes(x_range=[0, 4.3, 1], y_range=[0, 2.5], x_length=5, y_length=1.5,
                            axis_config={"stroke_color": GREY_B, "include_ticks": False}).shift(UP*1.5 + LEFT*2)
         smooth_func = axes_smooth.plot(lambda x: np.sin(x)*0.6 + 1.2, x_range=[0, 4], color=NVIDIA_GREEN, stroke_width=3)
         lbl_smooth = Text("Hàm trơn (s lớn)", font_size=18, color=NVIDIA_GREEN).next_to(axes_smooth, LEFT, buff=0.3)
         
-        # --- Bottom: Shock Function ---
         axes_shock = Axes(x_range=[0, 4.3, 1], y_range=[0, 2.5], x_length=5, y_length=1.5,
                           axis_config={"stroke_color": GREY_B, "include_ticks": False}).shift(DOWN*1.5 + LEFT*2)
         shock_func = axes_shock.plot(
@@ -143,7 +115,6 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
             Create(axes_shock), Create(shock_func), FadeIn(lbl_shock)
         )
         
-        # Function to generate dots & lines
         def get_sampling(axes, func, n_samples, color):
             dots = VGroup()
             lines = VGroup()
@@ -161,18 +132,15 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
         
         self.play_timed("sample_N4", 32, 34, FadeIn(sm_samp), FadeIn(sh_samp))
         
-        # Error glows
         smooth_glow = SurroundingRectangle(
             sm_samp, color=NVIDIA_GREEN, fill_opacity=0.3, stroke_width=0
         )
-        # For shock, focus on the discontinuity at x=2
         shock_glow = Rectangle(
             width=1.0, height=2.0, color=WARNING, fill_opacity=0.3, stroke_width=0
         ).move_to(axes_shock.c2p(2, 1.0))
         
         self.play_timed("glows_in", 34, 35, FadeIn(smooth_glow), FadeIn(shock_glow))
         
-        # Loop over N
         N_vals = [8, 16, 32]
         times = [(35, 36.5), (36.5, 38), (38, 39.5)]
         
@@ -195,7 +163,6 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
             
         self.play_timed("hide_smooth_glow", 39.5, 40, FadeOut(smooth_glow))
         
-        # --- Convergence Plot (Right side) ---
         conv_axes = Axes(
             x_range=[0, 3.5, 1], y_range=[-5.5, 0.5, 1],
             x_length=3.6, y_length=3.0,
@@ -203,7 +170,6 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
             y_axis_config={"include_tip": False}
         ).shift(RIGHT*4 + UP*0.5)
         
-        # Thêm Log scale labels thủ công (an toàn tuyệt đối)
         for i in range(1, 4):
             lbl = MathTex(f"10^{i}", font_size=16).next_to(conv_axes.c2p(i, 0), UP, buff=0.15)
             conv_axes.add(lbl)
@@ -214,7 +180,6 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
         conv_lbl_x = Text("N (lưới)", font_size=16, color=WHITE).next_to(conv_axes.x_axis, RIGHT, buff=0.1)
         conv_lbl_y = MathTex(r"\varepsilon_{disc}", font_size=20, color=WHITE).next_to(conv_axes.y_axis, UP, buff=0.1)
         
-        # Data points
         x_vals = np.linspace(0, 2.5, 15)
         
         smooth_conv = conv_axes.plot_line_graph(
@@ -245,7 +210,6 @@ class Scene0304_DeepNOErrorAnalysis(TimedScene):
             FadeIn(smooth_label), FadeIn(shock_label)
         )
         
-        # --- Formula ---
         error_formula = MathTex(
             r"\varepsilon_{disc} \propto N^{-s}",
             font_size=36, color=PURPLE

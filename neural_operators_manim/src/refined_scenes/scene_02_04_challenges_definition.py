@@ -1,9 +1,3 @@
-"""
-Scene 2.4 — Thách thức & Định nghĩa Neural Operator
-Source: Director's Cut
-Global time: 6:40 – 7:30
-Duration: 50s
-"""
 
 from manim import *
 import numpy as np
@@ -22,13 +16,9 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ═══════════════════════════════════════════════════════════════
-        # Beat 1A: [6:40-6:52] Discretization Invariance (Local 0 - 12s)
-        # ═══════════════════════════════════════════════════════════════
         
         di_label = Text("Discretization Invariance", font_size=36, color=NVIDIA_GREEN, weight=BOLD).to_edge(UP, buff=1.0)
         
-        # 1. CAD Mesh (Triangles)
         cad_mesh = VGroup()
         for i in range(6):
             for j in range(6):
@@ -43,7 +33,6 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
                 cad_mesh.add(triangle)
         cad_mesh.move_to(ORIGIN)
                 
-        # 2. Globe mesh (Satellite)
         globe_mesh = VGroup()
         circle = Circle(radius=2.5, stroke_color=PURPLE, stroke_width=2, fill_color=PURPLE, fill_opacity=0.1)
         globe_mesh.add(circle)
@@ -54,7 +43,6 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
             globe_mesh.add(ellipse2)
         globe_mesh.move_to(ORIGIN)
             
-        # 3. Sparse sensors (Dots)
         sparse_sensors = VGroup()
         np.random.seed(42)
         for _ in range(80):
@@ -72,9 +60,6 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
         
         self.play_timed("clear_beat1a", 11.5, 12, FadeOut(cad_mesh), FadeOut(di_label))
 
-        # ═══════════════════════════════════════════════════════════════
-        # Beat 1B: [6:52-7:05] Continuous Query (Local 12 - 25s)
-        # ═══════════════════════════════════════════════════════════════
         
         cq_label = Text("Continuous Query", font_size=36, color=OPERATOR, weight=BOLD).to_edge(UP, buff=1.0)
         
@@ -83,7 +68,6 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
         
         x_tracker = ValueTracker(1)
         
-        # Tangent line
         def get_tangent():
             x = x_tracker.get_value()
             dx = 0.01
@@ -95,16 +79,13 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
             
         tangent = always_redraw(get_tangent)
         
-        # Area
         def get_area():
             x = x_tracker.get_value()
-            # Ensure max > min to avoid ValueError
             x_end = max(1.01, x)
             return axes.get_area(curve, x_range=[1, x_end], color=PURPLE, opacity=0.4)
             
         area = always_redraw(get_area)
         
-        # Caliper Crosshair
         def get_caliper():
             x = x_tracker.get_value()
             p = axes.c2p(x, 2 + np.sin(x))
@@ -116,7 +97,6 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
             
         caliper = always_redraw(get_caliper)
         
-        # Labels
         def get_labels():
             x = x_tracker.get_value()
             p = axes.c2p(x, 2 + np.sin(x))
@@ -129,19 +109,14 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
         self.play_timed("cq_setup", 12.5, 14, FadeIn(cq_label), Create(axes), Create(curve))
         self.play_timed("caliper_in", 14.5, 15.5, FadeIn(caliper), FadeIn(tangent), FadeIn(area), FadeIn(labels))
         
-        # Slide caliper
         self.play_timed("slide_caliper", 16, 21, x_tracker.animate.set_value(9), rate_func=smooth)
         
         self.play_timed("clear_beat1b", 24, 25, 
                         *[FadeOut(m) for m in [cq_label, axes, curve, caliper, tangent, area, labels]])
 
-        # ═══════════════════════════════════════════════════════════════
-        # Beat 2: [7:05-7:30] The Mathematical Manifesto (Local 25 - 50s)
-        # ═══════════════════════════════════════════════════════════════
         
         manifesto_title = Text("Bản chất của Neural Operator", font_size=36, color=WHITE, weight=BOLD).to_edge(UP, buff=0.5)
         
-        # 3 Pillars
         pillars = VGroup()
         texts = [
             "", # placeholder for index 0
@@ -150,7 +125,6 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
         ]
         
         for i in range(3):
-            # Make it look like a glowing pillar / stone tablet
             pillar_box = RoundedRectangle(
                 width=7.5, height=1.0, corner_radius=0.1, 
                 stroke_color=NVIDIA_GREEN, stroke_width=2, 
@@ -172,7 +146,6 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
             
         pillars.arrange(DOWN, buff=0.4).to_edge(LEFT, buff=0.5).shift(DOWN * 0.5)
         
-        # Visual for Continuum Limit (Right side)
         local_axes = Axes(x_range=[0, 4, 1], y_range=[-1.5, 1.5, 1], x_length=5, y_length=4)
         local_axes.to_edge(RIGHT, buff=0.5).shift(DOWN * 0.5)
         
@@ -182,7 +155,6 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
             background_line_style={"stroke_color": TEAL, "stroke_width": 1, "stroke_opacity": 0.4}
         ).move_to(local_axes.get_center())
         
-        # Noisy curve (Grid artifacts)
         np.random.seed(42)
         x_vals = np.linspace(0, 4, 15)
         y_vals = np.sin(x_vals * 1.5) + np.random.normal(0, 0.3, len(x_vals))
@@ -191,29 +163,24 @@ class Scene0204_ChallengesAndDefinition(TimedScene):
         for i in range(len(x_vals)-1):
             p1 = local_axes.c2p(x_vals[i], y_vals[i])
             p2 = local_axes.c2p(x_vals[i+1], y_vals[i+1])
-            # Step function look
             noisy_curve.add(Line(p1, local_axes.c2p(x_vals[i+1], y_vals[i]), color=WARNING, stroke_width=3))
             noisy_curve.add(Line(local_axes.c2p(x_vals[i+1], y_vals[i]), p2, color=WARNING, stroke_width=3))
             
         grid_hallucination_text = Text("Ảo giác của lưới", font_size=18, color=WARNING).next_to(local_axes, UP, buff=0.2)
         
-        # Smooth curve
         smooth_curve = local_axes.plot(lambda x: np.sin(x * 1.5), color=NVIDIA_GREEN, stroke_width=5)
         continuum_text = Text("Hội tụ liên tục", font_size=18, color=NVIDIA_GREEN).next_to(local_axes, UP, buff=0.2)
         
         self.play_timed("manifesto_title", 25.5, 27, FadeIn(manifesto_title))
         
-        # Pillars appear
         self.play_timed("pillar_1", 27, 28.5, FadeIn(pillars[0], shift=UP*0.2))
         self.play_timed("pillar_2", 29, 30.5, FadeIn(pillars[1], shift=UP*0.2))
         self.play_timed("pillar_3", 31, 32.5, FadeIn(pillars[2], shift=UP*0.2))
         
-        # Visual appears
         self.play_timed("grid_visual_in", 33, 35, 
                         FadeIn(local_axes), FadeIn(grid_bg), 
                         Create(noisy_curve), FadeIn(grid_hallucination_text))
                         
-        # Transform to smooth
         self.play_timed("transform_continuum", 37, 40,
                         ReplacementTransform(noisy_curve, smooth_curve),
                         ReplacementTransform(grid_hallucination_text, continuum_text),

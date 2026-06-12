@@ -1,9 +1,3 @@
-"""
-Scene 6.4 — Thách thức hợp tác & Recap 3 nguyên tắc
-Source: original_outline.tex, Section 6, Scene 6.4
-Global time: 27:55 – 28:55
-Duration: 60s
-"""
 from manim import *
 import numpy as np
 
@@ -12,7 +6,6 @@ from src.common.theme import *
 
 apply_global_config()
 
-# Fallback colors
 CYAN = "#00FFFF"
 GREEN_SCREEN = "#00FF00"
 
@@ -24,15 +17,10 @@ class Scene0604_Collaboration_Recap(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ═══════════════════════════════════════════════════════════════
-        # BEAT 1: [27:55–28:25] Building the Bridge (30s)
-        # Concept: Two abstract "worlds" connected by shared language
-        # ═══════════════════════════════════════════════════════════════
         title = Text("Thách thức: Xây cầu nối giữa hai thế giới", font_size=28,
                      color=OPERATOR, weight=BOLD).to_edge(UP, buff=0.4)
         self.play_timed("b1_title", 0, 2, FadeIn(title))
 
-        # ── LEFT: PHYSICS WORLD ──
         physics_box = RoundedRectangle(
             width=4.5, height=3.0, corner_radius=0.2,
             stroke_color=BLUE_C, fill_color=BLUE_C, fill_opacity=0.1, stroke_width=2.5
@@ -41,7 +29,6 @@ class Scene0604_Collaboration_Recap(TimedScene):
         physics_header = Text("PHYSICS WORLD", font_size=18, color=BLUE_C, weight=BOLD)
         physics_header.next_to(physics_box, UP, buff=0.15)
         
-        # Physics tools (equations/concepts)
         physics_tools = VGroup(
             MathTex(r"\nabla \cdot \mathbf{u} = 0", font_size=22, color=BLUE_C),
             MathTex(r"\partial_t u + \mathcal{N}(u) = f", font_size=20, color=BLUE_C),
@@ -54,7 +41,6 @@ class Scene0604_Collaboration_Recap(TimedScene):
                         Create(physics_box), FadeIn(physics_header),
                         LaggedStart(*[FadeIn(t, shift=RIGHT*0.2) for t in physics_tools], lag_ratio=0.15))
 
-        # ── RIGHT: ML WORLD ──
         ml_box = RoundedRectangle(
             width=4.5, height=3.0, corner_radius=0.2,
             stroke_color=PURPLE, fill_color=PURPLE, fill_opacity=0.1, stroke_width=2.5
@@ -63,7 +49,6 @@ class Scene0604_Collaboration_Recap(TimedScene):
         ml_header = Text("ML WORLD", font_size=18, color=PURPLE, weight=BOLD)
         ml_header.next_to(ml_box, UP, buff=0.15)
         
-        # ML tools
         ml_tools = VGroup(
             Text("Neural Networks", font_size=16, color=PURPLE),
             MathTex(r"\mathcal{L}(\theta)", font_size=22, color=PURPLE),
@@ -76,7 +61,6 @@ class Scene0604_Collaboration_Recap(TimedScene):
                         Create(ml_box), FadeIn(ml_header),
                         LaggedStart(*[FadeIn(t, shift=LEFT*0.2) for t in ml_tools], lag_ratio=0.15))
 
-        # ── GAP: Communication barriers in the middle ──
         gap_zone = Rectangle(
             width=2.0, height=3.0, color=RED,
             fill_color=RED, fill_opacity=0.08, stroke_width=1, stroke_opacity=0.3
@@ -95,8 +79,6 @@ class Scene0604_Collaboration_Recap(TimedScene):
                         FadeIn(gap_zone), FadeIn(gap_label),
                         LaggedStart(*[FadeIn(p, scale=0.7) for p in gap_problems], lag_ratio=0.2))
 
-        # ── BRIDGE: Shared concepts connecting both worlds ──
-        # Bridge as a horizontal band with shared language
         bridge_band = RoundedRectangle(
             width=10.5, height=0.9, corner_radius=0.15,
             stroke_color=GREEN_SCREEN, fill_color=GREEN_SCREEN, fill_opacity=0.25, stroke_width=3
@@ -112,7 +94,6 @@ class Scene0604_Collaboration_Recap(TimedScene):
         bridge_label = Text("BRIDGE: Neural Operators", font_size=16, 
                             color=GREEN_SCREEN, weight=BOLD).next_to(bridge_band, UP, buff=0.15)
         
-        # Arrows from both worlds down to bridge
         arrow_left = Arrow(physics_box.get_bottom(), bridge_band.get_left() + RIGHT*1.5,
                           color=GREEN_SCREEN, buff=0.15, stroke_width=2.5)
         arrow_right = Arrow(ml_box.get_bottom(), bridge_band.get_right() + LEFT*1.5,
@@ -127,9 +108,6 @@ class Scene0604_Collaboration_Recap(TimedScene):
         
         self.wait_timed("b1_hold", 24, 30)
 
-        # ═══════════════════════════════════════════════════════════════
-        # BEAT 2: [28:25–28:55] Three Pillars Recap (30s)
-        # ═══════════════════════════════════════════════════════════════
         self.play_timed("clear_b1", 30, 32,
                         *[FadeOut(m) for m in [title, physics_box, physics_header, physics_tools,
                                                ml_box, ml_header, ml_tools,
@@ -140,21 +118,17 @@ class Scene0604_Collaboration_Recap(TimedScene):
                           color=OPERATOR, weight=BOLD).to_edge(UP, buff=0.4)
         self.play_timed("b2_title", 32, 34, FadeIn(recap_title))
 
-        # ── PILLAR 1: Discretization Invariance ──
         pillar1_box = RoundedRectangle(
             width=3.5, height=4.5, corner_radius=0.15,
             stroke_color=BLUE_C, fill_color=BLACK, fill_opacity=0.8, stroke_width=2.5
         ).shift(LEFT * 4.5 + DOWN * 0.5)
         
         pillar1_icon = VGroup(
-            # Coarse grid
             VGroup(*[Line(LEFT*0.6 + UP*y, RIGHT*0.6 + UP*y, color=BLUE_C, stroke_width=1.5) 
                      for y in np.linspace(-0.6, 0.6, 3)]),
             VGroup(*[Line(UP*0.6 + RIGHT*x, DOWN*0.6 + RIGHT*x, color=BLUE_C, stroke_width=1.5) 
                      for x in np.linspace(-0.6, 0.6, 3)]),
-            # Arrow
             Arrow(RIGHT*0.7, RIGHT*1.1, color=BLUE_C, stroke_width=2.5, buff=0, max_tip_length_to_length_ratio=0.3),
-            # Fine grid
             VGroup(*[Line(LEFT*0.6 + UP*y, RIGHT*0.6 + UP*y, color=BLUE_C, stroke_width=1.0) 
                      for y in np.linspace(-0.6, 0.6, 6)]).shift(RIGHT*1.8),
             VGroup(*[Line(UP*0.6 + RIGHT*x, DOWN*0.6 + RIGHT*x, color=BLUE_C, stroke_width=1.0) 
@@ -175,13 +149,11 @@ class Scene0604_Collaboration_Recap(TimedScene):
                         Write(pillar1_text),
                         Write(pillar1_check))
 
-        # ── PILLAR 2: Function Output ──
         pillar2_box = RoundedRectangle(
             width=3.5, height=4.5, corner_radius=0.15,
             stroke_color=PURPLE, fill_color=BLACK, fill_opacity=0.8, stroke_width=2.5
         ).shift(DOWN * 0.5)
         
-        # Continuous curve with query points
         pillar2_curve = ParametricFunction(
             lambda t: np.array([t*0.8, 0.4*np.sin(3*t), 0]),
             t_range=[-1.5, 1.5], color=PURPLE, stroke_width=3
@@ -212,13 +184,11 @@ class Scene0604_Collaboration_Recap(TimedScene):
                         Write(pillar2_text),
                         Write(pillar2_check))
 
-        # ── PILLAR 3: Speed (with callback numbers) ──
         pillar3_box = RoundedRectangle(
             width=3.5, height=4.5, corner_radius=0.15,
             stroke_color=GREEN_SCREEN, fill_color=BLACK, fill_opacity=0.8, stroke_width=2.5
         ).shift(RIGHT * 4.5 + DOWN * 0.5)
         
-        # Speed icon: lightning bolt
         bolt = VMobject(stroke_color=YELLOW, stroke_width=3, fill_color=YELLOW, fill_opacity=0.8)
         bolt.set_points_as_corners([
             UP*0.6 + LEFT*0.2, UP*0.1 + RIGHT*0.1, UP*0.1 + LEFT*0.05,
@@ -226,7 +196,6 @@ class Scene0604_Collaboration_Recap(TimedScene):
             UP*0.6 + LEFT*0.2
         ]).shift(RIGHT * 4.5 + UP * 1.0)
         
-        # Speed numbers with application context
         speed_data = VGroup(
             VGroup(Text("45,000×", font_size=16, color=YELLOW, weight=BOLD),
                    Text("Weather", font_size=12, color=GRAY_B)).arrange(DOWN, buff=0.05),
@@ -249,7 +218,6 @@ class Scene0604_Collaboration_Recap(TimedScene):
                         Write(pillar3_text),
                         Write(pillar3_check))
 
-        # ── Impact statement ──
         impact_text = Text(
             "Không chỉ là con số — mở ra những phân tích trước đây không thể làm được",
             font_size=18, color=WHITE, weight=BOLD
@@ -261,6 +229,5 @@ class Scene0604_Collaboration_Recap(TimedScene):
         
         self.wait_timed("b2_hold", 55, 58)
         
-        # Cut
         self.play_timed("cut", 58, 60, *[FadeOut(m, run_time=0.4) for m in self.mobjects])
         self.pad_to(self.SCENE_DURATION)

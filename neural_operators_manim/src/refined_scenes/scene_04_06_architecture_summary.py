@@ -1,9 +1,3 @@
-"""
-Scene 4.6 — Tổng kết kiến trúc & Chuyển cảnh
-Source: original_outline.tex, Section 4, Scene 4.6
-Global time: 17:00 – 17:25
-Duration: 25s
-"""
 
 from manim import *
 
@@ -24,7 +18,6 @@ class Scene0406_ArchitectureSummary(TimedScene):
         title = Text("Tổng kết: Chọn kiến trúc nào?", font_size=28,
                      color=TEXT, weight=BOLD).to_edge(UP, buff=0.4)
 
-        # Decision grid — 4 architectures (giảm height, tăng buff)
         grid_data = [
             ("FNO", "Lưới đều\nTốc độ", INPUT),
             ("GNO", "Mesh phức tạp", PURPLE),
@@ -56,13 +49,11 @@ class Scene0406_ArchitectureSummary(TimedScene):
 
         self.play_timed("title", 0, 1.5, FadeIn(title))
         
-        # FadeIn từng card sync với VO
         for i, card in enumerate(grid_cards):
             start = 1.5 + i * 1.2
             end = start + 1.2
             self.play_timed(f"card_{i}", start, end, FadeIn(card, shift=UP*0.2))
 
-        # Hybrid badge - nhấn mạnh với pulse
         hybrid_badge = VGroup(
             RoundedRectangle(width=3.5, height=0.5, corner_radius=0.1,
                              stroke_color=NVIDIA_GREEN, fill_color=NVIDIA_GREEN, 
@@ -76,12 +67,10 @@ class Scene0406_ArchitectureSummary(TimedScene):
                         FadeIn(hybrid_badge, scale=0.8),
                         *[m.animate.set_opacity(0.4) for m in grid_cards])  # Mờ grid
         
-        # Pulse hybrid badge
         self.play_timed("hybrid_pulse", 8, 9.5,
                         hybrid_badge.animate.scale(1.05).set_stroke(width=3),
                         rate_func=there_and_back)
 
-        # 4 core components - xuất hiện tuần tự
         components = VGroup(
             Text(" Tích phân", font_size=15, color=OPERATOR, weight=BOLD),
             Text("+ Residual", font_size=15, color=NVIDIA_GREEN),
@@ -96,7 +85,6 @@ class Scene0406_ArchitectureSummary(TimedScene):
 
         self.wait_timed("hold_summary", 12, 17)  # Giảm từ 8s → 5s
 
-        # Transition sang Section 5 - mạnh hơn
         self.play_timed("clear", 17, 17.5,
                         *[FadeOut(m, run_time=0.3) for m in [title, grid_cards, 
                                                               hybrid_badge, components]])

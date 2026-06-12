@@ -1,9 +1,3 @@
-"""
-Scene 1.2 — Plot twist: Bản chất dữ liệu: "Đầu dò" và "Trường liên tục"
-Source: original_outline.tex, Section 1, Scene 1.2
-Global time: 0:45 – 1:45
-Duration: 60s
-"""
 
 from manim import *
 import numpy as np
@@ -15,7 +9,6 @@ apply_global_config()
 
 
 def scalar_field(x, y):
-    """A smooth scalar field (temperature-like) for visualization."""
     return (
         0.5
         + 0.3 * np.sin(1.2 * x) * np.cos(0.9 * y)
@@ -25,7 +18,6 @@ def scalar_field(x, y):
 
 
 def field_color(val):
-    """Dark-mode friendly colormap: Deep Navy -> Slate Purple -> Soft Amber"""
     colors = [
         np.array([0.04, 0.06, 0.15]),  # Deep Navy (hòa vào background)
         np.array([0.12, 0.10, 0.35]),  # Dark Slate Purple
@@ -45,7 +37,6 @@ def field_color(val):
 
 
 def make_continuous_field(x_range, y_range, resolution, center, width, height):
-    """Create a VGroup of tiny squares representing a smooth scalar field."""
     field = VGroup()
     sq_w = width / resolution
     sq_h = height / resolution
@@ -71,12 +62,7 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
     SCENE_DURATION = SCRIPT_END - SCRIPT_START
 
     def construct(self):
-        # ═══════════════════════════════════════════════════════════════
-        # Beat 1: [0:45–1:05] (local 0–20s)
-        # R^n shatter → Scalar field surface → Probe
-        # ═══════════════════════════════════════════════════════════════
 
-        # R^n frame from end of scene 1.1
         rn_frame = RoundedRectangle(
             width=10, height=5.5, corner_radius=0.2,
             stroke_color=INPUT, stroke_width=2, fill_opacity=0
@@ -85,7 +71,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
         rn_group = VGroup(rn_frame, rn_label)
         self.add(rn_group)
 
-        # Shatter the R^n frame into pieces
         shards = VGroup()
         np.random.seed(7)
         for _ in range(18):
@@ -99,7 +84,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
                         FadeOut(rn_label),
                         Transform(rn_frame, shards))
 
-        # Now fade out shards and bring in the continuous scalar field
         field_res = 32  # 32x32 grid for the continuous field (smooth enough, fast to render)
         field_center = ORIGIN + UP * 0.3
         field_width = 8.0
@@ -110,7 +94,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
             width=field_width, height=field_height
         )
 
-        # Axes for the field
         field_axes = Axes(
             x_range=[-3, 3, 1], y_range=[-2, 2, 1],
             x_length=field_width, y_length=field_height,
@@ -131,11 +114,7 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
                         FadeIn(field_axes), FadeIn(x_label), FadeIn(y_label),
                         FadeIn(field_title), FadeIn(subtitle))
 
-        # ═══════════════════════════════════════════════════════════════
-        # PROBE DESIGN: Scientific Crosshair + HUD Pill
-        # ═══════════════════════════════════════════════════════════════
         
-        # 1. Crosshair (Thay cho Dot trắng lóa)
         probe_ring = Circle(radius=0.15, color=YELLOW, stroke_width=2.5)
         probe_cross_h = Line(LEFT*0.25, RIGHT*0.25, color=YELLOW, stroke_width=1.5)
         probe_cross_v = Line(UP*0.25, DOWN*0.25, color=YELLOW, stroke_width=1.5)
@@ -145,13 +124,11 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
         probe_label = Text("Sensor Probe", font_size=18, color=YELLOW, weight=BOLD)
         probe_label.next_to(probe, DR, buff=0.15)
 
-        # 2. Dashed line (Màu vàng đồng bộ)
         probe_vline = DashedLine(
             probe.get_center(), field_axes.c2p(probe.get_center()[0], -2),
             color=YELLOW, stroke_width=1.5, dash_length=0.1, stroke_opacity=0.6
         )
 
-        # 3. HUD Readout Pill (Chống chìm chữ)
         px, py = -2, 1
         val = scalar_field(px, py)
         temp = 15 + val * 25 
@@ -171,7 +148,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
         self.play_timed("probe_line", 7, 8,
                         Create(probe_vline), FadeIn(readout_group))
 
-        # Animate probe moving
         probe_path = [(-2, 1), (0, 0.5), (1.5, -0.8), (-0.5, -1.2), (2, 1.5)]
 
         for i in range(1, len(probe_path)):
@@ -185,7 +161,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
                 color=YELLOW, stroke_width=1.5, dash_length=0.1, stroke_opacity=0.6
             )
             
-            # Update HUD Text & Background
             new_text = MathTex(
                 f"T({px_new:.1f}, {py_new:.1f}) = {temp_new:.1f}^\\circ C",
                 font_size=24, color=YELLOW
@@ -207,22 +182,15 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
 
         self.wait_timed("hold_probe", 18, 20)
 
-        # ═══════════════════════════════════════════════════════════════
-        # Beat 2: [1:05–1:25] (local 20–40s)
-        # Split screen: CNN (grid) vs Neural Operator (probes)
-        # ═══════════════════════════════════════════════════════════════
 
-        # Clean up beat 1
         self.play_timed("clear_beat1", 20, 21,
                         FadeOut(probe), FadeOut(probe_vline), FadeOut(readout_group),
                         FadeOut(probe_label), FadeOut(field_title), FadeOut(subtitle),
                         FadeOut(field_axes), FadeOut(x_label), FadeOut(y_label),
                         FadeOut(continuous_field))
 
-        # Divider line
         divider = Line(UP * 4, DOWN * 4, color=MUTED, stroke_width=1.5)
 
-        # --- LEFT SIDE: Camera / CNN ---
         left_title = Text("Camera / CNN", font_size=26, color=INPUT, weight=BOLD)
         left_title.move_to(LEFT * 4 + UP * 3.8)
 
@@ -232,7 +200,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
             width=6.0, height=3.5
         )
 
-        # Grid overlay (16x16 visual grid representing 64x64 conceptually)
         grid_lines = VGroup()
         grid_n = 16
         gw, gh = 6.0, 3.5
@@ -253,7 +220,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
         grid_label_64 = Text("64 × 64 grid", font_size=16, color=WARNING)
         grid_label_64.next_to(left_field, DOWN, buff=0.2)
 
-        # --- RIGHT SIDE: Neural Operator ---
         right_title = Text("Neural Operator", font_size=26, color=NVIDIA_GREEN, weight=BOLD)
         right_title.move_to(RIGHT * 4 + UP * 3.8)
 
@@ -263,11 +229,9 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
             width=6.0, height=3.5
         )
 
-        # Function label
         func_label = MathTex(r"u(x)", font_size=32, color=NVIDIA_GREEN)
         func_label.next_to(right_field, DOWN, buff=0.2)
 
-        # Probes on the right side (Sensor Mesh style)
         np.random.seed(42)
         probes_right = VGroup()
         for _ in range(25):
@@ -276,7 +240,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
             screen_x = 4 + px * (6.0 / 6.0)
             screen_y = -0.2 + py * (3.5 / 4.0)
             
-            # Dùng Ring nhỏ thay vì Dot sáng chói
             p = Circle(
                 radius=0.06, color=NVIDIA_GREEN, stroke_width=2.0, fill_opacity=0
             ).move_to(np.array([screen_x, screen_y, 0]))
@@ -285,7 +248,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
         query_label = Text("Query Anywhere", font_size=24, color=NVIDIA_GREEN, weight=BOLD)
         query_label.next_to(right_field, UP, buff=0.15)
 
-        # Animate split screen
         self.play_timed("split_divider", 21, 22,
                         FadeIn(divider), FadeIn(left_title), FadeIn(right_title))
 
@@ -305,18 +267,12 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
 
         self.wait_timed("hold_split", 31, 40)
 
-        # ═══════════════════════════════════════════════════════════════
-        # Beat 3: [1:25–1:45] (local 40–60s)
-        # Resolution dial: CNN grid gets denser vs NO stays smooth
-        # ═══════════════════════════════════════════════════════════════
 
-        # Resolution dial
         dial_center = ORIGIN + DOWN * 3.6
         dial_bg = Circle(radius=0.55, color=MUTED, stroke_width=2, fill_color=CARD_BG, fill_opacity=0.9)
         dial_bg.move_to(dial_center)
         dial_label = Text("Resolution", font_size=14, color=TEXT).move_to(dial_center + DOWN * 0.15)
         dial_needle = Line(dial_center, dial_center + UP * 0.4, color=WARNING, stroke_width=3)
-        # Tick marks
         dial_ticks = VGroup()
         for angle in np.linspace(PI * 0.75, PI * 0.25, 5):
             tick_start = dial_center + 0.45 * np.array([np.cos(angle), np.sin(angle), 0])
@@ -330,7 +286,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
                         FadeOut(grid_label_64), FadeOut(func_label), FadeOut(query_label),
                         FadeIn(dial_group))
 
-        # Create denser grid for left side (32x32)
         dense_grid = VGroup()
         dense_n = 32
         for i in range(dense_n + 1):
@@ -349,7 +304,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
         heavy_label = Text("Heavy & Discrete", font_size=18, color=WARNING)
         heavy_label.next_to(left_field, DOWN, buff=0.2)
 
-        # More probes on right side
         np.random.seed(99)
         more_probes = VGroup()
         for _ in range(40):
@@ -366,7 +320,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
         invariance_label = Text("Discretization Invariance", font_size=22, color=NVIDIA_GREEN, weight=BOLD)
         invariance_label.next_to(right_field, DOWN, buff=0.2)
 
-        # Rotate needle from left (min) to right (max)
         needle_target = dial_needle.copy().rotate(-PI * 0.5, about_point=dial_center)
 
         self.play_timed("dial_turn", 42, 46,
@@ -378,7 +331,6 @@ class Scene0102_PlotTwistFunctionData(TimedScene):
 
         self.wait_timed("hold_resolution", 46, 58)
 
-        # Hard cut to black
         self.play_timed("cut_to_black", 58, 60,
                         *[FadeOut(m, run_time=0.5) for m in self.mobjects])
         self.pad_to(self.SCENE_DURATION)
