@@ -6,7 +6,7 @@ def apply_global_config():
     config.background_color = "#0B1020"
     config.frame_width = 16
     config.frame_height = 9
-    config.frame_rate = 20
+    config.frame_rate = 120
 
 
 BG = "#0B1020"
