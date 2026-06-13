@@ -48,6 +48,51 @@ class SectionBumper(Scene):
         self.play(*[FadeOut(mob, shift=UP*0.5) for mob in [num_bg, title, line, subtitle]], run_time=1.0)
         self.wait(0.5) # Đệm thêm 0.5s đen tuyệt đối để editor nối clip
 
+class IntroBumper(Scene):
+    def construct(self):
+        self.camera.background_color = BG_COLOR
+
+        symbol = MathTex(r"\mathcal{G}: \mathcal{A} \to \mathcal{U}", font_size=78, color=ACCENT_GREEN)
+        symbol.set_opacity(0.28)
+        symbol.shift(UP * 0.9)
+
+        title = Text("NEURAL OPERATOR", font_size=58, weight=BOLD, color=WHITE)
+        subtitle = Text("Learning maps between function spaces", font_size=24, color=GRAY_B)
+
+        line = Line(LEFT * 2.8, RIGHT * 2.8, color=ACCENT_GREEN, stroke_width=3)
+        content = VGroup(title, line, subtitle).arrange(DOWN, buff=0.32)
+        content.move_to(ORIGIN).shift(DOWN * 0.15)
+
+        self.play(FadeIn(symbol, scale=1.08), run_time=0.55)
+        self.play(Write(title), Create(line), run_time=0.85)
+        self.play(FadeIn(subtitle, shift=UP * 0.12), run_time=0.45)
+        self.wait(1.0)
+        self.play(
+            FadeOut(symbol, shift=UP * 0.25),
+            FadeOut(title, shift=UP * 0.25),
+            FadeOut(line, shift=UP * 0.25),
+            FadeOut(subtitle, shift=UP * 0.25),
+            run_time=0.55,
+        )
+        self.wait(0.25)
+
+class EndingBumper(Scene):
+    def construct(self):
+        self.camera.background_color = BG_COLOR
+
+        thanks = Text("THANK YOU", font_size=72, weight=BOLD, color=WHITE)
+        line = Line(LEFT * 2.4, RIGHT * 2.4, color=ACCENT_GREEN, stroke_width=3)
+        content = VGroup(thanks, line).arrange(DOWN, buff=0.32).move_to(ORIGIN)
+
+        self.play(Write(thanks), Create(line), run_time=0.85)
+        self.wait(1.35)
+        self.play(
+            FadeOut(thanks, shift=UP * 0.2),
+            FadeOut(line, shift=UP * 0.2),
+            run_time=0.6,
+        )
+        self.wait(0.3)
+
 class Bumper_01(SectionBumper):
     def __init__(self, **kwargs):
         super().__init__(
