@@ -87,6 +87,23 @@ class IntroBumper(Scene):
         )
         self.wait(0.25)
 
+class EndingBumper(Scene):
+    def construct(self):
+        self.camera.background_color = BG_COLOR
+
+        thanks = Text("THANK YOU", font_size=72, weight=BOLD, color=WHITE)
+        line = Line(LEFT * 2.4, RIGHT * 2.4, color=ACCENT_GREEN, stroke_width=3)
+        content = VGroup(thanks, line).arrange(DOWN, buff=0.32).move_to(ORIGIN)
+
+        self.play(Write(thanks), Create(line), run_time=0.85)
+        self.wait(1.35)
+        self.play(
+            FadeOut(thanks, shift=UP * 0.2),
+            FadeOut(line, shift=UP * 0.2),
+            run_time=0.6,
+        )
+        self.wait(0.3)
+
 class Bumper_01(SectionBumper):
     def __init__(self, **kwargs):
         super().__init__(
